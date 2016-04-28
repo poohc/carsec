@@ -1,0 +1,13 @@
+<DB>
+
+http://uj64-013.cafe24.com/WebMysql/
+
+id:carsec  ps:carsec1426
+
+<ftp>
+id:carsec  ps:carsec1426
+
+<admin>
+http://carsec.cafe24.com/admin/login/loginForm.do
+
+id:admin  ps:qwer1234
