@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.mbr.dao.AccountDAO">
+
+    <sql id="getAccountListWhere">
+        FROM MBR_ACCOUNT
+
+        <trim prefix="WHERE">
+        	1=1
+        	<if test="level !=null and level !=''">
+        		AND LEVEL = #{level}
+        	</if>
+        	<if test="levels != null">
+        		AND LEVEL IN
+        		<foreach item="levels" collection="levels" open="(" separator="," close=")">
+        			#{levels}
+        		</foreach>
+        	</if>
+        	<if test="statusType !=''">
+        		AND STATUS_TYPE = #{statusType}
+        	</if>
+        	<if test="statusType == null or statusType == ''">
+        		AND STATUS_TYPE &lt;&gt; '0' AND LEVEL &lt; 90
+        	</if>
+        	<if test="startLoginDate != null and startLoginDate != ''">
+        		AND DATE_FORMAT(LOGIN_DATE, '%Y%m%d') &gt;= DATE_FORMAT(#{startLoginDate}, '%Y%m%d')
+        	</if>
+        	<if test="endLoginDate != null and endLoginDate != ''">
+        		AND DATE_FORMAT(LOGIN_DATE, '%Y%m%d') &lt;= DATE_FORMAT(#{endLoginDate}, '%Y%m%d')
+        	</if>
+        	<if test="startRegisterDate != null and startRegisterDate != ''">
+        		AND DATE_FORMAT(REGISTER_DATE, '%Y%m%d') &gt;= DATE_FORMAT(#{startRegisterDate}, '%Y%m%d')
+        	</if>
+			<if test="endRegisterDate != null and endRegisterDate != ''">
+				AND DATE_FORMAT(REGISTER_DATE, '%Y%m%d') &lt;= DATE_FORMAT(#{endRegisterDate}, '%Y%m%d')
+			</if>
+
+	        <!-- select box로 검색할경우 -->
+	        <if test="searchValue != null">
+	        	<if test="searchColumn == 'mbrId'">
+	        		AND INSTR(LOWER(MBR_ID),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        	<if test="searchColumn == 'email'">
+	        		AND INSTR(LOWER(EMAIL),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        	<if test="searchColumn == 'firstName'">
+	        		AND INSTR(LOWER(FIRST_NAME),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        	<if test="searchColumn == 'nickName'">
+	        		AND INSTR(LOWER(NICKNAME),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        </if>
+	    </trim>
+
+    </sql>
+
+    <select id="getAccountListTotalCount" resultType="java.lang.Integer" parameterType="accountSearchVO">
+        SELECT COUNT(MBR_ID) AS TOTAL_COUNT
+        <include refid="getAccountListWhere"/>
+    </select>
+
+    <resultMap id="accountVOResult" type="com.pama.mbr.vo.AccountVO">
+        <id property="mbrId" column="MBR_ID"/>
+        <result property="pwd" column="PWD"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="lastName" column="LAST_NAME"/>
+        <result property="nickName" column="NICKNAME"/>
+        <result property="email" column="EMAIL"/>
+        <result property="tel" column="TEL"/>
+        <result property="mobile" column="MOBILE"/>
+        <result property="zipcode" column="ZIPCODE"/>
+        <result property="addr1" column="ADDR1"/>
+        <result property="addr2" column="ADDR2"/>
+        <result property="birth" column="BIRTH"/>
+        <result property="level" column="LEVEL"/>
+        <result property="gender" column="GENDER"/>
+        <result property="recommender" column="RECOMMENDER"/>
+        <result property="loginCount" column="LOGIN_COUNT"/>
+        <result property="loginDate" column="LOGIN_DATE"/>
+        <result property="accPoint" column="ACC_POINT"/>
+        <result property="memo" column="MEMO"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="updateIp" column="UPDATE_IP"/>
+    </resultMap>
+    <select id="getAccountPagingList" resultMap="accountVOResult" parameterType="accountSearchVO">
+        SELECT
+            MBR_ID,
+            PWD,
+            FIRST_NAME,
+            LAST_NAME,
+            NICKNAME,
+            EMAIL,
+            TEL,
+            MOBILE,
+            ZIPCODE,
+            ADDR1,
+            ADDR2,
+            BIRTH,
+            LEVEL,
+            GENDER,
+            RECOMMENDER,
+            LOGIN_COUNT,
+            LOGIN_DATE,
+            ACC_POINT,
+            MEMO,
+            REGISTER_DATE,
+            REGISTER_IP,
+            STATUS_TYPE,
+            UPDATE_DATE,
+            UPDATE_IP
+        <include refid="getAccountListWhere"/>
+        <choose>
+        	<when test="sortColumn == null">
+        		ORDER BY REGISTER_DATE DESC
+        	</when>
+        	<otherwise>
+        		<if test="sortColumn == 'mbrId'">
+        			ORDER BY MBR_ID ${sortValue}
+        		</if>
+        	</otherwise>
+        </choose>
+
+        LIMIT #{startIndex}, #{row}
+
+    </select>
+
+    <resultMap id="getAccountResult" type="com.pama.mbr.vo.AccountVO">
+        <result property="mbrId" column="MBR_ID"/>
+        <result property="pwd" column="PWD"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="lastName" column="LAST_NAME"/>
+        <result property="nickName" column="NICKNAME"/>
+        <result property="email" column="EMAIL"/>
+        <result property="tel" column="TEL"/>
+        <result property="mobile" column="MOBILE"/>
+        <result property="zipcode" column="ZIPCODE"/>
+        <result property="addr1" column="ADDR1"/>
+        <result property="addr2" column="ADDR2"/>
+        <result property="birth" column="BIRTH"/>
+        <result property="level" column="LEVEL"/>
+        <result property="gender" column="GENDER"/>
+        <result property="snsReceiveYN" column="SNS_RECEIVE_YN"/>
+        <result property="recommender" column="RECOMMENDER"/>
+        <result property="loginCount" column="LOGIN_COUNT"/>
+        <result property="loginDate" column="LOGIN_DATE"/>
+        <result property="accPoint" column="ACC_POINT"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+        <result property="memo" column="MEMO"/>
+        <result property="career" column="CAREER"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="updateIp" column="UPDATE_IP"/>
+    </resultMap>
+    <select id="getAccount" resultMap="getAccountResult">
+        SELECT
+            MBR_ID,
+            PWD,
+            FIRST_NAME,
+            LAST_NAME,
+            NICKNAME,
+            EMAIL,
+            TEL,
+            MOBILE,
+            ZIPCODE,
+            ADDR1,
+            ADDR2,
+            BIRTH,
+            LEVEL,
+            GENDER,
+            SNS_RECEIVE_YN,
+            RECOMMENDER,
+            LOGIN_COUNT,
+            LOGIN_DATE,
+            ACC_POINT,
+            REGISTER_DATE,
+            REGISTER_IP,
+            STATUS_TYPE,
+            MEMO,
+            CAREER,
+            UPDATE_DATE,
+            UPDATE_IP
+        FROM MBR_ACCOUNT
+        WHERE
+        MBR_ID = #{mbrId}
+<!--         (MBR_ID = #{mbrId} OR EMAIL = #{email}) -->
+        <if test="level != '0'">
+        	AND LEVEL &gt;= #{level}
+        </if>
+        <if test="statusType != null">
+        	AND STATUS_TYPE = #{statusType}
+        </if>
+
+    </select>
+
+    <resultMap id="getAccountChkResult" type="com.pama.mbr.vo.AccountVO">
+        <result property="mbrId" column="MBR_ID"/>
+        <result property="mobile" column="MOBILE"/>
+        <result property="email" column="EMAIL"/>
+        <result property="nickName" column="NICKNAME"/>
+    </resultMap>
+    <select id="getAccountChk" resultMap="getAccountChkResult">
+        SELECT
+            MBR_ID,
+            EMAIL,
+            MOBILE,
+            NICKNAME
+        FROM MBR_ACCOUNT
+       WHERE 1=1
+        <if test="mbrId != null">
+        	AND MBR_ID = #{mbrId}
+        </if>
+        <if test="mobile != null">
+        	AND MOBILE = #{mobile}
+        </if>
+        <if test="email != null">
+        	AND EMAIL = #{email}
+        </if>
+        <if test="nickName != null">
+        	AND NICKNAME = #{nickName}
+        </if>
+    </select>
+
+    <resultMap id="getAccountSearchResult" type="com.pama.mbr.vo.AccountVO">
+        <result property="mbrId" column="MBR_ID"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="lastName" column="LAST_NAME"/>
+        <result property="nickName" column="NICKNAME"/>
+        <result property="email" column="EMAIL"/>
+    </resultMap>
+    <select id="getAccountSearch" resultMap="getAccountSearchResult">
+        SELECT
+            MBR_ID,
+            FIRST_NAME,
+            LAST_NAME,
+            NICKNAME,
+            EMAIL
+        FROM MBR_ACCOUNT
+        WHERE FIRST_NAME = #{firstName}
+	        <if test="lastName != null">
+	        	AND LAST_NAME = #{lastName}
+	        </if>
+	        <if test="email != null">
+	        	AND EMAIL = #{email}
+	        </if>
+	        <if test="mobile != null">
+	        	AND replace(MOBILE,"-","") = replace(#{mobile},"-","");
+	        </if>
+	        <if test="mbrId != null">
+	        	AND MBR_ID = #{mbrId}
+	        </if>
+
+    </select>
+
+	<!-- 회원가입 -->
+    <insert id="insertAccount" parameterType="com.pama.mbr.vo.AccountVO">
+
+        INSERT INTO MBR_ACCOUNT (
+            MBR_ID
+            ,PWD
+            ,FIRST_NAME
+            ,LAST_NAME
+            ,NICKNAME
+            ,EMAIL
+            ,TEL
+            ,MOBILE
+            ,ZIPCODE
+            ,ADDR1
+            ,ADDR2
+            ,BIRTH
+            ,LEVEL
+            ,GENDER
+            ,SNS_RECEIVE_YN
+            ,RECOMMENDER
+            ,STATUS_TYPE
+            ,ACC_POINT
+            ,LOGIN_COUNT
+            ,REGISTER_DATE
+            ,REGISTER_IP
+        ) VALUES (
+            #{mbrId}
+            ,#{pwd}
+            ,#{firstName}
+            ,#{lastName}
+            ,#{nickName}
+            ,#{email}
+            ,#{tel}
+            ,#{mobile}
+            ,#{zipcode}
+            ,#{addr1}
+            ,#{addr2}
+            ,#{birth}
+            ,#{level}
+            ,#{gender}
+            ,#{snsReceiveYN}
+            ,#{recommender}
+            ,#{statusType}
+            ,0
+            ,0
+            ,NOW()
+            ,#{registerIp}
+        )
+    </insert>
+
+    <update id="updateAccount" parameterType="com.pama.mbr.vo.AccountVO">
+        UPDATE MBR_ACCOUNT SET
+			UPDATE_DATE = NOW()
+            ,UPDATE_IP = #{updateIp}
+        	<if test="firstName != null and firstName != ''">
+            ,FIRST_NAME = #{firstName}
+            </if>
+
+        	<if test="lastName != null and lastName != ''">
+            ,LAST_NAME = #{lastName}
+            </if>
+
+        	<if test="nickName != null and nickName != ''">
+            ,NICKNAME = #{nickName}
+            </if>
+
+			<if test="tel != null and tel != ''">
+            ,TEL = #{tel}
+            </if>
+
+            <if test="mobile != null and mobile != ''">
+            ,MOBILE = #{mobile}
+            </if>
+
+            <if test="email != null and email != ''">
+            ,EMAIL = #{email}
+            </if>
+
+			<if test="zipcode != null and zipcode != ''">
+            ,ZIPCODE = #{zipcode}
+            </if>
+
+			<if test="addr1 != null and addr1 != ''">
+             ,ADDR1 = #{addr1}
+            </if>
+
+            <if test="addr2 != null and addr2 != ''">
+            ,ADDR2 = #{addr2}
+            </if>
+
+            <if test="birth != null and birth != ''">
+            ,BIRTH = #{birth}
+            </if>
+
+            <if test="level != null and level != ''">
+            ,LEVEL = #{level}
+            </if>
+
+            <if test="gender != null and gender != ''">
+            ,GENDER = #{gender}
+            </if>
+
+            <if test="snsReceiveYN != null and snsReceiveYN != ''">
+            ,SNS_RECEIVE_YN = #{snsReceiveYN}
+            </if>
+
+            <if test="recommender != null and recommender != ''">
+            ,RECOMMENDER = #{recommender}
+            </if>
+
+            <if test="recommender != null and recommender != ''">
+            ,RECOMMENDER = #{recommender}
+            </if>
+
+
+        WHERE MBR_ID = #{mbrId}
+    </update>
+
+    <update id="updateAccountCareer" parameterType="com.pama.mbr.vo.AccountVO">
+    	UPDATE MBR_ACCOUNT SET
+    		CAREER = #{career}
+			,UPDATE_DATE = NOW()
+            ,UPDATE_IP = #{updateIp}
+    	WHERE MBR_ID = #{mbrId}
+    </update>
+
+    <update id="updateAccountMemo" parameterType="com.pama.mbr.vo.AccountVO">
+    	UPDATE MBR_ACCOUNT SET
+    		MEMO = #{memo}
+			,UPDATE_DATE = NOW()
+            ,UPDATE_IP = #{updateIp}
+    	WHERE MBR_ID = #{mbrId}
+    </update>
+
+    <update id="updateAccountLevel" parameterType="com.pama.mbr.vo.AccountVO">
+    	UPDATE MBR_ACCOUNT SET
+    		LEVEL = #{level}
+    		,UPDATE_DATE = NOW()
+            ,UPDATE_IP = #{updateIp}
+    	WHERE MBR_ID = #{mbrId}
+    </update>
+
+	<!-- 회원탈퇴 -->
+    <update id="updateAccountRemove" parameterType="com.pama.mbr.vo.AccountVO">
+        UPDATE MBR_ACCOUNT SET
+            PWD = ''
+            ,FIRST_NAME = ''
+            ,LAST_NAME = ''
+            ,NICKNAME = ''
+            ,TEL = ''
+            ,MOBILE = ''
+            ,ZIPCODE = ''
+            ,ADDR1 = ''
+            ,ADDR2 = ''
+            ,BIRTH = ''
+            ,GENDER = ''
+            ,ACC_POINT = 0
+            ,STATUS_TYPE = '0'
+            ,UPDATE_DATE = NOW()
+            ,UPDATE_IP = #{updateIp}
+            ,MEMO = #{memo}
+        WHERE MBR_ID = #{mbrId}
+    </update>
+
+    <update id="updateLastLoginDate" parameterType="com.pama.mbr.vo.AccountVO">
+        UPDATE MBR_ACCOUNT SET
+            LOGIN_COUNT = LOGIN_COUNT + 1,
+            LOGIN_DATE = NOW()
+        WHERE MBR_ID = #{mbrId}
+    </update>
+
+    <update id="updatePwd" parameterType="com.pama.mbr.vo.AccountVO">
+        UPDATE MBR_ACCOUNT SET
+            PWD = #{pwd}
+            ,UPDATE_DATE = NOW()
+            ,UPDATE_IP = #{updateIp}
+        WHERE
+        	<if test="mbrId != null">
+        		MBR_ID = #{mbrId}
+        	</if>
+        	<if test="email != null">
+        		EMAIL = #{email}
+        	</if>
+    </update>
+
+</mapper>

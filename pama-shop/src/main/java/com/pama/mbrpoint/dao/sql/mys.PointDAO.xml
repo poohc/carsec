@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.mbrpoint.dao.PointDAO">
+
+    <sql id="getPointListWhere">
+        FROM MBR_POINT
+       	WHERE	POINT_ID &gt; 0
+       	<if test="startPointDate != null">
+       		AND DATE_FORMAT(REGISTER_DATE, '%Y%m%d') &gt;= DATE_FORMAT(#{startPointDate}, '%Y%m%d')
+       	</if>
+       	<if test="endPointDate != null">
+       		AND DATE_FORMAT(REGISTER_DATE, '%Y%m%d') &lt;= DATE_FORMAT(#{endPointDate}, '%Y%m%d')
+           </if>
+       	<if test="pointFlag != null">
+       		AND POINT_FLAG = #{pointFlag}
+           </if>
+       	<if test="messageRegisterId != null">
+       		AND MESSAGE_REGISTER_ID = #{messageRegisterId}
+           </if>
+       	<if test="registerId != null">
+       		AND REGISTER_ID = #{registerId}
+        </if>
+    </sql>
+
+    <select id="getPointListTotalCount" resultType="java.lang.Integer" parameterType="com.pama.mbrpoint.vo.PointSearchVO">
+        SELECT COUNT(*) AS totalCount
+        <include refid="getPointListWhere"/>
+    </select>
+
+    <resultMap id="pointVOResult" type="com.pama.mbrpoint.vo.PointVO">
+        <id property="pointId" column="POINT_ID"/>
+        <result property="mbrId" column="MBR_ID"/>
+        <result property="pointFlag" column="POINT_FLAG"/>
+        <result property="point" column="POINT"/>
+        <result property="pointTitle" column="POINT_TITLE"/>
+        <result property="messageId" column="MESSAGE_ID"/>
+        <result property="messageRegisterId" column="MESSAGE_REGISTER_ID"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+
+        <result property="countPoint" column="COUNT_POINT"/>
+        <result property="sumPoint" column="SUM_POINT"/>
+        <result property="settlPoint" column="SETTL_POINT"/>
+        <result property="infoSettlRates" column="INFO_SETTL_RATES"/>
+
+    </resultMap>
+
+    <select id="getPointList" resultMap="pointVOResult" parameterType="com.pama.mbrpoint.vo.PointSearchVO">
+        SELECT
+			POINT_ID,
+			MBR_ID,
+			POINT_FLAG,
+			POINT,
+			POINT_TITLE,
+			MESSAGE_ID,
+			MESSAGE_REGISTER_ID,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP
+        <include refid="getPointListWhere"/>
+        <choose>
+        	<when test="sortColumn == mbrId">
+        		ORDER BY MBR_ID ${sortValue}
+        	</when>
+        	<when test="sortColumn == registerId">
+        		ORDER BY REGISTER_ID ${sortValue}
+        	</when>
+        	<otherwise>
+        		ORDER BY POINT_ID DESC
+        	</otherwise>
+        </choose>
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+    <select id="getPointUseSummaryList" resultMap="pointVOResult" parameterType="com.pama.mbrpoint.vo.PointSearchVO">
+       SELECT MP.MESSAGE_ID,
+		      MP.MESSAGE_REGISTER_ID,
+		      MI.INFO_SETTL_RATES,
+		      MP.COUNT_POINT,
+		      MP.SUM_POINT,
+       		 (SELECT POINT_TITLE FROM MBR_POINT MBRP WHERE MBRP.POINT_ID = MP.MAX_POINT_ID) AS POINT_TITLE,
+       		 ROUND(MP.SUM_POINT * IFNULL(MI.INFO_SETTL_RATES,0),0) AS SETTL_POINT
+		FROM (
+			SELECT
+			  			MESSAGE_ID,
+			  			MESSAGE_REGISTER_ID,
+			  			MAX(POINT_ID) AS MAX_POINT_ID,
+						COUNT(MBR_ID) AS COUNT_POINT,
+						SUM(POINT) AS SUM_POINT
+			FROM MBR_POINT
+			WHERE POINT_FLAG='2'
+			AND DATE_FORMAT(REGISTER_DATE, '%Y%m') = #{registerDate}
+			GROUP BY MESSAGE_ID, MESSAGE_REGISTER_ID
+		) MP
+		LEFT JOIN MBR_INFOMATION MI ON MI.MBR_ID = MP.MESSAGE_REGISTER_ID
+		<where>
+			<if test="messageRegisterId != null and messageRegisterId != ''">
+				MP.MESSAGE_REGISTER_ID = #{messageRegisterId}
+			</if>
+		</where>
+    </select>
+
+    <select id="getPoint" resultMap="pointVOResult" parameterType="java.lang.Integer">
+        SELECT
+            POINT_ID,
+			MBR_ID,
+			POINT_FLAG,
+			POINT,
+			POINT_TITLE,
+			MESSAGE_ID,
+			MESSAGE_REGISTER_ID,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP
+        FROM MBR_POINT
+        WHERE POINT_ID = #{pointId}
+    </select>
+
+    <select id="getPointUse" resultMap="pointVOResult" parameterType="com.pama.mbrpoint.vo.PointFormVO">
+        SELECT
+            POINT_ID,
+			MBR_ID,
+			POINT_FLAG,
+			POINT,
+			POINT_TITLE,
+			MESSAGE_ID,
+			MESSAGE_REGISTER_ID,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP
+        FROM MBR_POINT
+        WHERE MBR_ID = #{mbrId}
+        AND POINT_FLAG=#{pointFlag}
+        AND MESSAGE_ID=#{messageId}
+    </select>
+
+    <insert id="insertPoint" parameterType="com.pama.mbrpoint.vo.PointFormVO">
+        INSERT INTO MBR_POINT (
+            MBR_ID,
+			POINT_FLAG,
+			POINT,
+			POINT_TITLE,
+			MESSAGE_ID,
+			MESSAGE_REGISTER_ID,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP
+        ) VALUES (
+            #{mbrId}
+            ,#{pointFlag}
+            ,#{point}
+            ,#{pointTitle}
+            ,#{messageId}
+            ,#{messageRegisterId}
+            ,NOW()
+            ,#{registerId}
+            ,#{registerIp}
+        )
+    </insert>
+
+    <update id="updateAccountAccPoint" parameterType="com.pama.mbrpoint.vo.PointFormVO">
+    	UPDATE MBR_ACCOUNT SET
+    		ACC_POINT=IFNULL(ACC_POINT,0)+#{updateAccPoint},
+    		ACC_POINT_DATE = NOW()
+    	WHERE MBR_ID=#{mbrId}
+    </update>
+
+	<select id="getAccountAccPoint" resultType="java.lang.Integer" parameterType="com.pama.mbrpoint.vo.PointFormVO">
+    	SELECT
+    		ACC_POINT
+    	FROM MBR_ACCOUNT
+    	WHERE MBR_ID=#{mbrId}
+    </select>
+
+
+</mapper>

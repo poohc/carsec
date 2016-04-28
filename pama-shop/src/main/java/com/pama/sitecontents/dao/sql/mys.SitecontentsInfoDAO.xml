@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.sitecontents.dao.SiteContentsDAO">
+
+	<!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="siteContentVO">
+        SELECT COUNT(*) AS TOTAL_COUNT
+        FROM SITE_CONTENTS
+    </select>
+
+
+	<resultMap id="siteContentListResult" type="com.pama.sitecontents.vo.SiteContentVO">
+		<result property="contentId"	column="CONTENT_ID" />
+		<result property="contentKey"	column="CONTENT_KEY" />
+		<result property="contents"	column="CONTENTS" />
+	</resultMap>
+    <!-- 조회:목록 -->
+
+    <resultMap id="messageResult1" type="com.pama.sitecontents.vo.SiteContentVO">
+        <result property="contentId"	column="CONTENT_ID" />
+		<result property="contentKey"	column="CONTENT_KEY" />
+		<result property="contents"	column="CONTENTS" />
+    </resultMap>
+
+    <!-- 게시글 리스트  -->
+    <select id="getSiteContentList" resultMap="siteContentListResult" parameterType="siteContentVO">
+    	SELECT
+	        CONTENT_ID,
+	        CONTENT_KEY,
+	        CONTENTS
+    	FROM SITE_CONTENTS
+		ORDER BY CONTENT_ID DESC
+
+    </select>
+
+    <!-- 메세지 읽어오기 -->
+    <select id="getMessage" parameterType="java.lang.String" resultMap="messageResult1">
+        SELECT
+			CONTENT_ID,
+	        CONTENT_KEY,
+	        CONTENTS
+        FROM SITE_CONTENTS
+        WHERE CONTENT_ID = #{contentId}
+    </select>
+
+	<!-- 게시글 수정 -->
+    <insert id="modifyMessage" parameterType="siteContentVO">
+    	UPDATE SITE_CONTENTS SET
+    		CONTENT_KEY = #{contentKey},
+    		CONTENTS = #{contents}
+    	WHERE CONTENT_ID = #{contentId}
+    </insert>
+
+	<!-- 게시글 삭제 -->
+	<delete id="removeSelectMessage" parameterType="siteContentVO">
+		DELETE FROM SITE_CONTENTS
+			<trim prefix="WHERE">
+        	1=1
+        	<choose>
+        	<when test="checkedIds != null">
+        		AND CONTENT_ID IN
+        		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+        			#{checkedIds}
+        		</foreach>
+        	</when>
+        	<otherwise>
+        		AND CONTENT_ID = 0
+        	</otherwise>
+        	</choose>
+        </trim>
+
+	</delete>
+
+	<!-- 게시글 쓰기 -->
+	<insert id="insertMessage" parameterType="siteContentVO">
+		INSERT SITE_CONTENTS (
+			CONTENT_KEY,
+			CONTENTS
+		) VALUES (
+			#{contentKey},
+			#{contents}
+		)
+	</insert>
+</mapper>

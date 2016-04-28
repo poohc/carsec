@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.ord.dao.CartProductsDAO">
+
+    <resultMap id="cartProductVOResult" type="com.pama.ord.vo.CartProductsVO">
+        <result property="prdId" column="PRD_ID"/>
+        <result property="qty" column="QTY"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="prdName" column="PRD_NAME"/>
+        <result property="price" column="PRICE"/>
+        <result property="salePrice" column="SALE_PRICE"/>
+        <result property="comp" column="comp"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="cateName" column="CATE_NAME"/>
+        <result property="fileName" column="FILE_NAME"/>
+    </resultMap>
+
+    <resultMap id="cartProductsVOResult" extends="cartProductVOResult" type="com.pama.ord.vo.CartProductsVO">
+        <result property="cartId" column="CART_ID"/>
+    </resultMap>
+
+    <select id="getCartProductsList" resultMap="cartProductsVOResult" parameterType="com.pama.ord.vo.CartProductsVO">
+        SELECT
+            OCP.CART_ID,
+            OCP.PRD_ID,
+            OCP.QTY,
+            OCP.REGISTER_DATE,
+            OCP.REGISTER_ID,
+            OCP.REGISTER_IP,
+            PI.PRD_NAME,
+            PI.PRICE,
+            PI.SALE_PRICE,
+            PC.CATE_NAME,
+            PI.COMP,
+            MA.FIRST_NAME,
+            PA.FILE_NAME
+        FROM ORD_CART_PRODUCTS OCP LEFT OUTER JOIN PRD_INFO PI on OCP.PRD_ID = PI.PRD_ID
+        LEFT OUTER JOIN PRD_CATEGORY PC ON PI.CATE_ID = PC.CATE_ID
+        LEFT OUTER JOIN MBR_ACCOUNT MA ON MA.MBR_ID = PI.COMP
+        LEFT OUTER JOIN PRD_ATTACHEMENT PA on OCP.PRD_ID = PA.PRD_ID AND PA.IMAGE_TYPE = '1'
+        WHERE OCP.REGISTER_ID = #{registerId}
+    </select>
+
+    <select id="getCartProductList" resultMap="cartProductVOResult" parameterType="com.pama.ord.vo.CartProductsVO">
+        SELECT
+            PI.PRD_ID,
+            #{qty} QTY,
+            PI.REGISTER_DATE,
+            PI.REGISTER_ID,
+            PI.REGISTER_IP,
+            PI.PRD_NAME,
+            PI.PRICE,
+            PI.SALE_PRICE,
+            PC.CATE_NAME,
+            PI.COMP,
+            MA.FIRST_NAME,
+            PA.FILE_NAME
+        FROM PRD_INFO PI LEFT OUTER JOIN PRD_CATEGORY PC ON PI.CATE_ID = PC.CATE_ID
+        LEFT OUTER JOIN MBR_ACCOUNT MA ON MA.MBR_ID = PI.COMP
+        LEFT OUTER JOIN PRD_ATTACHEMENT PA on PI.PRD_ID = PA.PRD_ID AND PA.IMAGE_TYPE = '1'
+        WHERE PI.PRD_ID = #{prdId}
+    </select>
+
+    <insert id="insertCartProducts" parameterType="com.pama.ord.vo.CartProductsVO">
+        INSERT INTO ORD_CART_PRODUCTS (
+            CART_ID
+            ,PRD_ID
+            ,QTY
+            ,REGISTER_DATE
+            ,REGISTER_IP
+            ,REGISTER_ID
+            ,UPDATE_DATE
+            ,UPDATE_ID
+        ) VALUES (
+            #{cartId}
+            ,#{prdId}
+            ,#{qty}
+            ,NOW()
+            ,#{registerIp}
+            ,#{registerId}
+            ,NOW()
+            ,#{updateId}
+        )
+       <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+       </selectKey>
+    </insert>
+
+    <update id="updateCartProducts" parameterType="com.pama.ord.vo.CartProductsVO">
+        update ORD_CART_PRODUCTS SET
+            QTY = #{qty}
+            ,UPDATE_DATE = NOW()
+            ,UPDATE_ID = #{updateId}
+        WHERE CART_ID = #{cartId}
+        AND PRD_ID = #{prdId}
+    </update>
+
+    <delete id="removeCartProducts" parameterType="com.pama.ord.vo.CartProductsVO">
+        DELETE FROM ORD_CART_PRODUCTS
+        WHERE CART_ID = #{cartId}
+        <if test="prdId != null">
+        	AND PRD_ID = #{prdId}
+        </if>
+    </delete>
+
+</mapper>

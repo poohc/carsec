@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.prd.dao.StatisticsDAO">
+
+    <resultMap id="statisticsVOResult" type="com.pama.prd.vo.StatisticsVO">
+        <result property="prdId" column="PRD_ID"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+        <result property="statisticsCount" column="STATISTICS_COUNT"/>
+    </resultMap>
+    <select id="getStatistics" resultMap="statisticsVOResult" parameterType="com.pama.prd.vo.StatisticsVO">
+        SELECT
+            PRD_ID,
+            STATUS_TYPE,
+            STATISTICS_COUNT
+        FROM PRD_STATISTICS
+        WHERE PRD_ID = #{prdId}
+    </select>
+
+    <insert id="insertStatistics" parameterType="com.pama.prd.vo.StatisticsVO">
+        INSERT INTO PRD_STATISTICS (
+           PRD_ID
+          ,STATUS_TYPE
+          ,STATISTICS_COUNT
+        ) VALUES (
+           #{prdId}
+          ,#{statusType}
+          ,#{statisticsCount}
+        )
+        <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateStatisticsCount" parameterType="com.pama.prd.vo.StatisticsVO">
+        UPDATE PRD_STATISTICS SET
+          STATISTICS_COUNT = STATISTICS_COUNT + 1
+        WHERE PRD_ID = #{prdId}
+    </update>
+
+</mapper>
+

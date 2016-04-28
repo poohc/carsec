@@ -1,0 +1,185 @@
+@charset "utf-8";
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+/*body {font-family:'"나눔고딕",NanumGothic,"맑은 고딕","Malgun Gothic",Helvetica,AppleGothic,Sans-serif;font-size:12px;margin:0; padding:0; background:#ffffff;}
+*/
+body,table,table td,input,select,textarea{font-size:12px;font-family:"나눔고딕",NanumGothic,"맑은 고딕","Malgun Gothic",Helvetica,AppleGothic,Sans-serif; }
+
+img, fieldset {border:none;}
+h1 {display:none;}
+
+a:link { color:#555; text-decoration:none; }
+a:visited { color:#555; text-decoration:none; }
+a:hover   { color:#f00; text-decoration:underline; }
+a:active  { color:#555; text-decoration:none; }
+
+ul {margin:0;padding:0;}
+ul,ol,li {list-style:none;}
+
+.dataForm input.error, .dataForm textarea.error { border:1px solid red; }
+.dataForm label.error{ color:red; }
+
+.accountForm input.error, .accountForm textarea.error { border:1px solid red; }
+.accountForm label.error{ position:absolute; color:red; margin:0 0 0 3px;}
+.accountForm .mbrId label.error{ position:absolute; color:red; margin:0 0 0 70px;}
+
+.productForm input.error, .productForm textarea.error { border:1px solid red; }
+.productForm label.error{ position:absolute; color:red; margin:0 0 0 3px;}
+
+#wrapper {margin: 0 auto; width: auto;}
+
+#header {margin: 0 auto;}
+
+#footer {margin: 0 auto;}
+
+.htmltype {display:none;}
+
+#linkbox {height:27px; margin: 0 auto; background-color:#efefef; padding:0 0 0 0;}
+#linkbox ul li {float:left; height:27px;}
+#linkbox ul li a {float:left; height:27px; overflow:hidden; padding:5px 0 0 0;}
+#linkbox ul.c1 {float:right; height:27px; font-size:12px; padding:0 0 0 0;margin: 0;}
+#linkbox ul.c1 .bar {color:#CCC; font-size:9px; font-weight:normal;padding:9px 3px 0 3px;}
+#linkbox ul.c1 li.menu {padding:1px;}
+#linkbox ul.c1 li.rss {margin:7px 0 0 0;padding:0 0 0 15px;}
+
+/* Login Box  ---------------------------------------------------------------------- */
+#loginBox {position:relative;width: 680px; margin: 0 auto; padding:150px 0 0 0;}
+#loginBox .errMag {position:absolute; top:180px; left:420px; color:#ff0000;}
+#loginBox .loginBody {width: 680px; height:150px; padding:30px 0 0 0;}
+#loginBox ul li.loginTop {background:url(/common/images/admin/image/login_top.gif) no-repeat; width:680px; height:45px;}
+#loginBox ul li.loginLine {background-color:#00f0f0; width:680px; height:3px; margin:0;padding:0;}
+
+#loginBox .loginAction ul {list-style:none;margin:0;padding:0;}
+#loginBox .loginAction .loginLogo {float:left;background:url(/common/images/admin/image/logo_webmain.gif) no-repeat; width:201px; height:66px;margin:20px 0 0 40px;}
+
+#loginBox .loginAction .loginInput {float:left;background:url(/common/images/admin/image/login_bg.png) no-repeat; width:345px; height:124px;margin:0 0 0 40px;padding:0 0 0 20px;}
+#loginBox .loginAction .loginInput .inputBox {float:left;margin:30px 0 0 0;}
+#loginBox .loginAction .loginInput .inputBox ul {list-style:none;margin:0;padding:0;}
+#loginBox .loginAction .loginInput .inputBox ul li.idBox {background:url(/common/images/admin/image/login_id.gif) no-repeat; padding:0 0 0 92px;}
+#loginBox .loginAction .loginInput .inputBox ul li.pwdBox {background:url(/common/images/admin/image/login_pw.gif) no-repeat; padding:0 0 0 92px;}
+#loginBox .loginAction .loginInput .buttonBox {float:left; margin:30px 0 0 10px;; padding:3px 0 0 0;}
+
+/* Navi Bar  ---------------------------------------------------------------------- */
+#topmenubox {width:auto;height:40px;text-transform:uppercase;font-size:12px;font-weight:bold;background:transparent url("/common/images/admin/menus/bgOFF.gif") repeat-x top left;font-family:Helvetica,Arial,Verdana,sans-serif;border-bottom:4px solid #336666;border-top:1px solid #C0E2D4;}
+.topnav{margin:0;padding:0;list-style-type:none;width:1200px;position:relative;display:block;height:40px;text-transform:uppercase;font-size:12px;font-weight:bold;background:transparent url("/common/images/admin/menus/bgOFF.gif") repeat-x top left;font-family:Helvetica,Arial,Verdana,sans-serif;}
+.topnav>li{display:block;float:left;margin:0;pading:0;}
+.topnav>li.logo{padding:0;margin:0;}
+.topnav>li.logo>a{padding:3px 10px 0 10px;margin:0;height:30px;}
+
+.topnav>li>a{display:block;float:left;color:#874B46;text-decoration:none;padding:12px 10px 0 10px;height:24px;background:transparent url("/common/images/admin/menus/bgDIVIDER.gif") no-repeat top right;}
+.topnav>li>a:hover, .topnav>li:hover, .topnav .hover{background:transparent url("/common/images/admin/menus/bgHOVER.gif") no-repeat top right;}
+.topnav>li>a.current,.topnav  li a.current:hover{color:#fff;background:transparent url("/common/images/admin/menus/bgON.gif") no-repeat top right;}
+
+.topnav>li.logo>a:hover, .topnav>li.logo:hover, .topnav .hover {background:transparent url("/common/images/admin/menus/bgDIVIDER.gif") no-repeat top right;}
+
+#leftMenu {position:absolute;width:180px;height:500px;margin:0;padding:0;top:70px;left:0;}
+#leftMenu dl { margin:0;padding:0; }
+#leftMenu dt {width:180px;height:30px;background-color:#3DAC0F;text-align:center;margin:4px 2px 0 2px;padding:10px 0 0 0;font-weight:bold; color:#ffffff;font-size:14px;}
+#leftMenu dd {list-style:none;margin:0;padding:10px 0 10px 10px;height:10px;border-bottom: 1px dotted #a4b2bd;}
+#leftMenu dd.s {list-style:none;margin:0;padding:8px 0 8px 25px;}
+
+#menuTab {}
+#menuTab ul {border-top: 1px solid #a4b2bd;border-left: 1px solid #a4b2bd;border-right: 1px solid #a4b2bd;width:241px;}
+#menuTab ul li {float:left;padding:10px;width:100px;text-align:center;}
+#menuTab ul li.on {}
+#menuTab ul li.off {background-color:#efefef;}
+#menuTab ul li.ln {width:1px;height:34px;padding:0px;background-color:#a4b2bd;}
+
+/* Contents  ---------------------------------------------------------------------- */
+.content {width: 980px; padding:5px 0 0 185px;}
+.content .title {padding: 1px 0 7px 23px; background: url(/common/images/admin/ico/icon_titnavy.gif) no-repeat 4px 3px; font-weight: bold; color: #2e597b; font-size:14px;}
+.content .title span { margin-left:8px; font-weight:normal; color: #e95229; font-size:11px;}
+.content .history {color: #b0b0b0; font-size:11px; text-align:right;}
+.content .btn {margin: 5px;}
+.content .btn ul {list-style:none;margin:0;padding:0;}
+.content .btn ul li {margin: 5px;}
+.content .btn ul li.btnFr {float: right;}
+.content .btn ul li.btnFl {float: left; margin: 0px 3px 0px 0px;}
+.content .btn ul li .searchinput {float: left;}
+.content .btn ul li .searchbtn {float: left;}
+
+.content .btn { margin: 5px; }
+.content .btnFr { float: right; }
+.content .btnFl { float: left; margin: 0px 3px 0px 0px; }
+
+/* Table  ---------------------------------------------------------------------- */
+table.detail {clear: both; width: 100%; border-collapse: collapse; border-top: 2px solid #2e597b; text-align: left;}
+table.detail th {padding: 7px 5px 6px 21px; font-size: 11px; font-weight: bold; font-family: tahoma; background: #f2f4f6; border-top: 1px solid #a4b2bd; border-bottom: 1px solid #a4b2bd;}
+table.detail td.cl {padding: 7px 5px 6px 5px; font-size: 12px; border-top: 1px solid #a4b2bd; border-left: 1px solid #dbe3ec; border-bottom: 1px solid #a4b2bd;}
+table.detail thead th {padding: 7px 8px 6px 8px; border-left: 1px solid #dbe3ec; text-align: center; font-weight: bold; border-top: 2px solid #2e597b; border-bottom: 1px solid #2e597b;}
+table.detail th.first, table td.first {border-left: none;}
+table.detail tbody th {vertical-align: top; font-weight: bold;}
+table.detail tbody th.multi {border-left: 1px solid #dbe3ec; font-weight: bold;}
+table.detail tbody td.cl {padding: 7px 6px 6px 6px;height: 25px;}
+table.detail select {margin-right: 3px;}
+table.detail .left {text-align: left; padding-left: 5px;}
+table.detail tr.center td.left {text-align: left;}
+table.detail tr.center td.left10 {text-align: left; padding-left: 10px;}
+table.detail .date {font-size: 11px; color: #999;}
+table.detail td img {vertical-align: middle;}
+table.detail tbody td.center {padding: 0 25px; text-align: center;}
+
+table.contents {clear: both; width: 100%; border-collapse: collapse; border-top: 2px solid #2e597b; text-align: left;}
+table.contents th {padding: 7px 5px 6px 21px; font-size: 11px; width:100px; font-weight: bold; font-family: tahoma; background: #f2f4f6; border-top: 1px solid #a4b2bd; border-bottom: 1px solid #a4b2bd;}
+table.contents td {padding: 7px 5px 6px 5px; font-size: 12px; border-top: 1px solid #a4b2bd; border-left: 1px solid #dbe3ec; border-bottom: 1px solid #a4b2bd;}
+table.contents thead th {padding: 7px 8px 6px 8px; border-left: 1px solid #dbe3ec; text-align: center; font-weight: bold; border-top: 2px solid #2e597b; border-bottom: 1px solid #2e597b;}
+table.contents th.first, table td.first {border-left: none;}
+table.contents tbody th {vertical-align: top; font-weight: bold;}
+table.contents tbody th.multi {border-left: 1px solid #dbe3ec; font-weight: bold;}
+table.contents tbody td {padding: 7px 6px 6px 6px;height: 25px;}
+table.contents select {margin-right: 3px;}
+table.contents .left {text-align: left; padding-left: 5px;}
+table.contents tr.center td.left {text-align: left;}
+table.contents tr.center td.left10 {text-align: left; padding-left: 10px;}
+table.contents .date {font-size: 11px; color: #999;}
+table.contents td img {vertical-align: middle;}
+table.contents tbody td.center {padding: 0 25px; text-align: center;}
+
+table.comments {clear: both; width: 100%; border-collapse: collapse; border-top: 2px solid #2e597b; text-align: left;}
+table.comments th {padding: 7px 5px 6px 21px; font-size: 11px; width:200px; font-weight: bold; font-family: tahoma; background: #f2f4f6; border-top: 1px solid #a4b2bd; border-bottom: 1px solid #a4b2bd;}
+table.comments td {padding: 7px 5px 6px 5px; font-size: 12px; border-top: 1px solid #a4b2bd; border-left: 1px solid #dbe3ec; border-bottom: 1px solid #a4b2bd;}
+table.comments thead th {padding: 7px 8px 6px 8px; border-left: 1px solid #dbe3ec; text-align: center; font-weight: bold; border-top: 2px solid #2e597b; border-bottom: 1px solid #2e597b;}
+table.comments th.first, table td.first {border-left: none;}
+table.comments tbody th {vertical-align: top; font-weight: bold;}
+table.comments tbody th.multi {border-left: 1px solid #dbe3ec; font-weight: bold;}
+table.comments tbody td {padding: 7px 6px 6px 6px;height: 25px;}
+table.comments select {margin-right: 3px;}
+table.comments .left {text-align: left; padding-left: 5px;}
+table.comments tr.center td.left {text-align: left;}
+table.comments tr.center td.left10 {text-align: left; padding-left: 10px;}
+table.comments .date {font-size: 11px; color: #999;}
+table.comments td img {vertical-align: middle;}
+table.comments tbody td.center {padding: 0 25px; text-align: center;}
+
+/* File Uploader  ---------------------------------------------------------------------- */
+.fileUploader{ clear:both; padding-top:5px; margin-bottom:10px;}
+.fileUploader:after{ content:""; display:block; clear:both;}
+.fileUploader .preview{ float:left; width:64px; height:64px; border:1px solid #ccc;; padding:2px; margin:0 10px 5px 0;}
+.fileUploader .preview.black { background-color:#000; border:1px solid #666;}
+.fileUploader .preview img{ display:block; width:64px; height:64px;}
+.fileUploader .fileListArea{ float:left; width:260px; margin:0 10px 5px 0;}
+.fileUploader .fileListArea select{ width:100%; height:70px; overflow:auto;}
+.fileUploader .fileListArea select option{ font-size:11px;}
+.fileUploader .fileListArea.black select { background-color:#000; border:1px solid #666;}
+.fileUploader .fileListArea.black select option { color:#aaa; }
+.fileUploader .fileUploadControl{ clear:right;}
+.fileUploader .fileUploadControl .button{ margin-bottom:5px;}
+.fileUploader .file_attach_info{ clear:right; margin:5px 0;}
+
+/* UploadBox ---------------------------------------------------------------------- */
+#uploadBox h3 {padding:10px 0 0 25px;}
+#uploadBox ul {list-style:none;margin:0;padding:0;}
+#uploadBox ul li {line-height:180%;}
+#uploadBox ul li.l1 {padding:5px 0 0 0; text-align:center;}
+#uploadBox ul li.l2 {padding:20px 0 0 0; text-align:center;}
+#uploadBox ul li.l3 {padding:20px 0 0 0; text-align:center;}
+
+/* Paging ---------------------------------------------------------------------- */
+.paging {width:100%; text-align:center; padding-top:18px;}
+.paging span {font-size: 12px; color: #1a5afd; font-weight:bold; padding:5px;}
+.paging span a {color:#828282; font-weight:normal; text-decoration:none;}
+.paging span a:hover {background:none; color:#1a5afd; text-decoration:underline;}
+.paging img { padding:0 1px 0 2px;}
+
+/* Footer ---------------------------------------------------------------------- */
+.footer_copyright {width:100%; text-align:center;padding:50px 0 10px 0;}
+.footer_copyright p {border-top: 1px solid #a4b2bd; padding:5px 0 0 0;}

@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.prd.dao.ProductDAO">
+
+    <resultMap id="productVOResult" type="productVO">
+        <id property="prdId" column="PRD_ID"/>
+        <result property="cateId" column="CATE_ID"/>
+        <result property="prdName" column="PRD_NAME"/>
+        <result property="unit" column="UNIT"/>
+        <result property="expirationMonth" column="EXPIRATION_MONTH"/>
+        <result property="price" column="PRICE"/>
+        <result property="salePrice" column="SALE_PRICE"/>
+        <result property="comp" column="COMP"/>
+        <result property="country" column="COUNTRY"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="updateIp" column="UPDATE_IP"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+    </resultMap>
+
+    <resultMap id="productVOListResult" extends="productVOResult" type="productVO">
+        <result property="cateName" column="CATE_NAME"/>
+    </resultMap>
+
+    <resultMap id="bestProductVOListResult" extends="productVOResult" type="productVO">
+        <result property="statisticsCount" column="STATISTICS_COUNT"/>
+        <result property="cateName" column="CATE_NAME"/>
+    </resultMap>
+
+    <resultMap id="productNameVOResult" type="productVO">
+    	<id property="prdId" column="PRD_ID"/>
+        <result property="cateId" column="CATE_ID"/>
+        <result property="expirationMonth" column="EXPIRATION_MONTH"/>
+        <result property="prdName" column="PRD_NAME"/>
+        <result property="price" column="PRICE"/>
+        <result property="salePrice" column="SALE_PRICE"/>
+    </resultMap>
+
+    <resultMap id="productContentsVOResult" type="productContentsVO">
+        <id property="prdConId" column="PRD_CON_ID"/>
+        <result property="prdId" column="PRD_ID"/>
+        <result property="contents" column="CONTENTS"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+    </resultMap>
+
+    <resultMap id="productAttachementVOResult" type="productAttachementVO">
+        <id property="prdAttaId" column="PRD_ATTA_ID"/>
+        <result property="prdId" column="PRD_ID"/>
+        <result property="imageType" column="IMAGE_TYPE"/>
+        <result property="contentType" column="CONTENT_TYPE"/>
+        <result property="fileType" column="FILE_TYPE"/>
+        <result property="fileName" column="FILE_NAME"/>
+        <result property="displayName" column="DISPLAY_NAME"/>
+        <result property="filePath" column="FILE_PATH"/>
+        <result property="fileSize" column="FILE_SIZE"/>
+        <result property="imageWidth" column="IMAGE_WIDTH"/>
+        <result property="imageHeight" column="IMAGE_HEIGHT"/>
+        <result property="downLoadCount" column="DOWNLOAD_COUNT"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+    </resultMap>
+
+    <sql id="getProductInfoListWhere">
+        FROM
+            PRD_INFO PI INNER JOIN PRD_CATEGORY PC
+            ON PI.CATE_ID = PC.CATE_ID
+        WHERE 1=1
+        	<if test="prdId != null">
+        		AND PI.PRD_ID = #{prdId}
+        	</if>
+			<if test="cateId != null">
+				AND PI.CATE_ID = #{cateId}
+			</if>
+        	<if test="cateIds != null">
+        		AND PI.CATE_ID IN
+        		<foreach item="cateIds" collection="cateIds" open="(" separator="," close=")">
+        			#{cateIds}
+        		</foreach>
+        	</if>
+            <if test="prdName != null">
+            	AND PI.PRD_NAME LIKE CONCAT(#{prdName},'%')
+            </if>
+            <if test="price != null">
+            	AND PI.PRICE = #{price}
+            </if>
+            <if test="salePrice != null">
+            	AND PI.SALE_PRICE = #{salePrice}
+            </if>
+            <if test="comp != null">
+            	AND PI.COMP = #{comp}
+            </if>
+            <if test="statusType != null">
+            	AND PI.STATUS_TYPE = #{statusType}
+            </if>
+            <if test="registerDate != null">
+            	AND PI.REGISTER_DATE = #{registerDate}
+            </if>
+            <if test="cateName != null">
+            	AND PC.CATE_NAME = #{cateName}
+            </if>
+            <if test="sortTree != null">
+            	AND PC.SORT_TREE LIKE CONCAT(#{sortTree},'%')
+            </if>
+    </sql>
+
+    <sql id="getBestProductInfoListWhere">
+        FROM
+            PRD_INFO PI INNER JOIN PRD_CATEGORY PC
+            ON PI.CATE_ID = PC.CATE_ID LEFT JOIN PRD_STATISTICS PS
+            ON PI.PRD_ID = PS.PRD_ID
+        WHERE 1=1
+            <if test="prdId != null">
+        		AND PI.PRD_ID = #{prdId}
+        	</if>
+			<if test="cateId != null">
+				AND PI.CATE_ID = #{cateId}
+			</if>
+			<if test="prdName != null">
+				AND PI.PRD_NAME LIKE CONCAT(#{prdName},'%')
+			</if>
+			<if test="price != null">
+				AND PI.PRICE = #{price}
+			</if>
+			<if test="salePrice != null">
+				AND PI.SALE_PRICE = #{salePrice}
+			</if>
+			<if test="comp != null">
+				AND PI.COMP = #{comp}
+			</if>
+			<if test="statusType != null">
+				AND PI.STATUS_TYPE = #{statusType}
+			</if>
+			<if test="registerDate != null">
+				AND PI.REGISTER_DATE = #{registerDate}
+			</if>
+			<if test="cateName != null">
+				AMD PC.CATE_NAME = #{cateName}
+			</if>
+			<if test="sortTree != null">
+				AND PC.SORT_TREE LIKE CONCAT(#{sortTree},'%')
+			</if>
+
+    </sql>
+
+    <select id="getProductInfoListCount" resultType="java.lang.Integer" parameterType="productSearchVO">
+        SELECT
+            COUNT(*) AS TOTAL_COUNT
+        <include refid="getProductInfoListWhere"/>
+    </select>
+
+    <select id="getProductInfoList" resultMap="productVOListResult" parameterType="productSearchVO">
+        SELECT
+            PI.PRD_ID,
+            PI.CATE_ID,
+            PI.PRD_NAME,
+            PI.UNIT,
+            PI.EXPIRATION_MONTH,
+            PI.PRICE,
+            PI.SALE_PRICE,
+            PI.COMP,
+            PI.COUNTRY,
+            PI.REGISTER_DATE,
+            PI.REGISTER_ID,
+            PI.REGISTER_IP,
+            PI.UPDATE_DATE,
+            PI.UPDATE_ID,
+            PI.UPDATE_IP,
+            PI.STATUS_TYPE,
+            PC.CATE_NAME
+        <include refid="getProductInfoListWhere"/>
+
+        <!-- Sorting -->
+        <choose>
+        	<when test="sortColumn == ''">
+				ORDER BY PI.PRD_ID ${sortValue}
+        	</when>
+        	<when test="sortColumn == 'CATE_ID'">
+        		ORDER BY PI.CATE_ID ${sortValue}
+        	</when>
+        	<when test="sortColumn == 'PRD_NAME'">
+        		ORDER BY PI.PRD_NAME ${sortValue}
+        	</when>
+			<when test="sortColumn == 'PRICE'">
+				ORDER BY PI.PRICE ${sortValue}
+			</when>
+			<when test="sortColumn == 'SALE_PRICE'">
+				ORDER BY PI.SALE_PRICE ${sortValue}
+			</when>
+			<when test="sortColumn == 'COMP'">
+				ORDER BY PI.COMP ${sortValue}
+			</when>
+			<when test="sortColumn == 'STATUS_TYPE'">
+				ORDER BY PI.STATUS_TYPE ${sortValue}
+			</when>
+			<when test="sortColumn == 'REGISTER_DATE'">
+				ORDER BY PI.REGISTER_DATE ${sortValue}
+			</when>
+        	<otherwise>
+        		ORDER BY PI.PRD_ID ${sortValue}
+        	</otherwise>
+        </choose>
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+    <select id="getBestProductInfoListCount" resultType="java.lang.Integer" parameterType="productSearchVO">
+        SELECT
+            COUNT(*) AS TOTAL_COUNT
+        <include refid="getBestProductInfoListWhere"/>
+    </select>
+
+    <select id="getBestProductInfoList" resultMap="bestProductVOListResult" parameterType="productSearchVO">
+        SELECT
+            PI.PRD_ID,
+            PI.CATE_ID,
+            PI.PRD_NAME,
+            PI.UNIT,
+            PI.EXPIRATION_MONTH,
+            PI.PRICE,
+            PI.SALE_PRICE,
+            PI.COMP,
+            PI.COUNTRY,
+            PI.REGISTER_DATE,
+            PI.REGISTER_ID,
+            PI.REGISTER_IP,
+            PI.UPDATE_DATE,
+            PI.UPDATE_ID,
+            PI.UPDATE_IP,
+            PI.STATUS_TYPE,
+            PS.STATISTICS_COUNT,
+            PC.CATE_NAME
+        <include refid="getBestProductInfoListWhere"/>
+
+        <!-- Sorting -->
+        <choose>
+        	<when test="sortColumn == ''">
+        		ORDER BY PI.CATE_ID ${sortValue}
+        	</when>
+        	<when test="sortColumn == 'PRD_NAME'">
+        		ORDER BY PI.PRD_NAME ${sortValue}
+        	</when>
+        	<when test="sortColumn == 'PRICE'">
+        		ORDER BY PI.PRICE ${sortValue}
+        	</when>
+			<when test="sortColumn == 'SALE_PRICE'">
+				ORDER BY PI.SALE_PRICE ${sortValue}
+			</when>
+			<when test="sortColumn == 'COMP'">
+				ORDER BY PI.COMP ${sortValue}
+			</when>
+			<when test="sortColumn == 'STATUS_TYPE'">
+				ORDER BY PI.STATUS_TYPE ${sortValue}
+			</when>
+			<when test="sortColumn == 'REGISTER_DATE'">
+				ORDER BY PI.REGISTER_DATE ${sortValue}
+			</when>
+			<when test="sortColumn == 'STATISTICS_COUNT'">
+				ORDER BY PS.STATISTICS_COUNT ${sortValue}
+			</when>
+        	<otherwise>
+        		ORDER BY PI.PRD_ID ${sortValue}
+        	</otherwise>
+        </choose>
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+    <select id="getProductInfo" resultMap="productVOResult" parameterType="productSearchVO">
+        SELECT
+            PI.PRD_ID,
+            PI.CATE_ID,
+            PI.PRD_NAME,
+            PI.UNIT,
+            PI.EXPIRATION_MONTH,
+            PI.PRICE,
+            PI.SALE_PRICE,
+            PI.COMP,
+            PI.COUNTRY,
+            PI.REGISTER_DATE,
+            PI.REGISTER_ID,
+            PI.REGISTER_IP,
+            PI.UPDATE_DATE,
+            PI.UPDATE_ID,
+            PI.UPDATE_IP,
+            PI.STATUS_TYPE
+        FROM
+            PRD_INFO PI
+            <if test="sortTree != null">
+            INNER JOIN PRD_CATEGORY PC ON PI.CATE_ID = PC.CATE_ID
+            </if>
+        WHERE 1=1
+        	<if test="prdId != null">
+        		AND PI.PRD_ID = #{prdId}
+        	</if>
+        	<if test="cateId != null">
+        		AND PI.CATE_ID = #{cateId}
+        	</if>
+        	<if test="prdName != null">
+        		AND PI.PRD_NAME = #{prdName}
+        	</if>
+        	<if test="price != null">
+        		AND PI.PRICE = #{price}
+        	</if>
+        	<if test="salePrice != null">
+        		AND PI.SALE_PRICE = #{salePrice}
+        	</if>
+        	<if test="comp != null">
+        		AND PI.COMP = #{comp}
+        	</if>
+        	<if test="sortTree != null">
+        		AND PC.SORT_TREE = #{sortTree}
+        	</if>        	
+        	<if test="statusType != null">
+        		AND PI.STATUS_TYPE = #{statusType}
+        	</if>
+        	<if test="registerDate != null">
+        		AND PI.REGISTER_DATE = #{registerDate}
+        	</if>
+
+    </select>
+
+    <select id="getProductCategoryList" resultMap="productNameVOResult" parameterType="productSearchVO">
+        SELECT
+            PRD_ID,
+            CATE_ID,
+            EXPIRATION_MONTH,
+            PRD_NAME,
+            PRICE,
+            SALE_PRICE,
+            STATUS_TYPE
+        FROM
+            PRD_INFO
+        WHERE 1=1
+        	<if test="cateId != null">
+        		AND CATE_ID = #{cateId}
+        	</if>
+            AND STATUS_TYPE = 2
+    </select>
+
+    <select id="getProductOnList" resultMap="productNameVOResult" parameterType="productSearchVO">
+        SELECT
+            t1.PRD_ID,
+            t1.CATE_ID,
+            t1.EXPIRATION_MONTH,
+            t1.PRD_NAME,
+            t1.PRICE,
+            t1.SALE_PRICE,
+            t1.STATUS_TYPE
+        FROM
+            PRD_INFO t1
+            LEFT OUTER JOIN
+            (
+            	select
+            		PRD_ID,
+            		COUNT(LICENSE_CODE) totalcount
+            	FROM PRD_LICENSE
+            	WHERE
+            		LICENSE_PUBLISH_TYPE = '1'
+            	GROUP BY PRD_ID
+            )
+            t2 on t1.PRD_ID = t2.PRD_ID
+        WHERE 1=1
+        	<if test="cateId != null">
+        		AND CATE_ID = #{cateId}
+        	</if>
+            AND t1.STATUS_TYPE = 2
+            AND totalcount &gt; 0
+    </select>
+
+    <select id="getProductContentsList" resultMap="productContentsVOResult" parameterType="productVO">
+        SELECT
+            PRD_CON_ID,
+            PRD_ID,
+            CONTENTS,
+            REGISTER_DATE,
+            UPDATE_DATE
+        FROM
+            PRD_CONTENTS
+        WHERE
+            PRD_ID = #{prdId}
+    </select>
+
+    <select id="getProductAttachementList" resultMap="productAttachementVOResult" parameterType="productVO">
+        SELECT
+            PRD_ATTA_ID,
+            PRD_ID,
+            IMAGE_TYPE,
+            FILE_TYPE,
+            CONTENT_TYPE,
+            FILE_NAME,
+            FILE_PATH,
+            FILE_SIZE,
+            IMAGE_WIDTH,
+            IMAGE_HEIGHT,
+            DISPLAY_NAME,
+            DOWNLOAD_COUNT,
+            REGISTER_DATE,
+            UPDATE_DATE
+        FROM
+            PRD_ATTACHEMENT
+        WHERE
+            PRD_ID = #{prdId}
+    </select>
+
+    <insert id="insertProductInfo" parameterType="productVO">
+        INSERT INTO PRD_INFO (
+            CATE_ID,
+            PRD_NAME,
+            UNIT,
+            EXPIRATION_MONTH,
+            PRICE,
+            SALE_PRICE,
+            COMP,
+            COUNTRY,
+            REGISTER_DATE,
+            REGISTER_ID,
+            REGISTER_IP,
+            STATUS_TYPE
+        )VALUES(
+            #{cateId},
+            #{prdName},
+            #{unit},
+            #{expirationMonth},
+            #{price},
+            #{salePrice},
+            #{comp},
+            #{country},
+            NOW(),
+            #{registerId},
+            #{registerIp},
+            #{statusType}
+        )
+       <selectKey resultType="java.lang.String" keyProperty="prdId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <insert id="insertProductContents" parameterType="productContentsVO">
+        INSERT INTO PRD_CONTENTS (
+            PRD_ID,
+            CONTENTS,
+            REGISTER_DATE
+        )VALUES(
+            #{prdId},
+            #{contents},
+            NOW()
+        )
+    </insert>
+
+    <insert id="insertProductAttachement" parameterType="productAttachementVO">
+        INSERT INTO PRD_ATTACHEMENT (
+            PRD_ID,
+            IMAGE_TYPE,
+            FILE_TYPE,
+            CONTENT_TYPE,
+            FILE_NAME,
+            FILE_PATH,
+            FILE_SIZE,
+            IMAGE_WIDTH,
+            IMAGE_HEIGHT,
+            DISPLAY_NAME,
+            DOWNLOAD_COUNT,
+            REGISTER_DATE
+        )VALUES(
+            #{prdId},
+            #{imageType},
+            #{fileType},
+            #{contentType},
+            #{fileName},
+            #{filePath},
+            #{fileSize},
+            #{imageWidth},
+            #{imageHeight},
+            #{displayName},
+            #{downLoadCount},
+            NOW()
+        )
+    </insert>
+
+    <update id="updateProductInfo" parameterType="productVO">
+        UPDATE
+            PRD_INFO
+        SET
+            CATE_ID = #{cateId},
+            PRD_NAME = #{prdName},
+            UNIT = #{unit},
+            EXPIRATION_MONTH = #{expirationMonth},
+            PRICE = #{price},
+            SALE_PRICE = #{salePrice},
+            COMP = #{comp},
+            COUNTRY = #{country},
+            UPDATE_DATE = NOW(),
+            UPDATE_ID = #{updateId},
+            UPDATE_IP = #{updateIp},
+            STATUS_TYPE = #{statusType}
+        WHERE
+            PRD_ID = #{prdId}
+    </update>
+
+    <update id="updateProductContents" parameterType="productContentsVO">
+        UPDATE
+            PRD_CONTENTS
+        SET
+            CONTENTS = #{contents},
+            UPDATE_DATE = NOW()
+        WHERE
+            PRD_CON_ID = #{prdConId}
+    </update>
+
+    <update id="updateProductAttachement" parameterType="productAttachementVO">
+        UPDATE
+            PRD_ATTACHEMENT
+        SET
+            IMAGE_TYPE = #{imageType},
+            FILE_TYPE = #{fileType},
+            CONTENT_TYPE =#{contentType},
+            FILE_NAME = #{fileName},
+            FILE_PATH = #{filePath},
+            FILE_SIZE = #{fileSize},
+            IMAGE_WIDTH = #{imageWidth},
+            IMAGE_HEIGHT = #{imageHeight},
+            DISPLAY_NAME = #{displayName},
+            DOWNLOAD_COUNT = #{downLoadCount},
+            UPDATE_DATE = NOW()
+        WHERE
+            PRD_ATTA_ID = #{prdAttaId}
+    </update>
+
+    <update id="updateProductStatus" parameterType="productVO">
+        UPDATE
+            PRD_INFO
+        SET
+            STATUS_TYPE = #{statusType},
+            UPDATE_DATE = NOW(),
+            UPDATE_ID = #{updateId},
+            UPDATE_IP = #{updateIp}
+        WHERE
+            PRD_ID = #{prdId}
+    </update>
+
+    <delete id="deleteProductInfo" parameterType="productVO">
+        DELETE
+        FROM
+            PRD_INFO
+        WHERE
+            PRD_ID = #{prdId}
+    </delete>
+
+    <delete id="deleteProductContents" parameterType="productContentsVO">
+        DELETE
+        FROM
+            PRD_CONTENTS
+        WHERE
+            PRD_CON_ID = #{prdConId}
+    </delete>
+
+    <delete id="deleteProductAttachement" parameterType="productAttachementVO">
+        DELETE
+        FROM
+            PRD_ATTACHEMENT
+        WHERE
+            PRD_ATTA_ID = #{prdAttaId}
+    </delete>
+
+</mapper>
+

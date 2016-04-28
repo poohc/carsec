@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko"  xml:lang="ko">
+<meta http-equiv="Content-Type" Content="text/html; charset=utf-8" />
+<head>
+ <title>11월 오픈 안내</title> 
+  
+ <style type="text/css">
+body {
+	background-image: url(open_popup.png);
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background-repeat: no-repeat;
+}
+</style>
+ 
+ <script language="JavaScript">
+ <!-- 
+function notice_setCookie( name, value, expiredays )
+     {
+         var todayDate = new Date();
+         todayDate.setDate( todayDate.getDate() + expiredays );
+         document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+         }
+
+function notice_closeWin() 
+ { 
+         if ( document.forms[0].Notice.checked ) 
+                 notice_setCookie( "Notice", "done" , 1); // 1=하룻동안 공지창 열지 않음
+        self.close(); 
+ }
+ function na_call(str){  eval(str);}
+ //-->
+ </script>
+ </head> 
+ <body> 
+ 
+ <form name="form1">
+ <input type="checkbox" name="Notice"  OnClick="notice_closeWin()">
+ <span style="color: #F9F8F8">오늘은 이창을 다시 열지않음
+ </span>
+ </form>
+
+</body>
+ </html>

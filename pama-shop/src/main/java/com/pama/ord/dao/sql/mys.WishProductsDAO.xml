@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.ord.dao.WishProductsDAO">
+
+    <resultMap id="wishProductsVOResult" type="com.pama.ord.vo.WishProductsVO">
+        <result property="prdId" column="PRD_ID"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="wishNid" column="WISH_NID"/>
+    </resultMap>
+    <select id="getWishProductsList" resultMap="wishProductsVOResult" parameterType="com.pama.ord.vo.WishProductsVO">
+        SELECT
+            PRD_ID,
+            REGISTER_DATE,
+            REGISTER_IP,
+            WISH_NID
+        FROM ORD_WISH_PRODUCTS
+        <!--  WHERE  -->
+    </select>
+
+    <insert id="insertWishProducts" parameterType="com.pama.ord.vo.WishProductsVO">
+        INSERT INTO ORD_WISH_PRODUCTS (
+            WISH_NID
+            ,PRD_ID
+            ,REGISTER_DATE
+            ,REGISTER_IP
+        ) VALUES (
+            #{wishNid}
+            ,#{prdId}
+            ,NOW()
+            ,#{registerIp}
+        )
+       <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+       </selectKey>
+    </insert>
+
+    <delete id="removeWishProducts" parameterType="com.pama.ord.vo.WishProductsVO">
+         DELETE FROM ORD_WISH_PRODUCTS
+         WHERE WISH_NID = #{wishNid}
+    </delete>
+
+</mapper>

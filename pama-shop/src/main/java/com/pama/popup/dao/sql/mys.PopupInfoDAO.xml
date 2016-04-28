@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.popup.dao.PopupInfoDAO">
+
+	<select id="popupInfoList" resultType="com.pama.popup.vo.PopupInfoVO" parameterType="com.pama.popup.vo.PopupSearchVO">
+		SELECT 
+		    POPUP_ID as popupId,
+			POPUP_TITLE as popupTitle,
+			STATUS_TYPE as statusType,
+			POPUP_START_DATE as popupStartDate,
+			POPUP_END_DATE as popupEndDate,
+			REGISTER_DATE as registerDate 
+		FROM
+			POPUP_INFO
+		WHERE STATUS_TYPE &lt;&gt; 0
+		LIMIT #{startIndex}, #{row}
+	</select>
+	
+	<select id="popupInfoListTotalCount" resultType="java.lang.Integer" parameterType="com.pama.popup.vo.PopupSearchVO">
+		SELECT 
+		 COUNT(*) AS totalCount
+		FROM
+			POPUP_INFO
+		WHERE STATUS_TYPE &lt;&gt; 0
+		
+	</select>
+    
+</mapper>

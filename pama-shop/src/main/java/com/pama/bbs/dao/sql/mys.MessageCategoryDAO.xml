@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.bbs.dao.MessageCategoryDAO">
+
+    <!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="messageCategorySearchVO">
+        SELECT COUNT(MESSAGE_CATEGORY_ID) AS TOTAL_COUNT
+        FROM BBS_MESSAGE_CATEGORY
+        WHERE BOARD_ID = #{boardId}
+    </select>
+
+     <resultMap id="getMessageCategoryResult" type="com.pama.bbs.vo.MessageCategoryVO">
+        <id property="messageCategoryId" column="MESSAGE_CATEGORY_ID"/>
+        <result property="parentMessageCategoryId" column="PARENT_MESSAGE_CATEGORY_ID"/>
+        <result property="boardId" column="BOARD_ID"/>
+        <result property="messageCategoryName" column="MESSAGE_CATEGORY_NAME"/>
+        <result property="sortTree" column="SORT_TREE"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+    </resultMap>
+    <select id="getMessageCategoryList" parameterType="java.lang.String" resultMap="getMessageCategoryResult">
+        SELECT
+            MESSAGE_CATEGORY_ID,
+            PARENT_MESSAGE_CATEGORY_ID,
+            IFNULL(BOARD_ID,0) BOARD_ID,
+            MESSAGE_CATEGORY_NAME,
+            SORT_TREE,
+            STATUS_TYPE
+        FROM BBS_MESSAGE_CATEGORY
+        WHERE BOARD_ID = #{boardId}
+        ORDER BY SORT_TREE ASC, REGISTER_DATE ASC
+    </select>
+
+    <select id="getMessageCategory" parameterType="java.lang.Integer" resultMap="getMessageCategoryResult">
+        SELECT
+			MESSAGE_CATEGORY_ID,
+			PARENT_MESSAGE_CATEGORY_ID,
+			IFNULL(BOARD_ID,0) BOARD_ID,
+			MESSAGE_CATEGORY_NAME,
+			SORT_TREE,
+			MESSAGE_CATEGORY_LEVEL,
+			STATUS_TYPE,
+			REGISTER_ID,
+			REGISTER_DATE
+        FROM BBS_MESSAGE_CATEGORY
+        WHERE MESSAGE_CATEGORY_ID = #{messageCategoryId}
+    </select>
+
+    <insert id="insertMessageCategory" parameterType="com.pama.bbs.vo.MessageCategoryVO" useGeneratedKeys="true" keyProperty="messageCategoryId">
+        INSERT INTO BBS_MESSAGE_CATEGORY (
+			PARENT_MESSAGE_CATEGORY_ID,
+			BOARD_ID,
+			MESSAGE_CATEGORY_LEVEL,
+			MESSAGE_CATEGORY_NAME,
+			STATUS_TYPE,
+			REGISTER_ID,
+			REGISTER_IP,
+			REGISTER_DATE,
+			UPDATE_ID,
+			UPDATE_IP,
+			UPDATE_DATE
+        ) VALUES (
+            #{parentMessageCategoryId},
+            #{boardId},
+            #{messageCategoryLevel},
+			#{messageCategoryName},
+			'1',
+            #{registerId},
+            #{registerIp},
+            NOW(),
+            #{updateId},
+            #{updateIp},
+            NOW()
+         )
+        <selectKey keyProperty="messageCategoryId" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateMessageCategory" parameterType="com.pama.bbs.vo.MessageCategoryVO">
+        UPDATE BBS_MESSAGE_CATEGORY
+        SET
+            MESSAGE_CATEGORY_NAME = #{messageCategoryName},
+			UPDATE_ID			  = #{updateId},
+			UPDATE_DATE			  = NOW()
+        WHERE  MESSAGE_CATEGORY_ID   = #{messageCategoryId}
+    </update>
+
+    <!-- 같은  soreTREE에서  -->
+    <update id="updateVideoCategorySortTree" parameterType="com.pama.bbs.vo.MessageCategoryVO">
+        UPDATE BBS_MESSAGE_CATEGORY SET
+        SORT_TREE = #{sortTree},
+        MESSAGE_CATEGORY_LEVEL = #{messageCategoryLevel}
+        WHERE MESSAGE_CATEGORY_ID = #{messageCategoryId}
+    </update>
+
+    <!-- 부모는 삭제안함 현재 2뎁스만 사용가능하게 한다. -->
+    <update id="deleteVideoCategory" parameterType="java.lang.Integer">
+        DELETE FROM BBS_MESSAGE_CATEGORY
+        WHERE MESSAGE_CATEGORY_ID = #{messageCategoryId}
+    </update>
+
+</mapper>

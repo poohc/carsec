@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.prd.dao.ProductLicenseDAO">
+
+    <resultMap id="productLicenseVOResult" type="productLicenseVO">
+        <id property="prdLicenseId" column="PRD_LICENSE_ID"/>
+        <result property="cateId" column="CATE_ID"/>
+        <result property="prdId" column="PRD_ID"/>
+        <result property="prdName" column="PRD_NAME"/>
+        <result property="licenseCode" column="LICENSE_CODE"/>
+        <result property="publishDate" column="PUBLISH_DATE"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="licensePublishType" column="LICENSE_PUBLISH_TYPE"/>
+    </resultMap>
+
+    <resultMap id="productLicense1VOResult" type="productLicenseVO">
+        <id property="prdLicenseId" column="PRD_LICENSE_ID"/>
+        <result property="cateId" column="CATE_ID"/>
+        <result property="cateName" column="CATE_NAME"/>
+        <result property="prdId" column="PRD_ID"/>
+        <result property="prdName" column="PRD_NAME"/>
+        <result property="licenseCode" column="LICENSE_CODE"/>
+        <result property="publishDate" column="PUBLISH_DATE"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="licensePublishType" column="LICENSE_PUBLISH_TYPE"/>
+    </resultMap>
+
+    <resultMap id="productLicenseVOListResult" extends="productLicenseVOResult" type="productLicenseVO">
+        <result property="cateName" column="CATE_NAME"/>
+    </resultMap>
+
+    <sql id="getProductLicenseListWhere">
+        FROM
+            PRD_LICENSE t1
+            	LEFT OUTER JOIN PRD_INFO t2 on t1.PRD_ID = t2.PRD_ID
+            	LEFT OUTER JOIN PRD_CATEGORY t3 on t3.CATE_ID = t2.CATE_ID
+            	LEFT OUTER JOIN ORD_PRODUCTS t4 on t4.LICENSE_CODE = t1.LICENSE_CODE
+        WHERE
+            1=1
+            <if test="prdId != null">
+            	AND t1.PRD_ID = #{prdId}
+            </if>
+            <if test="prdName != null">
+            	AND t2.PRD_NAME LIKE CONCAT(#{prdName},'%')
+            </if>
+            <if test="licenseCode != null">
+            	AND t1.LICENSE_CODE = #{licenseCode}
+            </if>
+            <choose>
+            	<when test="licensePublishType != null">
+            		AND t1.LICENSE_PUBLISH_TYPE = #{licensePublishType}
+            	</when>
+            	<otherwise>
+            		AND t1.LICENSE_PUBLISH_TYPE &gt; 0
+            	</otherwise>
+            </choose>
+    </sql>
+
+    <select id="getProductLicenseListCount" resultType="java.lang.Integer" parameterType="productLicenseSearchVO">
+        SELECT
+            COUNT(t1.PRD_LICENSE_ID) AS TOTAL_COUNT
+        <include refid="getProductLicenseListWhere"/>
+    </select>
+
+    <select id="getProductLicenseList" resultMap="productLicenseVOListResult" parameterType="productLicenseSearchVO">
+        SELECT
+            t1.PRD_LICENSE_ID,
+            t2.CATE_ID,
+            t3.CATE_NAME,
+            t1.PRD_ID,
+            t2.PRD_NAME,
+            t1.LICENSE_CODE,
+            t1.PUBLISH_DATE,
+            t1.REGISTER_DATE,
+            t1.REGISTER_ID,
+            t1.UPDATE_DATE,
+            t1.UPDATE_ID,
+			case when t4.LICENSE_CODE is null then t1.LICENSE_PUBLISH_TYPE else
+				case when DATE_FORMAT(t4.END_DATE, '%Y%m%d') &gt;= DATE_FORMAT(NOW(), '%Y%m%d') then t1.LICENSE_PUBLISH_TYPE else
+				'3' end end LICENSE_PUBLISH_TYPE
+		<include refid="getProductLicenseListWhere"/>
+        <!-- Sorting -->
+        <choose>
+        	<when test="sortColumn == ''">
+        		ORDER BY PRD_LICENSE_ID DESC
+        	</when>
+        	<when test="sortColumn == 'prdName'">
+        		ORDER BY t2.PRD_NAME ${sortValue}
+        	</when>
+        	<when test="sortColumn == 'licenseCode'">
+        		ORDER BY t1.LICENSE_CODE ${sortValue}
+        	</when>
+			<when test="sortColumn == 'publishDate'">
+				ORDER BY t1.PUBLISH_DATE ${sortValue}
+			</when>
+			<when test="sortColumn == 'registerDate'">
+				ORDER BY t1.REGISTER_DATE ${sortValue}
+			</when>
+			<when test="sortColumn == 'licensePublishType'">
+				ORDER BY t1.LICENSE_PUBLISH_TYPE ${sortValue}
+			</when>
+        	<otherwise>
+        		ORDER BY PRD_LICENSE_ID DESC
+        	</otherwise>
+        </choose>
+
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+    <select id="getProductLicense" resultMap="productLicense1VOResult" parameterType="productLicenseSearchVO">
+        SELECT
+            t1.PRD_LICENSE_ID,
+            t2.CATE_ID,
+            t3.CATE_NAME,
+            t1.PRD_ID,
+            t2.PRD_NAME,
+            t1.LICENSE_CODE,
+            t1.PUBLISH_DATE,
+            t1.REGISTER_DATE,
+            t1.REGISTER_ID,
+            t1.UPDATE_DATE,
+            t1.UPDATE_ID,
+			t1.LICENSE_PUBLISH_TYPE
+        FROM
+            PRD_LICENSE t1
+            	LEFT OUTER JOIN PRD_INFO t2 on t1.PRD_ID = t2.PRD_ID
+            	LEFT OUTER JOIN PRD_CATEGORY t3 on t3.CATE_ID = t2.CATE_ID
+        WHERE 1=1
+        	<if test="prdLicenseId != null">
+        		AND t1.PRD_LICENSE_ID = #{prdLicenseId}
+        	</if>
+        	<if test="prdId != null">
+        		AND t1.PRD_ID = #{prdId}
+        	</if>
+        	<if test="prdName != null">
+        		AND t2.PRD_NAME = #{prdName}
+        	</if>
+        	<if test="licenseCode != null">
+        		AND t1.LICENSE_CODE = #{licenseCode}
+        	</if>
+    </select>
+
+    <select id="getProductLicensePublish" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT
+               LICENSE_CODE
+        FROM (
+	        SELECT
+				PRD_LICENSE_ID, LICENSE_CODE
+	        FROM
+	            PRD_LICENSE
+	        WHERE 1=1
+	            AND PRD_ID = #{prdId}
+	            AND LICENSE_PUBLISH_TYPE = '1'
+          	ORDER BY PRD_LICENSE_ID ASC
+          	LIMIT 1
+		) t1
+    </select>
+
+    <insert id="insertProductLicense" parameterType="productLicenseVO">
+        INSERT INTO PRD_LICENSE (
+            PRD_ID,
+            LICENSE_CODE,
+            REGISTER_DATE,
+            REGISTER_ID,
+            UPDATE_DATE,
+            UPDATE_ID,
+			LICENSE_PUBLISH_TYPE
+        )VALUES(
+            #{prdId},
+            #{licenseCode},
+            NOW(),
+            #{registerId},
+            NOW(),
+            #{updateId},
+            #{licensePublishType}
+        )
+       <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateProductLicense" parameterType="productLicenseVO">
+        UPDATE
+            PRD_LICENSE
+        SET
+        	PRD_ID = #{prdId},
+            LICENSE_CODE = #{licenseCode},
+            UPDATE_DATE = NOW(),
+            UPDATE_ID = #{updateId}
+        WHERE
+            PRD_LICENSE_ID = #{prdLicenseId}
+    </update>
+
+    <update id="updateProductLicensePublish" parameterType="productLicenseVO">
+        UPDATE
+            PRD_LICENSE
+        SET
+            PUBLISH_DATE = NOW(),
+            LICENSE_PUBLISH_TYPE = #{licensePublishType}
+        WHERE
+            LICENSE_CODE = #{licenseCode}
+    </update>
+
+    <update id="updateProductLicenseStatus" parameterType="productLicenseVO">
+        UPDATE
+            PRD_LICENSE
+        SET
+            LICENSE_PUBLISH_TYPE = #{licensePublishType},
+            UPDATE_DATE = NOW(),
+            UPDATE_ID = #{updateId}
+        WHERE
+            PRD_LICENSE_ID = #{prdLicenseId}
+    </update>
+
+    <update id="updateSelectLicenseStatus" parameterType="com.pama.prd.vo.ProductLicenseFormVO">
+        UPDATE PRD_LICENSE SET
+        	LICENSE_PUBLISH_TYPE = 0,
+			UPDATE_DATE = NOW(),
+			UPDATE_ID = #{updateId}
+        <trim prefix="WHERE">
+        1=1
+        	<choose>
+        	<when test="checkedIds != null">
+        		AND PRD_LICENSE_ID IN
+        		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+        			#{checkedIds}
+        		</foreach>
+        	</when>
+        	<otherwise>
+        		AND PRD_LICENSE_ID = 0
+        	</otherwise>
+        	</choose>
+        </trim>
+    </update>
+
+</mapper>
+

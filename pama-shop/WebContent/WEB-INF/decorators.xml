@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<decorators defaultdir="/WEB-INF/jsp/decorators">
+    <!-- 주위 : 아래로 갈수록 우선순위 -->
+
+    <decorator name="frontMain" page="front_main.jsp">
+        <pattern>/web/main.do</pattern>
+    </decorator>
+
+    <decorator name="frontMain" page="front_main.jsp">
+        <pattern>/main/main.do</pattern>
+    </decorator>
+
+	<!-- 서비스  -->
+    <decorator name="frontSubService" page="front_sub_service.jsp">
+        <pattern>/check*/*.do</pattern>
+        <pattern>/bbs/company3*/*.do</pattern>
+        <pattern>/bbs/caritemmap*/*.do</pattern>
+    </decorator>
+
+	<!-- 정보도서관  -->
+    <decorator name="frontSubLib" page="front_sub_lib.jsp">
+        <pattern>/bbs/freeboard*/*.do</pattern>
+        <pattern>/bbs/accident*/*.do</pattern>
+        <pattern>/bbs/carnews*/*.do</pattern>
+        <pattern>/bbs/recallnews*/*.do</pattern>
+        <pattern>/bbs/carcheck*/*.do</pattern>
+        <pattern>/bbs/trafficlaw*/*.do</pattern>
+        <pattern>/bbs/drivecourse*/*.do</pattern>
+        <pattern>/bbs/carnpeople*/*.do</pattern>
+    </decorator>
+
+    <!-- 에이전트 -->
+    <decorator name="frontSubAgent" page="front_sub_agent.jsp">
+        <pattern>/bbs/recruit2*/*.do</pattern>
+        <pattern>/bbs/resumes*/*.do</pattern>
+        <pattern>/bbs/usedcarmarket*/*.do</pattern>
+    </decorator>
+
+    <!-- 메카닉 -->
+    <decorator name="frontSubMec" page="front_sub_mec.jsp">
+        <pattern>/bbs/newcar*/*.do</pattern>
+        <pattern>/bbs/newtech*/*.do</pattern>
+        <pattern>/bbs/maintennace*/*.do</pattern>
+        <pattern>/bbs/recruit*/*.do</pattern>
+        <pattern>/bbs/shopmarket*/*.do</pattern>
+        <pattern>/bbs/partsmarket*/*.do</pattern>
+        <pattern>/bbs/company1*/*.do</pattern>
+        <pattern>/bbs/company2*/*.do</pattern>
+        <pattern>/bbs/complain*/*.do</pattern>
+    </decorator>
+
+    <!-- 이벤트  -->
+    <decorator name="frontSubEvent" page="front_sub_event.jsp">
+        <pattern>/bbs/compareevent*/*.do</pattern>
+    </decorator>
+
+	<!-- 쿠폰쇼핑  -->
+    <decorator name="frontSubPrd" page="front_sub_prd.jsp">
+        <pattern>/prd*/*.do</pattern>
+        <pattern>/ord*/*.do</pattern>
+    </decorator>
+
+
+	<decorator name="frontSubCustomer" page="front_sub_customer.jsp">
+		<pattern>/web/customer*/*.do</pattern>
+    	<pattern>/bbs/notice*/*.do</pattern>
+    	<pattern>/bbs/usereviews*/*.do</pattern>
+	</decorator>
+
+	<decorator name="frontSubEtc" page="front_sub_etc.jsp">
+		<pattern>/web/etc*/*.do</pattern>
+	</decorator>
+
+    <decorator name="frontSubEtc2" page="front_sub_etc2.jsp">
+        <pattern>/mbr/*.do</pattern>
+        <pattern>/mbr/info/*.do</pattern>
+        <pattern>/mbr/mypage/*.do</pattern>
+        <pattern>/estimate*/*.do</pattern>
+        <pattern>/coupon*/*.do</pattern>
+        <pattern>/bbs/qna*/*.do</pattern>
+        <pattern>/login/*.do</pattern>
+    </decorator>
+
+    <decorator name="frontPopup" page="front_popup.jsp">
+        <pattern>/web/popup/*.do</pattern>
+    </decorator>
+
+    <decorator name="frontSub" page="front_sub.jsp">
+        <pattern>/web/sub*/*.do</pattern>
+    </decorator>
+
+
+     <decorator name="admin" page="admin.jsp">
+        <pattern>/admin/*.do</pattern>
+    </decorator>
+
+    <decorator name="adminLogin" page="admin_login.jsp">
+        <pattern>/admin/login*.do</pattern>
+    </decorator>
+
+    <decorator name="panel" page="panel.jsp"/>
+
+    <excludes>
+        <pattern>/index.jsp</pattern>
+        <pattern>/up.jsp</pattern>
+        <pattern>/exclude.jsp</pattern>
+        <pattern>/exclude/*</pattern>
+        <pattern>/test/*</pattern>
+        <pattern>/mbr/accountSearchPwd.do</pattern>
+        <pattern>/admin/mbr/accountRemoveForm.do</pattern>
+        <pattern>*/excel/*</pattern>
+    </excludes>
+
+</decorators>

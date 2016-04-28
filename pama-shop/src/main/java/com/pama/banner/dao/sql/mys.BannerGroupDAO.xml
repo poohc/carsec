@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.banner.dao.BannerGroupDAO">
+
+    <!-- 목록에 대한 검색조건은 같은걸로 사용 -->
+    <sql id="getListWhere">
+    	<trim prefix="WHERE" >
+    		1=1
+    		<choose>
+	        	<when test="statusType == null">
+	        		AND STATUS_TYPE &lt;&gt; 0
+	        	</when>
+	        	<otherwise>
+	        		AND STATUS_TYPE = #{statusType}
+	        	</otherwise>
+	        </choose>
+
+	        <!-- select box로 검색할경우 -->
+	        <if test="searchValue != null">
+	        	<if test="searchColumn == 'compyName'">
+	        		AND INSTR(LOWER(COMPY_NAME),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        </if>
+		</trim>
+    </sql>
+
+    <!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="bannerSearchVO">
+        SELECT COUNT(BANNER_GROUP_ID) AS TOTAL_COUNT
+        FROM BANNER_GROUP
+        <include refid="getListWhere"/>
+    </select>
+
+	<resultMap id="bannerGroupResult" type="com.pama.banner.vo.BannerGroupVO">
+		<id property="bannerGroupId" column="BANNER_GROUP_ID"/>
+		<result property="compyName" column="COMPY_NAME"/>
+		<result property="personName" column="PERSON_NAME"/>
+		<result property="personEmail" column="PERSON_EMAIL"/>
+		<result property="personTel" column="PERSON_TEL"/>
+		<result property="registerDate" column="REGISTER_DATE"/>
+		<result property="registerId" column="REGISTER_ID"/>
+		<result property="registerIp" column="REGISTER_IP"/>
+		<result property="statusType" column="STATUS_TYPE"/>
+	</resultMap>
+
+    <!-- 조회:목록 -->
+    <select id="getBannerGroupList" resultMap="bannerGroupResult" parameterType="bannerSearchVO">
+        SELECT
+			BANNER_GROUP_ID,
+			COMPY_NAME,
+			PERSON_NAME,
+			PERSON_EMAIL,
+			PERSON_TEL,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP,
+			STATUS_TYPE
+        FROM BANNER_GROUP
+        <include refid="getListWhere"/>
+        <!-- Sorting -->
+	    <choose>
+	      <when test="sortColumn != null">
+	      	<choose>
+	      		<when test="sortColumn == 'registerDate'">
+	      			ORDER BY REGISTER_DATE ${sortValue}
+	      		</when>
+	      		<when test="sortColumn == 'compyName'">
+	      			ORDER BY COMPY_NAME ${sortValue}
+	      		</when>
+	      	</choose>
+	      </when>
+	      <otherwise>
+	      		ORDER BY REGISTER_DATE DESC
+	      </otherwise>
+	    </choose>
+		LIMIT #{startIndex}, #{row}
+    </select>
+
+	<select id="getBannerGroup" resultMap="bannerGroupResult">
+		SELECT
+			BANNER_GROUP_ID,
+			COMPY_NAME,
+			PERSON_NAME,
+			PERSON_EMAIL,
+			PERSON_TEL,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP,
+			STATUS_TYPE
+		FROM BANNER_GROUP
+		<trim prefix="WHERE" >
+	    	1=1
+    		<choose>
+	        	<when test="statusType == null">
+	        		AND STATUS_TYPE &lt;&gt; 0
+	        	</when>
+	        	<otherwise>
+	        		AND STATUS_TYPE = #{statusType}
+	        	</otherwise>
+	    	</choose>
+	    	AND BANNER_GROUP_ID = #{bannerGroupId}
+	    </trim>
+    </select>
+
+	<insert id="insertBannerGroup" parameterType="com.pama.banner.vo.BannerGroupVO" useGeneratedKeys="true" keyProperty="bannerGroupId">
+        INSERT INTO BANNER_GROUP (
+			COMPY_NAME,
+			PERSON_NAME,
+			PERSON_EMAIL,
+			PERSON_TEL,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP,
+			UPDATE_DATE,
+			UPDATE_ID,
+			UPDATE_IP,
+			STATUS_TYPE
+        ) VALUES (
+        	#{compyName},
+        	#{personName},
+        	#{personEmail},
+        	#{personTel},
+        	NOW(),
+        	#{registerId},
+        	#{registerIp},
+        	NOW(),
+        	#{updateId},
+        	#{updateIp},
+        	#{statusType}
+        )
+        <selectKey keyProperty="bannerGroupId" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+
+	<update id="updateBannerGroup" parameterType="com.pama.banner.vo.BannerGroupVO">
+		UPDATE BANNER_GROUP SET
+			COMPY_NAME = #{compyName},
+			PERSON_NAME = #{personName},
+			PERSON_EMAIL = #{personEmail},
+			PERSON_TEL = #{personTel},
+			UPDATE_DATE = NOW(),
+			UPDATE_ID = #{updateId},
+			UPDATE_IP = #{updateIp},
+			STATUS_TYPE = #{statusType}
+		WHERE BANNER_GROUP_ID = #{bannerGroupId}
+	</update>
+
+	<update id="updateBannerGroupRemove" parameterType="com.pama.banner.vo.BannerGroupVO">
+        UPDATE BANNER_GROUP SET
+			UPDATE_DATE = NOW(),
+			UPDATE_ID = #{updateId},
+			UPDATE_IP = #{updateIp},
+            STATUS_TYPE = '0'
+        WHERE  BANNER_GROUP_ID = #{bannerGroupId}
+	</update>
+
+	<update id="updateSelectBannerGroupRemove" parameterType="com.pama.banner.vo.BannerFormVO">
+        UPDATE BANNER_GROUP SET
+			UPDATE_DATE = NOW(),
+			UPDATE_ID = #{updateId},
+			UPDATE_IP = #{updateIp},
+        	STATUS_TYPE = '0'
+        <trim prefix="WHERE">
+        1=1
+        	<choose>
+        	<when test="checkedIds != null">
+        		AND BANNER_GROUP_ID IN
+        		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+        			#{checkedIds}
+        		</foreach>
+        	</when>
+        	<otherwise>
+        		AND BANNER_GROUP_ID = 0
+        	</otherwise>
+        	</choose>
+        </trim>
+    </update>
+
+</mapper>

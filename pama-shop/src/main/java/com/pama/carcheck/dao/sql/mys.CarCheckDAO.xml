@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.carcheck.dao.CarCheckDAO">
+
+    <select id="getCarCheckFirstList" resultType="com.pama.carcheck.vo.CarCheckVO" parameterType="com.pama.carcheck.vo.CarCheckVO">
+         SELECT
+	          GCODE as gcode,
+	          QCODE as qcode,
+	          QCODE_TITLE as qcodeTitle,
+	          GCODE_TITLE as gcodeTitle,
+	          RIGHT(QCODE,1) as gcodeType,
+	          LENGTH(QCODE) - LENGTH(REPLACE(QCODE,'Q','')) as qtypeLength,
+	          LENGTH(QCODE) as qcodeLength,
+	          LENGTH(QCODE)+1 as qcodeNextLength,
+	          IF(RIGHT(QCODE,1)='F','Y','N') qcodeFinalYN
+         FROM CAR_CHECK
+         WHERE QCODE= 'Q'
+    </select>
+
+    <select id="getCarCheckGcodeTotalCount" resultType="int" parameterType="com.pama.carcheck.vo.CarCheckVO">
+        SELECT COUNT(TA.qcodeLength) AS totalCount FROM (
+   			SELECT LENGTH(qcode) as qcodeLength
+	         FROM CAR_CHECK
+	        WHERE
+	        GCODE=#{gcode}
+	        GROUP BY qcodeLength
+         ) TA
+    </select>
+
+    <select id="getCarCheckOne" resultType="com.pama.carcheck.vo.CarCheckVO" parameterType="com.pama.carcheck.vo.CarCheckVO">
+          SELECT
+	          GCODE as gcode,
+	          QCODE as qcode,
+	          QCODE_TITLE as qcodeTitle,
+	          GCODE_TITLE as gcodeTitle,
+	          RIGHT(QCODE,1) as gcodeType,
+	          LENGTH(QCODE) - LENGTH(REPLACE(QCODE,'Q','')) as qtypeLength,
+	          LENGTH(QCODE) as qcodeLength,
+	          LENGTH(QCODE)+1 as qcodeNextLength,
+	          IF(RIGHT(QCODE,1)='F','Y','N') qcodeFinalYN
+         FROM CAR_CHECK
+         WHERE
+         GCODE=#{gcode} AND  QCODE=#{qcode}
+    </select>
+
+
+     <select id="getCarCheckNextList" resultType="com.pama.carcheck.vo.CarCheckVO" parameterType="com.pama.carcheck.vo.CarCheckVO">
+	      SELECT
+	          GCODE as gcode,
+	          QCODE as qcode,
+	          QCODE_TITLE as qcodeTitle,
+	          GCODE_TITLE as gcodeTitle,
+	          RIGHT(QCODE,1) as gcodeType,
+	          LENGTH(QCODE) - LENGTH(REPLACE(QCODE,'Q','')) as qtypeLength,
+	          LENGTH(QCODE) as qcodeLength,
+	          LENGTH(QCODE)+1 as qcodeNextLength,
+	          IF(RIGHT(QCODE,1)='F','Y','N') qcodeFinalYN
+	      FROM CAR_CHECK
+	      WHERE
+			GCODE=#{gcode}
+			AND INSTR(QCODE,#{qcode}) &gt; 0
+			AND LENGTH(QCODE)=#{qcodeNextLength}
+    </select>
+
+</mapper>

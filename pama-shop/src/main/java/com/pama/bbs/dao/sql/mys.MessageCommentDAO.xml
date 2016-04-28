@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.bbs.dao.MessageCommentDAO">
+
+    <!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" parameterType="com.pama.bbs.vo.MessageCommentSearchVO" resultType="java.lang.Integer">
+        SELECT COUNT(*) AS TOTAL_COUNT
+        FROM BBS_MESSAGE_COMMENT
+        WHERE MESSAGE_ID = #{messageId}
+<!--         AND STATUS_TYPE &lt;&gt; 0 -->
+    </select>
+
+    <select id="getMessageCommentList" parameterType="com.pama.bbs.vo.MessageCommentSearchVO" resultType="com.pama.bbs.vo.MessageCommentVO">
+        SELECT
+            COMMENT_ID as commentId,
+            MESSAGE_ID as messageId,
+            TITLE as title,
+            COMMENTS as comments,
+            REGISTER_DATE as registerDate,
+            REGISTER_ID as registerId,
+            REGISTER_PWD as registerPwd,
+            REGISTER_NAME as registerName,
+            REGISTER_NICKNAME as registerNickname,
+            REGISTER_EMAIL as registerEmail,
+            REGISTER_IP as registerIp,
+            UPDATE_DATE as updateDate,
+            UPDATE_ID as updateId,
+            STATUS_TYPE as statusType,
+            SORT_TREE as sortTree,
+            RECOMMEND_COUNT as recommendCount
+        FROM BBS_MESSAGE_COMMENT
+        WHERE MESSAGE_ID = #{messageId}
+<!--         	AND STATUS_TYPE &lt;&gt; 0 -->
+<!--         ORDER BY COMMENT_ID DESC -->
+        ORDER BY SORT_TREE DESC
+    </select>
+
+
+	<select id="getMessageCommentEventList" parameterType="com.pama.bbs.vo.MessageCommentSearchVO" resultType="com.pama.bbs.vo.MessageCommentVO">
+        SELECT
+            COMMENT_ID as commentId,
+            MESSAGE_ID as messageId,
+            TITLE as title,
+            COMMENTS as comments,
+            REGISTER_DATE as registerDate,
+            REGISTER_ID as registerId,
+            REGISTER_PWD as registerPwd,
+            REGISTER_NAME as registerName,
+            REGISTER_NICKNAME as registerNickname,
+            REGISTER_EMAIL as registerEmail,
+            REGISTER_IP as registerIp,
+            UPDATE_DATE as updateDate,
+            UPDATE_ID as updateId,
+            STATUS_TYPE as statusType,
+            SORT_TREE as sortTree,
+            RECOMMEND_COUNT as recommendCount
+        FROM BBS_MESSAGE_COMMENT
+        WHERE MESSAGE_ID = #{messageId}
+        AND TITLE = #{title}
+        ORDER BY RECOMMEND_COUNT DESC
+    </select>
+
+    <select id="getMessageCommentRegisterIdCount" parameterType="com.pama.bbs.vo.MessageCommentSearchVO"  resultType="java.lang.Integer">
+    	SELECT
+    		COUNT(*)  as totalCount FROM BBS_MESSAGE_COMMENT
+    		 WHERE MESSAGE_ID = #{messageId} AND  REGISTER_ID = #{registerId}
+    </select>
+
+
+    <insert id="insertMessageComment" parameterType="com.pama.bbs.vo.MessageCommentFormVO" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO BBS_MESSAGE_COMMENT (
+			  MESSAGE_ID
+			  ,TITLE
+			  ,COMMENTS
+			  ,REGISTER_DATE
+			  ,REGISTER_ID
+			  ,REGISTER_PWD
+			  ,REGISTER_NAME
+			  ,REGISTER_NICKNAME
+			  ,REGISTER_EMAIL
+			  ,REGISTER_IP
+			  ,STATUS_TYPE
+			  ,SORT_TREE
+        ) VALUES (
+            	#{messageId}
+			  ,#{title}
+			  ,#{comments}
+			  ,now()
+			  ,#{registerId}
+			  ,#{registerPwd}
+			  ,#{registerName}
+			  ,#{registerNickname}
+			  ,#{registerEmail}
+			  ,#{registerIp}
+			  ,#{statusType}
+			  ,#{sortTree}
+         )
+        <selectKey keyProperty="commentId" resultType="java.lang.String" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateMessageCommentSortTree" parameterType="com.pama.bbs.vo.MessageCommentFormVO">
+    	UPDATE BBS_MESSAGE_COMMENT SET
+    		SORT_TREE 		= #{sortTree},
+			UPDATE_DATE 	= NOW()
+    	WHERE  COMMENT_ID = #{commentId}
+        AND MESSAGE_ID = #{messageId}
+    </update>
+
+    <update id="updateMessageCommentRecommendCount" parameterType="com.pama.bbs.vo.MessageCommentFormVO">
+    	UPDATE BBS_MESSAGE_COMMENT SET
+    		RECOMMEND_COUNT 	= IFNULL(RECOMMEND_COUNT,0)+1,
+			UPDATE_DATE 	= NOW()
+    	WHERE  COMMENT_ID = #{commentId}
+        AND MESSAGE_ID = #{messageId}
+    </update>
+
+    <delete id="deleteComment" parameterType="com.pama.bbs.vo.MessageCommentFormVO">
+        DELETE FROM BBS_MESSAGE_COMMENT
+        WHERE COMMENT_ID = #{commentId}
+        AND MESSAGE_ID = #{messageId}
+    </delete>
+
+    <delete id="deleteSelectComment" parameterType="com.pama.bbs.vo.MessageCommentFormVO">
+        DELETE FROM BBS_MESSAGE_COMMENT
+         WHERE MESSAGE_ID = #{messageId}
+        		AND COMMENT_ID IN
+	      		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+	      			#{checkedIds}
+	      		</foreach>
+    </delete>
+
+</mapper>

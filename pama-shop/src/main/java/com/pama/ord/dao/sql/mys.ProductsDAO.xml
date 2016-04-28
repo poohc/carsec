@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.ord.dao.ProductsDAO">
+
+    <resultMap id="productsVOResult" type="com.pama.ord.vo.ProductsVO">
+        <result property="opdRodId" column="OPD_ROD_ID"/>
+        <result property="ordId" column="ORD_ID"/>
+        <result property="prdId" column="PRD_ID"/>
+        <result property="prdName" column="PRD_NAME"/>
+        <result property="qty" column="QTY"/>
+        <result property="price" column="PRICE"/>
+        <result property="salePrice" column="SALE_PRICE"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="expirationMonth" column="EXPIRATION_MONTH"/>
+        <result property="licenseCode" column="LICENSE_CODE"/>
+        <result property="cateId" column="CATE_ID"/>
+        <result property="cateName" column="CATE_NAME"/>
+        <result property="fileName" column="FILE_NAME"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="lastName" column="LAST_NAME"/>
+        <result property="tel" column="TEL"/>
+        <result property="addr1" column="ADDR1"/>
+    </resultMap>
+    <select id="getProductsList" resultMap="productsVOResult" parameterType="com.pama.ord.vo.ProductsVO">
+        SELECT
+            OP.OPD_ROD_ID,
+            OP.ORD_ID,
+            OP.PRD_ID,
+            OP.PRD_NAME,
+            OP.QTY,
+            OP.PRICE,
+            OP.SALE_PRICE,
+            OP.START_DATE,
+            OP.END_DATE,
+            OP.EXPIRATION_MONTH,
+            OP.LICENSE_CODE,
+            PC.CATE_ID,
+            PC.CATE_NAME,
+            PA.FILE_NAME,
+            MA.FIRST_NAME,
+            MA.LAST_NAME,
+            MA.TEL,
+            MA.ADDR1
+        FROM ORD_PRODUCTS OP LEFT OUTER JOIN PRD_INFO PI on OP.PRD_ID = PI.PRD_ID
+        LEFT OUTER JOIN PRD_CATEGORY PC ON PI.CATE_ID = PC.CATE_ID
+        LEFT OUTER JOIN PRD_ATTACHEMENT PA on OP.PRD_ID = PA.PRD_ID AND PA.IMAGE_TYPE = '1'
+        LEFT OUTER JOIN MBR_ACCOUNT MA ON MA.MBR_ID = PI.COMP
+        WHERE OP.ORD_ID = #{ordId}
+    </select>
+
+    <select id="getLicenseListTotalCount" resultType="java.lang.Integer" parameterType="com.pama.ord.vo.ProductsVO">
+        SELECT
+            COUNT(OP.OPD_ROD_ID) AS TOTAL_COUNT
+        FROM ORD_PRODUCTS OP INNER JOIN ORD_INFO OI ON OP.ORD_ID = OI.ORD_ID
+        LEFT OUTER JOIN PRD_INFO PI on OP.PRD_ID = PI.PRD_ID
+        LEFT OUTER JOIN PRD_CATEGORY PC ON PI.CATE_ID = PC.CATE_ID
+        LEFT OUTER JOIN PRD_ATTACHEMENT PA on OP.PRD_ID = PA.PRD_ID AND PA.IMAGE_TYPE = '1'
+        WHERE OI.REGISTER_ID = #{registerId}
+          AND OI.STATUS_TYPE = '11'
+          AND DATE_FORMAT(OP.START_DATE, '%Y%m%d') &lt;= DATE_FORMAT(NOW(), '%Y%m%d')
+          AND DATE_FORMAT(OP.END_DATE, '%Y%m%d') &gt;= DATE_FORMAT(NOW(), '%Y%m%d')
+          AND OP.LICENSE_CODE is not null
+    </select>
+
+    <select id="getProductsLicenseList" resultMap="productsVOResult" parameterType="com.pama.ord.vo.ProductsVO">
+        SELECT
+            OP.OPD_ROD_ID,
+            OP.ORD_ID,
+            OP.PRD_ID,
+            OP.PRD_NAME,
+            OP.QTY,
+            OP.PRICE,
+            OP.SALE_PRICE,
+            OP.START_DATE,
+            OP.END_DATE,
+            OP.EXPIRATION_MONTH,
+            OP.LICENSE_CODE,
+            PI.PRICE,
+            PC.CATE_ID,
+            PC.CATE_NAME,
+            PA.FILE_NAME
+        FROM ORD_PRODUCTS OP INNER JOIN ORD_INFO OI ON OP.ORD_ID = OI.ORD_ID
+        LEFT OUTER JOIN PRD_INFO PI on OP.PRD_ID = PI.PRD_ID
+        LEFT OUTER JOIN PRD_CATEGORY PC ON PI.CATE_ID = PC.CATE_ID
+        LEFT OUTER JOIN PRD_ATTACHEMENT PA on OP.PRD_ID = PA.PRD_ID AND PA.IMAGE_TYPE = '1'
+        WHERE OI.REGISTER_ID = #{registerId}
+          AND OI.STATUS_TYPE = '11'
+          AND DATE_FORMAT(OP.START_DATE, '%Y%m%d') &lt;= DATE_FORMAT(NOW(), '%Y%m%d')
+          AND DATE_FORMAT(OP.END_DATE, '%Y%m%d') &gt;= DATE_FORMAT(NOW(), '%Y%m%d')
+          AND OP.LICENSE_CODE is not null
+    </select>
+
+    <resultMap id="productsLicenseVOResult" type="com.pama.ord.vo.ProductsVO">
+        <result property="opdRodId" column="OPD_ROD_ID"/>
+        <result property="ordId" column="ORD_ID"/>
+        <result property="prdId" column="PRD_ID"/>
+        <result property="prdName" column="PRD_NAME"/>
+        <result property="qty" column="QTY"/>
+        <result property="price" column="PRICE"/>
+        <result property="salePrice" column="SALE_PRICE"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="expirationMonth" column="EXPIRATION_MONTH"/>
+        <result property="licenseCode" column="LICENSE_CODE"/>
+        <result property="price" column="PRICE"/>
+        <result property="cateId" column="CATE_ID"/>
+        <result property="cateName" column="CATE_NAME"/>
+    </resultMap>
+    <select id="getProductsLicense" resultMap="productsLicenseVOResult" parameterType="com.pama.ord.vo.ProductsVO">
+        SELECT
+            OP.OPD_ROD_ID,
+            OP.ORD_ID,
+            OP.PRD_ID,
+            OP.PRD_NAME,
+            OP.QTY,
+            OP.PRICE,
+            OP.SALE_PRICE,
+            OP.START_DATE,
+            OP.END_DATE,
+            OP.EXPIRATION_MONTH,
+            OP.LICENSE_CODE,
+            PI.PRICE,
+            PC.CATE_ID,
+            PC.CATE_NAME
+        FROM ORD_PRODUCTS OP LEFT OUTER JOIN PRD_INFO PI on OP.PRD_ID = PI.PRD_ID
+        LEFT OUTER JOIN ORD_INFO OI ON OI.ORD_ID = OP.ORD_ID
+        LEFT OUTER JOIN PRD_CATEGORY PC ON PI.CATE_ID = PC.CATE_ID
+        WHERE PI.CATE_ID = #{cateId}
+          <![CDATA[
+          AND OP.START_DATE <= date_format(now(),'%Y-%m-%d')
+          AND OP.END_DATE >= date_format(now(),'%Y-%m-%d')
+          ]]>
+          AND OI.REGISTER_ID = #{registerId}
+          AND OI.STATUS_TYPE = '11'
+        limit 1
+    </select>
+    
+    <select id="getLicense" resultMap="productsLicenseVOResult" parameterType="com.pama.ord.vo.ProductsVO">
+        SELECT
+            OP.OPD_ROD_ID,
+            OP.ORD_ID,
+            OP.PRD_ID,
+            OP.PRD_NAME,
+            OP.QTY,
+            OP.PRICE,
+            OP.SALE_PRICE,
+            OP.START_DATE,
+            OP.END_DATE,
+            OP.EXPIRATION_MONTH,
+            OP.LICENSE_CODE,
+            PI.PRICE,
+            PC.CATE_ID,
+            PC.CATE_NAME
+        FROM ORD_PRODUCTS OP LEFT OUTER JOIN PRD_INFO PI on OP.PRD_ID = PI.PRD_ID
+        LEFT OUTER JOIN ORD_INFO OI ON OI.ORD_ID = OP.ORD_ID
+        LEFT OUTER JOIN PRD_CATEGORY PC ON PI.CATE_ID = PC.CATE_ID
+        WHERE OP.LICENSE_CODE = #{licenseCode}
+        limit 1
+    </select>    
+
+    <insert id="insertProduct" parameterType="com.pama.ord.vo.OrderVO">
+        INSERT INTO ORD_PRODUCTS (
+            ORD_ID
+            ,PRD_ID
+            ,PRD_NAME
+            ,QTY
+            ,PRICE
+            ,SALE_PRICE    <!-- 상품의 실제 판매 가격 -->
+            ,START_DATE
+            ,END_DATE
+            ,EXPIRATION_MONTH
+        )
+        SELECT
+            #{ordId} AS ORD_ID,
+            PRD_ID,
+            PRD_NAME,
+            #{qty} AS QTY,
+            PRICE,
+            #{salePrice},
+            #{startDate},
+            #{endDate},
+            #{expirationMonth}
+        FROM PRD_INFO
+        WHERE PRD_ID = #{prdId}
+       <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+       </selectKey>
+    </insert>
+
+    <insert id="insertProducts" parameterType="com.pama.ord.vo.OrderVO">
+        INSERT INTO ORD_PRODUCTS (
+            ORD_ID
+            ,PRD_ID
+            ,PRD_NAME
+            ,QTY
+            ,PRICE
+            ,SALE_PRICE  <!-- 상품의 실제 판매 가격 -->
+        )
+        SELECT
+            OCP.CART_ID AS ORD_ID,
+            OCP.PRD_ID AS PRD_ID,
+            PI.PRD_NAME AS PRD_NAME,
+            OCP.QTY AS QTY,
+            PI.PRICE AS PRICE,
+            PI.PRICE AS SALE_PRICE
+        FROM ORD_CART_PRODUCTS OCP LEFT OUTER JOIN PRD_INFO PI on OCP.PRD_ID = PI.PRD_ID
+        WHERE OCP.REGISTER_ID = #{registerId}
+
+       <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+       </selectKey>
+    </insert>
+
+    <update id="updateProductsLicense" parameterType="com.pama.ord.vo.ProductsVO">
+        UPDATE ORD_PRODUCTS SET
+            LICENSE_CODE = #{licenseCode}
+        WHERE ORD_ID = #{ordId}
+          AND PRD_ID = #{prdId}
+    </update>
+
+    <delete id="removeProducts" parameterType="com.pama.ord.vo.ProductsVO">
+        DELETE FROM ORD_PRODUCTS
+        WHERE OPD_ROD_ID = #{opdRodId}
+    </delete>
+
+</mapper>

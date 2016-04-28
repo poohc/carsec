@@ -1,0 +1,1325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.bbs.dao.MessageDAO">
+
+    <resultMap id="messageResult" type="com.pama.bbs.vo.MessageVO">
+        <id property="messageId" column="MESSAGE_ID"/>
+        <result property="boardKey" column="BOARD_KEY"/>
+        <result property="boardId" column="BOARD_ID"/>
+        <result property="messageCategoryId" column="MESSAGE_CATEGORY_ID"/>
+        <result property="messageCategoryName" column="MESSAGE_CATEGORY_NAME"/>
+        <result property="parentMessageId" column="PARENT_MESSAGE_ID"/>
+        <result property="messageLevel" column="MESSAGE_LEVEL"/>
+        <result property="tags" column="TAGS"/>
+
+        <result property="topFlag" column="TOP_FLAG"/>
+        <result property="title" column="TITLE"/>
+        <result property="subTitle" column="SUB_TITLE"/>
+        <result property="summaryContents" column="SUMMARY_CONTENTS"/>
+        <result property="viewCount" column="VIEW_COUNT"/>
+        <result property="replyCount" column="REPLY_COUNT"/>
+        <result property="commentCount" column="COMMENT_COUNT"/>
+
+        <result property="attachmentCount" column="ATTACHMENT_COUNT"/>
+        <result property="scrapCount" column="SCRAP_COUNT"/>
+        <result property="recommendCount" column="RECOMMEND_COUNT"/>
+        <result property="thumbnailUrl" column="THUMBNAIL_URL"/>
+        <result property="homeUrl" column="HOME_URL"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+
+        <result property="progressStatus" column="PROGRESS_STATUS"/>
+        <result property="licenseType" column="LICENSE_TYPE"/>
+        <result property="licensePoint" column="LICENSE_POINT"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerPwd" column="REGISTER_PWD"/>
+        <result property="registerName" column="REGISTER_NAME"/>
+        <result property="registerNickname" column="REGISTER_NICKNAME"/>
+        <result property="registerEmail" column="REGISTER_EMAIL"/>
+
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+
+        <result property="varFiled1" column="VAR_FILED1"/>
+        <result property="varFiled2" column="VAR_FILED2"/>
+        <result property="varFiled3" column="VAR_FILED3"/>
+        <result property="varFiled4" column="VAR_FILED4"/>
+        <result property="varFiled5" column="VAR_FILED5"/>
+        <result property="varFiled6" column="VAR_FILED6"/>
+        <result property="varFiled7" column="VAR_FILED7"/>
+        <result property="varFiled8" column="VAR_FILED8"/>
+        <result property="varFileds" column="VAR_FILEDS"/>
+
+        <result property="showFile1" column="SHOW_FILE1"/>
+        <result property="showFile2" column="SHOW_FILE2"/>
+
+        <result property="newFlag" column="NEW_FLAG"/>
+    </resultMap>
+
+    <resultMap id="messageResult2" type="com.pama.bbs.vo.MessageVO">
+        <id property="messageId" column="MESSAGE_ID"/>
+        <result property="boardId" column="BOARD_ID"/>
+        <result property="messageCategoryId" column="MESSAGE_CATEGORY_ID"/>
+        <result property="messageCategoryName" column="MESSAGE_CATEGORY_NAME"/>
+        <result property="parentMessageId" column="PARENT_MESSAGE_ID"/>
+        <result property="messageLevel" column="MESSAGE_LEVEL"/>
+        <result property="tags" column="TAGS"/>
+
+        <result property="topFlag" column="TOP_FLAG"/>
+        <result property="title" column="TITLE"/>
+        <result property="subTitle" column="SUB_TITLE"/>
+        <result property="summaryContents" column="SUMMARY_CONTENTS"/>
+        <result property="viewCount" column="VIEW_COUNT"/>
+        <result property="replyCount" column="REPLY_COUNT"/>
+        <result property="commentCount" column="COMMENT_COUNT"/>
+
+        <result property="attachmentCount" column="ATTACHMENT_COUNT"/>
+        <result property="scrapCount" column="SCRAP_COUNT"/>
+        <result property="recommendCount" column="RECOMMEND_COUNT"/>
+        <result property="thumbnailUrl" column="THUMBNAIL_URL"/>
+        <result property="homeUrl" column="HOME_URL"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+
+        <result property="progressStatus" column="PROGRESS_STATUS"/>
+        <result property="licenseType" column="LICENSE_TYPE"/>
+        <result property="licensePoint" column="LICENSE_POINT"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerPwd" column="REGISTER_PWD"/>
+        <result property="registerName" column="REGISTER_NAME"/>
+        <result property="registerNickname" column="REGISTER_NICKNAME"/>
+        <result property="registerEmail" column="REGISTER_EMAIL"/>
+
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+        <result property="contents" column="CONTENTS"/>
+    </resultMap>
+
+    <resultMap id="messageResult3" type="com.pama.bbs.vo.MessageVO">
+        <id property="messageId" column="MESSAGE_ID"/>
+        <result property="boardId" column="BOARD_ID"/>
+        <result property="messageCategoryId" column="MESSAGE_CATEGORY_ID"/>
+        <result property="parentMessageId" column="PARENT_MESSAGE_ID"/>
+        <result property="messageLevel" column="MESSAGE_LEVEL"/>
+        <result property="tags" column="TAGS"/>
+        <result property="topFlag" column="TOP_FLAG"/>
+
+        <result property="title" column="TITLE"/>
+        <result property="subTitle" column="SUB_TITLE"/>
+        <result property="summaryContents" column="SUMMARY_CONTENTS"/>
+        <result property="viewCount" column="VIEW_COUNT"/>
+        <result property="replyCount" column="REPLY_COUNT"/>
+        <result property="commentCount" column="COMMENT_COUNT"/>
+        <result property="attachmentCount" column="ATTACHMENT_COUNT"/>
+
+        <result property="scrapCount" column="SCRAP_COUNT"/>
+        <result property="recommendCount" column="RECOMMEND_COUNT"/>
+        <result property="thumbnailUrl" column="THUMBNAIL_URL"/>
+        <result property="homeUrl" column="HOME_URL"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="progressStatus" column="PROGRESS_STATUS"/>
+
+        <result property="licenseType" column="LICENSE_TYPE"/>
+        <result property="licensePoint" column="LICENSE_POINT"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerPwd" column="REGISTER_PWD"/>
+        <result property="registerName" column="REGISTER_NAME"/>
+        <result property="registerNickname" column="REGISTER_NICKNAME"/>
+        <result property="registerEmail" column="REGISTER_EMAIL"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+    </resultMap>
+
+    <resultMap id="messageResult4" type="com.pama.bbs.vo.MessageVO">
+        <id property="messageId" column="MESSAGE_ID"/>
+        <result property="boardId" column="BOARD_ID"/>
+        <result property="messageCategoryId" column="MESSAGE_CATEGORY_ID"/>
+        <result property="messageCategoryName" column="MESSAGE_CATEGORY_NAME"/>
+        <result property="parentMessageId" column="PARENT_MESSAGE_ID"/>
+        <result property="messageLevel" column="MESSAGE_LEVEL"/>
+        <result property="tags" column="TAGS"/>
+
+        <result property="topFlag" column="TOP_FLAG"/>
+        <result property="title" column="TITLE"/>
+        <result property="subTitle" column="SUB_TITLE"/>
+        <result property="summaryContents" column="SUMMARY_CONTENTS"/>
+        <result property="viewCount" column="VIEW_COUNT"/>
+        <result property="replyCount" column="REPLY_COUNT"/>
+        <result property="commentCount" column="COMMENT_COUNT"/>
+
+        <result property="attachmentCount" column="ATTACHMENT_COUNT"/>
+        <result property="scrapCount" column="SCRAP_COUNT"/>
+        <result property="recommendCount" column="RECOMMEND_COUNT"/>
+        <result property="thumbnailUrl" column="THUMBNAIL_URL"/>
+        <result property="homeUrl" column="HOME_URL"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+
+        <result property="progressStatus" column="PROGRESS_STATUS"/>
+        <result property="licenseType" column="LICENSE_TYPE"/>
+        <result property="licensePoint" column="LICENSE_POINT"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerPwd" column="REGISTER_PWD"/>
+        <result property="registerName" column="REGISTER_NAME"/>
+        <result property="registerNickname" column="REGISTER_NICKNAME"/>
+        <result property="registerEmail" column="REGISTER_EMAIL"/>
+
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+        <result property="contents" column="CONTENTS"/>
+        <result property="varFiled1" column="VAR_FILED1"/>
+        <result property="varFiled2" column="VAR_FILED2"/>
+        <result property="varFiled3" column="VAR_FILED3"/>
+        <result property="varFiled4" column="VAR_FILED4"/>
+        <result property="varFiled5" column="VAR_FILED5"/>
+        <result property="varFiled6" column="VAR_FILED6"/>
+        <result property="varFiled7" column="VAR_FILED7"/>
+        <result property="varFiled8" column="VAR_FILED8"/>
+        <result property="varFileds" column="VAR_FILEDS"/>
+        <result property="sortTree" column="SORT_TREE"/>
+    </resultMap>
+
+    <resultMap id="messageMainResult" type="com.pama.bbs.vo.MessageVO">
+    	<id property="messageId" column="MESSAGE_ID"/>
+    	<result property="boardId" column="BOARD_ID"/>
+        <result property="subTitle" column="SUB_TITLE"/>
+        <result property="summaryContents" column="SUMMARY_CONTENTS"/>
+        <result property="title" column="TITLE"/>
+        <result property="registerName" column="REGISTER_NAME"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+		<result property="contents" column="CONTENTS"/>
+    </resultMap>
+
+    <!-- 목록에 대한 검색조건은 같은걸로 사용 -->
+    <sql id="getListWhere">
+    	FROM BBS_MESSAGE BM
+				<if test="searchColumn == 'contents' or searchColumn == 'title_contents'">
+					LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+				</if>
+              	    LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+              	    LEFT OUTER JOIN BBS_MESSAGE_ATTACHMENT BMA ON BMA.MESSAGE_ID = BM.MESSAGE_ID AND BMA.SHOW_INDEX = '1'
+              	    LEFT OUTER JOIN BBS_MESSAGE_ATTACHMENT BMA2 ON BMA2.MESSAGE_ID = BM.MESSAGE_ID AND BMA2.SHOW_INDEX = '2'
+
+    	WHERE BM.BOARD_ID = #{boardId} AND IFNULL(BM.TOP_FLAG,'0') = 0
+
+    		<choose>
+    			<when test="statusType == 'me'">
+    			   AND (
+    			       (BM.REGISTER_ID = 'icon1' AND BM.STATUS_TYPE = '2')
+            		   OR
+             		   (BM.PARENT_MESSAGE_ID &gt;= 0 AND BM.STATUS_TYPE = '1')
+             		   )
+    			</when>
+    			<when test="statusType == '12'">
+    				AND BM.STATUS_TYPE in ('1','2')
+    			</when>
+    			<when test="statusType != null and statusType != ''">
+    				AND BM.STATUS_TYPE = #{statusType}
+    			</when>
+    			<otherwise>
+    				AND BM.STATUS_TYPE &gt; 0 <!-- 삭제가 안된 게시물 관리자 전용 -->
+    			</otherwise>
+
+    		</choose>
+
+    		<if test="messageCategoryId != null and messageCategoryId != ''">
+    			AND BM.MESSAGE_CATEGORY_ID = #{messageCategoryId}
+    		</if>
+
+
+    		<if test="registerId != null and registerId != ''">
+    			AND BM.REGISTER_ID = #{registerId}
+    		</if>
+
+    		<if test="tags != null">
+        		<foreach item="tags" collection="tags" open="AND (" separator="or" close=")">
+        			BM.TITLE like '%${tags}%'
+        		</foreach>
+
+        		AND  BM.MESSAGE_ID &lt;&gt; #{messageId}
+    		</if>
+
+	        <!-- select box로 검색할경우 -->
+	        <if test="searchValue != null">
+	        	<choose>
+	        		<when test="searchColumn == 'title'">
+	        			AND INSTR(LOWER(BM.TITLE),LOWER(#{searchValue})) &gt; 0
+	        		</when>
+	        		<when test="searchColumn == 'registerNickname'">
+	        			AND INSTR(LOWER(BM.REGISTER_NICKNAME),LOWER(#{searchValue})) &gt; 0
+	        		</when>
+	        		<when test="searchColumn == 'email'">
+	        			AND INSTR(LOWER(BM.EMAIL),LOWER(#{searchValue})) &gt; 0
+	        		</when>
+	        		<when test="searchColumn == 'tags'">
+	        			AND INSTR(LOWER(BM.TAGS),LOWER(#{searchValue})) &gt; 0
+	        		</when>
+	        		<when test="searchColumn == 'contents'">
+	        			AND INSTR(LOWER(BMC.CONTENTS),LOWER(#{searchValue})) &gt; 0
+	        		</when>
+	        		<when test="searchColumn == 'title_contents'">
+	        			AND (INSTR(LOWER(BM.TITLE),LOWER(#{searchValue})) &gt; 0 OR INSTR(LOWER(BMC.CONTENTS),LOWER(#{searchValue})) &gt; 0)
+	        		</when>
+	        	</choose>
+	        </if>
+
+	        <if test="varFiled1 != null and varFiled1 != ''">
+	        		AND INSTR(LOWER(BM.VAR_FILED1),LOWER(#{varFiled1})) &gt; 0
+	        </if>
+	        <if test="varFiled2 != null and varFiled2 != ''">
+	        		AND INSTR(LOWER(BM.VAR_FILED2),LOWER(#{varFiled2})) &gt; 0
+	        </if>
+	        <if test="varFiled3 != null and varFiled3 != ''">
+	        		AND INSTR(LOWER(BM.VAR_FILED3),LOWER(#{varFiled3})) &gt; 0
+	        </if>
+	        <if test="varFiled4 != null and varFiled4 != ''">
+	        		AND INSTR(LOWER(BM.VAR_FILED4),LOWER(#{varFiled4})) &gt; 0
+	        </if>
+	        <if test="varFiled5 != null and varFiled5 != ''">
+	        		AND INSTR(LOWER(BM.VAR_FILED5),LOWER(#{varFiled5})) &gt; 0
+	        </if>
+	        <if test="varFiled6 != null and varFiled6 != ''">
+	        		AND INSTR(LOWER(BM.VAR_FILED6),LOWER(#{varFiled6})) &gt; 0
+	        </if>
+	        <if test="varFiled7 != null and varFiled7 != ''">
+	        		AND INSTR(LOWER(BM.VAR_FILED7),LOWER(#{varFiled7})) &gt; 0
+	        </if>
+	        <if test="varFiled8 != null and varFiled8 != ''">
+	        		AND INSTR(LOWER(BM.VAR_FILED8),LOWER(#{varFiled8})) &gt; 0
+	        </if>
+
+    </sql>
+
+    <!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="messageSearchVO">
+        SELECT COUNT(*) AS TOTAL_COUNT
+        <include refid="getListWhere"/>
+    </select>
+
+    <!-- 조회:목록 -->
+    <select id="getMessageList" resultMap="messageResult" parameterType="messageSearchVO">
+	           SELECT
+	               BM.MESSAGE_ID,
+	               BM.BOARD_ID,
+	               BM.MESSAGE_CATEGORY_ID,
+	               BMT.MESSAGE_CATEGORY_NAME,
+	               BM.PARENT_MESSAGE_ID,
+	               BM.MESSAGE_LEVEL,
+	               BM.TAGS,
+
+	               BM.TOP_FLAG,
+	               BM.TITLE,
+	               BM.SUB_TITLE,
+	               BM.SUMMARY_CONTENTS,
+	               BM.VIEW_COUNT,
+	               BM.REPLY_COUNT,
+	               BM.COMMENT_COUNT,
+
+	               BM.ATTACHMENT_COUNT,
+	               BM.SCRAP_COUNT,
+	               BM.RECOMMEND_COUNT,
+	               BM.THUMBNAIL_URL,
+	               BM.HOME_URL,
+	               BM.START_DATE,
+	               BM.END_DATE,
+
+	               BM.PROGRESS_STATUS,
+	               BM.LICENSE_TYPE,
+	               BM.LICENSE_POINT,
+	               BM.REGISTER_ID,
+	               BM.REGISTER_PWD,
+	               BM.REGISTER_NAME,
+	               BM.REGISTER_NICKNAME,
+	               BM.REGISTER_EMAIL,
+
+	               BM.REGISTER_IP,
+	               BM.REGISTER_DATE,
+	               BM.UPDATE_ID,
+	               BM.UPDATE_DATE,
+	               BM.STATUS_TYPE,
+
+	               BM.VAR_FILED1,
+	               BM.VAR_FILED2,
+	               BM.VAR_FILED3,
+	               BM.VAR_FILED4,
+	               BM.VAR_FILED5,
+	               BM.VAR_FILED6,
+	               BM.VAR_FILED7,
+	               BM.VAR_FILED8,
+	               BM.VAR_FILEDS,
+
+
+	               BMA.FILE_NAME as SHOW_FILE1,
+	               BMA2.FILE_NAME as SHOW_FILE2,
+
+	               case when NOW() &lt;= DATE_FORMAT(BM.REGISTER_DATE+2,'yyyy-mm-dd') then 'Y' else 'N' end NEW_FLAG
+   			  <include refid="getListWhere"/>
+
+		     <!-- Sorting -->
+		     <choose>
+		      <when test="sortColumn != null">
+		      	<choose>
+		      		<when test="sortColumn == 'messageId'">
+		      			ORDER BY MESSAGE_ID ${sortValue}
+		      		</when>
+		      		<when test="sortColumn == 'title'">
+		      			ORDER BY TITLE ${sortValue}
+		      		</when>
+		      		<when test="sortColumn == 'registerDate'">
+		      			ORDER BY REGISTER_DATE ${sortValue}
+		      		</when>
+		      		<when test="sortColumn == 'viewCount'">
+		      			ORDER BY VIEW_COUNT ${sortValue}
+		      		</when>
+		      	</choose>
+		      </when>
+		      <otherwise>
+		      		ORDER BY BM.SORT_TREE DESC
+		      </otherwise>
+		     </choose>
+		     LIMIT #{startIndex}, #{row}
+
+    </select>
+
+    <select id="getMessageTopList" resultMap="messageResult">
+		SELECT
+	        BM.MESSAGE_ID,
+	        BM.BOARD_ID,
+	        BM.MESSAGE_CATEGORY_ID,
+	        BMT.MESSAGE_CATEGORY_NAME,
+	        BM.PARENT_MESSAGE_ID,
+	        BM.MESSAGE_LEVEL,
+	        BM.TAGS,
+
+	        BM.TOP_FLAG,
+	        BM.TITLE,
+	        BM.SUB_TITLE,
+	        BM.SUMMARY_CONTENTS,
+	        BM.VIEW_COUNT,
+	        BM.REPLY_COUNT,
+	        BM.COMMENT_COUNT,
+
+	        BM.ATTACHMENT_COUNT,
+	        BM.SCRAP_COUNT,
+	        BM.RECOMMEND_COUNT,
+	        BM.THUMBNAIL_URL,
+	        BM.HOME_URL,
+	        BM.START_DATE,
+	        BM.END_DATE,
+
+	        BM.PROGRESS_STATUS,
+	        BM.LICENSE_TYPE,
+	        BM.LICENSE_POINT,
+	        BM.REGISTER_ID,
+	        BM.REGISTER_PWD,
+	        BM.REGISTER_NAME,
+	        BM.REGISTER_NICKNAME,
+	        BM.REGISTER_EMAIL,
+
+	        BM.REGISTER_IP,
+	        BM.REGISTER_DATE,
+	        BM.UPDATE_ID,
+	        BM.UPDATE_DATE,
+	        BM.STATUS_TYPE,
+			case when NOW() &lt;= DATE_FORMAT(BM.REGISTER_DATE+2,'yyyy-mm-dd') then 'Y' else 'N' end NEW_FLAG
+		FROM BBS_MESSAGE BM
+			LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+        WHERE BM.BOARD_ID = #{boardId}
+            AND BM.STATUS_TYPE &gt; 0
+            AND BM.TOP_FLAG = '1'
+        ORDER BY BM.MESSAGE_ID DESC
+    </select>
+
+    <select id="getMessageCount" resultType="java.lang.Integer">
+    	SELECT COUNT(MESSAGE_ID) AS TOTAL_COUNT
+    	FROM BBS_MESSAGE
+    	WHERE HOME_URL = #{homeUrl}
+    </select>
+
+    <select id="getMessageAllList" resultMap="messageResult3">
+		SELECT
+			MESSAGE_ID,
+			BOARD_ID,
+			MESSAGE_CATEGORY_ID,
+			PARENT_MESSAGE_ID,
+			MESSAGE_LEVEL,
+			TAGS,
+			TOP_FLAG,
+
+			TITLE,
+			SUB_TITLE,
+			SUMMARY_CONTENTS,
+			VIEW_COUNT,
+			REPLY_COUNT,
+			COMMENT_COUNT,
+			ATTACHMENT_COUNT,
+
+			SCRAP_COUNT,
+			RECOMMEND_COUNT,
+			THUMBNAIL_URL,
+			HOME_URL,
+			START_DATE,
+			END_DATE,
+			PROGRESS_STATUS,
+
+			LICENSE_TYPE,
+			LICENSE_POINT,
+			REGISTER_ID,
+			REGISTER_PWD,
+			REGISTER_NAME,
+			REGISTER_NICKNAME,
+			REGISTER_EMAIL,
+			REGISTER_IP,
+
+			REGISTER_DATE,
+			UPDATE_ID,
+			UPDATE_DATE,
+			STATUS_TYPE,
+		FROM BBS_MESSAGE
+		AND STATUS_TYPE &gt; 0
+		ORDER BY REGISTER_DATE ASC
+    </select>
+
+    <select id="getRandomMessages" resultMap="messageResult" parameterType="messageSearchVO">
+    	SELECT T1.*, #{boardKey} as BOARD_KEY
+
+    	 FROM(
+    		 SELECT
+     		   	  RAND() AS RANDOMNO,
+	               BM.MESSAGE_ID,
+	               BM.BOARD_ID,
+	               BM.MESSAGE_CATEGORY_ID,
+	               BMT.MESSAGE_CATEGORY_NAME,
+	               BM.PARENT_MESSAGE_ID,
+	               BM.MESSAGE_LEVEL,
+	               BM.TAGS,
+
+	               BM.TOP_FLAG,
+	               BM.TITLE,
+	               BM.SUB_TITLE,
+	               BM.SUMMARY_CONTENTS,
+	               BM.VIEW_COUNT,
+	               BM.REPLY_COUNT,
+	               BM.COMMENT_COUNT,
+
+	               BM.ATTACHMENT_COUNT,
+	               BM.SCRAP_COUNT,
+	               BM.RECOMMEND_COUNT,
+	               BM.THUMBNAIL_URL,
+	               BM.HOME_URL,
+	               BM.START_DATE,
+	               BM.END_DATE,
+
+	               BM.PROGRESS_STATUS,
+	               BM.LICENSE_TYPE,
+	               BM.LICENSE_POINT,
+	               BM.REGISTER_ID,
+	               BM.REGISTER_PWD,
+	               BM.REGISTER_NAME,
+	               BM.REGISTER_NICKNAME,
+	               BM.REGISTER_EMAIL,
+
+	               BM.REGISTER_IP,
+	               BM.REGISTER_DATE,
+	               BM.UPDATE_ID,
+	               BM.UPDATE_DATE,
+	               BM.STATUS_TYPE,
+
+	               BM.VAR_FILED1,
+	               BM.VAR_FILED2,
+	               BM.VAR_FILED3,
+	               BM.VAR_FILED4,
+	               BM.VAR_FILED5,
+	               BM.VAR_FILED6,
+	               BM.VAR_FILED7,
+	               BM.VAR_FILED8,
+	               BM.VAR_FILEDS,
+
+
+	               BMA.FILE_NAME as SHOW_FILE1,
+	               BMA2.FILE_NAME as SHOW_FILE2,
+
+	               case when NOW() &lt;= DATE_FORMAT(BM.REGISTER_DATE+2,'yyyy-mm-dd') then 'Y' else 'N' end NEW_FLAG
+   			  <include refid="getListWhere"/>
+
+		     LIMIT 0, 100
+		    ) T1
+		    ORDER BY T1.RANDOMNO ASC
+		    LIMIT 0, 10
+    </select>
+
+    <select id="getMessageReplyList" resultMap="messageResult2">
+         SELECT
+			BM.MESSAGE_ID,
+			BM.BOARD_ID,
+			BM.MESSAGE_CATEGORY_ID,
+			BMT.MESSAGE_CATEGORY_NAME,
+			BM.PARENT_MESSAGE_ID,
+			BM.MESSAGE_LEVEL,
+			BM.TAGS,
+
+			BM.TOP_FLAG,
+			BM.TITLE,
+			BM.SUB_TITLE,
+			BM.SUMMARY_CONTENTS,
+			BM.VIEW_COUNT,
+			BM.REPLY_COUNT,
+			BM.COMMENT_COUNT,
+
+			BM.ATTACHMENT_COUNT,
+			BM.SCRAP_COUNT,
+			BM.RECOMMEND_COUNT,
+			BM.THUMBNAIL_URL,
+			BM.HOME_URL,
+			BM.START_DATE,
+			BM.END_DATE,
+
+			BM.PROGRESS_STATUS,
+			BM.LICENSE_TYPE,
+			BM.LICENSE_POINT,
+			BM.REGISTER_ID,
+			BM.REGISTER_PWD,
+			BM.REGISTER_NAME,
+			BM.REGISTER_NICKNAME,
+			BM.REGISTER_EMAIL,
+
+			BM.REGISTER_IP,
+			BM.REGISTER_DATE,
+			BM.UPDATE_ID,
+			BM.UPDATE_DATE,
+			BM.STATUS_TYPE,
+			BM.CONTENTS
+        FROM BBS_MESSAGE BM LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+        	LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+		WHERE BM.PARENT_MESSAGE_ID = #{parentMessageId}
+            AND BM.PARENT_MESSAGE_ID &gt; 0 <!-- 자식글만 -->
+            AND BM.STATUS_TYPE &gt; 0 <!-- 삭제안된건만 -->
+            AND IFNULL(BM.TOP_FLAG,'0') &lt;&gt; '1'<!-- 일반게시물(공지아님) -->
+            <if test="statusType > 1">
+            	AND BM.STATUS_TYPE = #{statusType}
+            </if>
+         ORDER BY BM.MESSAGE_ID DESC
+    </select>
+
+    <select id="getMessageLevelList" resultMap="messageResult2">
+        SELECT
+			BM.MESSAGE_ID,
+			BM.BOARD_ID,
+			BM.MESSAGE_CATEGORY_ID,
+			BMT.MESSAGE_CATEGORY_NAME,
+			BM.PARENT_MESSAGE_ID,
+			BM.MESSAGE_LEVEL,
+			BM.TAGS,
+
+			BM.TOP_FLAG,
+			BM.TITLE,
+			BM.SUB_TITLE,
+			BM.SUMMARY_CONTENTS,
+			BM.VIEW_COUNT,
+			BM.REPLY_COUNT,
+			BM.COMMENT_COUNT,
+
+			BM.ATTACHMENT_COUNT,
+			BM.SCRAP_COUNT,
+			BM.RECOMMEND_COUNT,
+			BM.THUMBNAIL_URL,
+			BM.HOME_URL,
+			BM.START_DATE,
+			BM.END_DATE,
+
+			BM.PROGRESS_STATUS,
+			BM.LICENSE_TYPE,
+			BM.LICENSE_POINT,
+			BM.REGISTER_ID,
+			BM.REGISTER_PWD,
+			BM.REGISTER_NAME,
+			BM.REGISTER_NICKNAME,
+			BM.REGISTER_EMAIL,
+
+			BM.REGISTER_IP,
+			BM.REGISTER_DATE,
+			BM.UPDATE_ID,
+			BM.UPDATE_DATE,
+			BM.STATUS_TYPE,
+			BMC.CONTENTS
+        FROM BBS_MESSAGE BM
+            LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+            LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+        WHERE BM.PARENT_MESSAGE_ID = #{messageId}
+        AND BM.STATUS_TYPE &gt; 0 <!-- 삭제안된건만 -->
+    </select>
+
+    <select id="getMessageMainList" resultMap="messageResult">
+        SELECT
+				   BB.BOARD_KEY,
+	               BM.MESSAGE_ID,
+	               BM.BOARD_ID,
+	               BM.MESSAGE_CATEGORY_ID,
+	               BMT.MESSAGE_CATEGORY_NAME,
+	               BM.PARENT_MESSAGE_ID,
+	               BM.MESSAGE_LEVEL,
+	               BM.TAGS,
+
+	               BM.TOP_FLAG,
+	               BM.TITLE,
+	               BM.SUB_TITLE,
+	               BM.SUMMARY_CONTENTS,
+	               BM.VIEW_COUNT,
+	               BM.REPLY_COUNT,
+	               BM.COMMENT_COUNT,
+
+	               BM.ATTACHMENT_COUNT,
+	               BM.SCRAP_COUNT,
+	               BM.RECOMMEND_COUNT,
+	               BM.THUMBNAIL_URL,
+	               BM.HOME_URL,
+	               BM.START_DATE,
+	               BM.END_DATE,
+
+	               BM.PROGRESS_STATUS,
+	               BM.LICENSE_TYPE,
+	               BM.LICENSE_POINT,
+	               BM.REGISTER_ID,
+	               BM.REGISTER_PWD,
+	               BM.REGISTER_NAME,
+	               BM.REGISTER_NICKNAME,
+	               BM.REGISTER_EMAIL,
+
+	               BM.REGISTER_IP,
+	               BM.REGISTER_DATE,
+	               BM.UPDATE_ID,
+	               BM.UPDATE_DATE,
+	               BM.STATUS_TYPE,
+
+	               BM.VAR_FILED1,
+	               BM.VAR_FILED2,
+	               BM.VAR_FILED3,
+	               BM.VAR_FILED4,
+	               BM.VAR_FILED5,
+	               BM.VAR_FILED6,
+	               BM.VAR_FILED7,
+	               BM.VAR_FILED8,
+	               BM.VAR_FILEDS,
+
+	               BMC.CONTENTS,
+				   BMA.FILE_NAME as SHOW_FILE1
+
+
+	               FROM BBS_MESSAGE BM
+  	  				LEFT OUTER JOIN BBS_BOARD BB ON BB.BOARD_ID = BM.BOARD_ID
+	  				LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+              	    LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+              	    LEFT OUTER JOIN BBS_MESSAGE_ATTACHMENT BMA ON BMA.MESSAGE_ID = BM.MESSAGE_ID AND BMA.SHOW_INDEX = '1'
+
+        WHERE BM.STATUS_TYPE = 2
+        AND BM.BOARD_ID = #{boardId}
+        ORDER BY BM.MESSAGE_ID DESC
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+    <select id="getMessageBestList" resultMap="messageMainResult">
+        SELECT
+			BM.MESSAGE_ID,
+			BM.BOARD_ID,
+			BM.TITLE,
+			BM.SUB_TITLE,
+			BM.SUMMARY_CONTENTS,
+			BM.REGISTER_NAME,
+			BM.REGISTER_DATE,
+			BMC.CONTENTS
+        FROM BBS_MESSAGE BM
+            LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+            LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+        WHERE BM.STATUS_TYPE &gt; 0
+        AND BM.BOARD_ID = #{boardId}
+        <if test="mbrLevel != null and mbrLevel != ''">
+		AND BM.REGISTER_ID IN (SELECT MBR_ID FROM MBR_ACCOUNT WHERE LEVEL=#{mbrLevel})
+		</if>
+
+        ORDER BY VIEW_COUNT DESC
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+	<!-- 메세지 읽어오기 -->
+    <select id="getMessageOne" parameterType="com.pama.bbs.vo.MessageVO" resultMap="messageResult4">
+        SELECT
+			BM.MESSAGE_ID,
+			BM.BOARD_ID,
+			BM.MESSAGE_CATEGORY_ID,
+			BMT.MESSAGE_CATEGORY_NAME,
+			BM.PARENT_MESSAGE_ID,
+			BM.MESSAGE_LEVEL,
+			BM.TAGS,
+
+			BM.TOP_FLAG,
+			BM.TITLE,
+			BM.SUB_TITLE,
+			BM.SUMMARY_CONTENTS,
+			BM.VIEW_COUNT,
+			BM.REPLY_COUNT,
+			BM.COMMENT_COUNT,
+
+			BM.ATTACHMENT_COUNT,
+			BM.SCRAP_COUNT,
+			BM.RECOMMEND_COUNT,
+			BM.THUMBNAIL_URL,
+			BM.HOME_URL,
+			BM.START_DATE,
+			BM.END_DATE,
+
+			BM.PROGRESS_STATUS,
+			BM.LICENSE_TYPE,
+			BM.LICENSE_POINT,
+			BM.REGISTER_ID,
+			BM.REGISTER_PWD,
+			BM.REGISTER_NAME,
+			BM.REGISTER_NICKNAME,
+			BM.REGISTER_EMAIL,
+
+			BM.REGISTER_IP,
+			BM.REGISTER_DATE,
+			BM.UPDATE_ID,
+			BM.UPDATE_DATE,
+			BM.STATUS_TYPE,
+			BMC.CONTENTS,
+			BM.VAR_FILED1,
+			BM.VAR_FILED2,
+			BM.VAR_FILED3,
+			BM.VAR_FILED4,
+			BM.VAR_FILED5,
+			BM.VAR_FILED6,
+			BM.VAR_FILED7,
+			BM.VAR_FILED8,
+			BM.VAR_FILEDS,
+
+			BM.SORT_TREE
+        FROM BBS_MESSAGE BM
+            LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+            LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+        WHERE BM.MESSAGE_ID = #{messageId}
+        AND BM.BOARD_ID = #{boardId}
+        AND BM.STATUS_TYPE &gt; 0 <!-- 삭제안된건만 -->
+    </select>
+
+	<!-- 메세지 읽어오기 -->
+    <select id="getMessageOne2" parameterType="com.pama.bbs.vo.MessageVO" resultMap="messageResult4">
+        SELECT
+			MESSAGE_ID,
+			BOARD_ID,
+			REGISTER_ID
+        FROM BBS_MESSAGE
+        WHERE MESSAGE_ID = #{messageId}
+        AND STATUS_TYPE &gt; 0 <!-- 삭제안된건만 -->
+    </select>
+
+    <select id="getMessageView" resultMap="messageResult2">
+        SELECT
+			BM.MESSAGE_ID,
+			BM.BOARD_ID,
+			BM.MESSAGE_CATEGORY_ID,
+			BMT.MESSAGE_CATEGORY_NAME,
+			BM.PARENT_MESSAGE_ID,
+			BM.MESSAGE_LEVEL,
+			BM.TAGS,
+
+			BM.TOP_FLAG,
+			BM.TITLE,
+			BM.SUB_TITLE,
+			BM.SUMMARY_CONTENTS,
+			BM.VIEW_COUNT,
+			BM.REPLY_COUNT,
+			BM.COMMENT_COUNT,
+
+			BM.ATTACHMENT_COUNT,
+			BM.SCRAP_COUNT,
+			BM.RECOMMEND_COUNT,
+			BM.THUMBNAIL_URL,
+			BM.HOME_URL,
+			BM.START_DATE,
+			BM.END_DATE,
+
+			BM.PROGRESS_STATUS,
+			BM.LICENSE_TYPE,
+			BM.LICENSE_POINT,
+			BM.REGISTER_ID,
+			BM.REGISTER_PWD,
+			BM.REGISTER_NAME,
+			BM.REGISTER_NICKNAME,
+			BM.REGISTER_EMAIL,
+
+			BM.REGISTER_IP,
+			BM.REGISTER_DATE,
+			BM.UPDATE_ID,
+			BM.UPDATE_DATE,
+			BM.STATUS_TYPE,
+			BMC.CONTENTS
+        FROM BBS_MESSAGE BM
+            LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+            LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+        WHERE BM.MESSAGE_ID = #{messageId}
+         AND BM.BOARD_ID = #{boardId}
+         AND BM.STATUS_TYPE &gt; 0 <!-- 삭제안된건만 -->
+    </select>
+
+    <!-- 이전글 -->
+    <select id="getMessageViewPrev" resultMap="messageResult2">
+        SELECT InnerTable1.* FROM (
+            SELECT
+				BM.MESSAGE_ID,
+				BM.BOARD_ID,
+				BM.MESSAGE_CATEGORY_ID,
+				BMT.MESSAGE_CATEGORY_NAME,
+				BM.PARENT_MESSAGE_ID,
+				BM.MESSAGE_LEVEL,
+				BM.TAGS,
+
+				BM.TOP_FLAG,
+				BM.TITLE,
+				BM.SUB_TITLE,
+				BM.SUMMARY_CONTENTS,
+				BM.VIEW_COUNT,
+				BM.REPLY_COUNT,
+				BM.COMMENT_COUNT,
+
+				BM.ATTACHMENT_COUNT,
+				BM.SCRAP_COUNT,
+				BM.RECOMMEND_COUNT,
+				BM.THUMBNAIL_URL,
+				BM.HOME_URL,
+				BM.START_DATE,
+				BM.END_DATE,
+
+				BM.PROGRESS_STATUS,
+				BM.LICENSE_TYPE,
+				BM.LICENSE_POINT,
+				BM.REGISTER_ID,
+				BM.REGISTER_PWD,
+				BM.REGISTER_NAME,
+				BM.REGISTER_NICKNAME,
+				BM.REGISTER_EMAIL,
+
+				BM.REGISTER_IP,
+				BM.REGISTER_DATE,
+				BM.UPDATE_ID,
+				BM.UPDATE_DATE,
+				BM.STATUS_TYPE,
+				BMC.CONTENTS
+	        FROM BBS_MESSAGE BM
+	            LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+	            LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+            WHERE BM.MESSAGE_ID &lt; #{messageId}
+            AND BM.BOARD_ID = #{boardId}
+            AND BM.STATUS_TYPE &gt; 0 <!-- 삭제안된건만 -->
+            ORDER BY BM.MESSAGE_ID DESC
+
+         ) InnerTable1 LIMIT 1
+    </select>
+
+    <!-- 다음글 -->
+    <select id="getMessageViewNext" resultMap="messageResult2">
+        SELECT InnerTable1.* FROM (
+            SELECT
+				BM.MESSAGE_ID,
+				BM.BOARD_ID,
+				BM.MESSAGE_CATEGORY_ID,
+				BMT.MESSAGE_CATEGORY_NAME,
+				BM.PARENT_MESSAGE_ID,
+				BM.MESSAGE_LEVEL,
+				BM.TAGS,
+
+				BM.TOP_FLAG,
+				BM.TITLE,
+				BM.SUB_TITLE,
+				BM.SUMMARY_CONTENTS,
+				BM.VIEW_COUNT,
+				BM.REPLY_COUNT,
+				BM.COMMENT_COUNT,
+
+				BM.ATTACHMENT_COUNT,
+				BM.SCRAP_COUNT,
+				BM.RECOMMEND_COUNT,
+				BM.THUMBNAIL_URL,
+				BM.HOME_URL,
+				BM.START_DATE,
+				BM.END_DATE,
+
+				BM.PROGRESS_STATUS,
+				BM.LICENSE_TYPE,
+				BM.LICENSE_POINT,
+				BM.REGISTER_ID,
+				BM.REGISTER_PWD,
+				BM.REGISTER_NAME,
+				BM.REGISTER_NICKNAME,
+				BM.REGISTER_EMAIL,
+
+				BM.REGISTER_IP,
+				BM.REGISTER_DATE,
+				BM.UPDATE_ID,
+				BM.UPDATE_DATE,
+				BM.STATUS_TYPE,
+				BMC.CONTENTS
+	        FROM BBS_MESSAGE BM
+	            LEFT OUTER JOIN BBS_MESSAGE_CONTENTS BMC ON BMC.MESSAGE_ID = BM.MESSAGE_ID
+	            LEFT OUTER JOIN BBS_MESSAGE_CATEGORY BMT ON BMT.MESSAGE_CATEGORY_ID = BM.MESSAGE_CATEGORY_ID
+            WHERE BM.MESSAGE_ID &gt; #{messageId}
+            AND BM.BOARD_ID = #{boardId}
+            AND BM.STATUS_TYPE &gt; 0 <!-- 삭제안된건만 -->
+            ORDER BY BM.MESSAGE_ID ASC
+         ) InnerTable1 Limit 1
+    </select>
+
+
+    <!-- 조회:목록 -->
+    <select id="getMessageStat" resultType="com.pama.bbs.vo.MessageStatVO" parameterType="messageSearchVO">
+		SELECT ROWNUM as messageRank, messageCount FROM(
+		SELECT (@RNUM := @RNUM +1) AS ROWNUM, SRCHTABLE.* FROM
+			(SELECT @RNUM :=0 ) R,
+			(
+			SELECT REGISTER_ID, count(REGISTER_ID) AS messageCount
+			          FROM BBS_MESSAGE
+			          WHERE BOARD_ID IN ('25','26','29','30','31')
+			          	AND STATUS_TYPE  &gt; 0
+						 GROUP BY REGISTER_ID
+						 ORDER BY messageCount DESC
+			) SRCHTABLE
+		) SRCHTABLE
+		WHERE REGISTER_ID = #{registerId}
+    </select>
+
+    <select id="getMessageAttachmentStat" resultType="com.pama.bbs.vo.MessageStatVO" parameterType="messageSearchVO">
+		SELECT  ROWNUM as attachDownloadRank, attachDownloadCount FROM(
+			SELECT (@RNUM := @RNUM +1) AS ROWNUM, SRCHTABLE.* FROM
+				(SELECT @RNUM :=0 ) R,
+				(
+
+			SELECT BM.REGISTER_ID, SUM(BMA.DOWNLOAD_COUNT) AS attachDownloadCount FROM BBS_MESSAGE_ATTACHMENT BMA
+			INNER JOIN BBS_MESSAGE BM ON BM.MESSAGE_ID = BMA.MESSAGE_ID
+			WHERE BOARD_ID IN ('25','26','29','30','31')
+			GROUP BY REGISTER_ID
+			ORDER BY attachDownloadCount DESC
+
+				) SRCHTABLE
+			) SRCHTABLE
+		WHERE REGISTER_ID = #{registerId}
+    </select>
+
+    <resultMap id="messageContentsVOResult" type="com.pama.bbs.vo.MessageVO">
+        <id property="messageId" column="MESSAGE_ID"/>
+        <result property="contents" column="CONTENTS"/>
+    </resultMap>
+    <select id="getMessageContents" resultMap="messageContentsVOResult">
+    	SELECT
+    		MESSAGE_ID,
+    		CONTENTS
+    	FROM BBS_MESSAGE_CONTENTS
+    	WHERE MESSAGE_ID = #{messageId}
+    </select>
+
+    <insert id="insertMessage" parameterType="com.pama.bbs.vo.MessageFormVO" useGeneratedKeys="true" keyProperty="messageId">
+        INSERT INTO BBS_MESSAGE (
+			BOARD_ID,
+			MESSAGE_CATEGORY_ID,
+			PARENT_MESSAGE_ID,
+			TAGS,
+			TOP_FLAG,
+			TITLE,
+			SUB_TITLE,
+			SUMMARY_CONTENTS,
+			VIEW_COUNT,
+			REPLY_COUNT,
+			COMMENT_COUNT,
+			ATTACHMENT_COUNT,
+			SCRAP_COUNT,
+			RECOMMEND_COUNT,
+			RECOMMEND_POINT,
+			THUMBNAIL_URL,
+			HOME_URL,
+			START_DATE,
+			END_DATE,
+			PROGRESS_STATUS,
+			LICENSE_TYPE,
+			LICENSE_POINT,
+			REGISTER_ID,
+			REGISTER_PWD,
+			REGISTER_NAME,
+			REGISTER_NICKNAME,
+			REGISTER_EMAIL,
+			REGISTER_IP,
+			REGISTER_DATE,
+			STATUS_TYPE,
+			VAR_FILED1,
+			VAR_FILED2,
+			VAR_FILED3,
+			VAR_FILED4,
+			VAR_FILED5,
+			VAR_FILED6,
+			VAR_FILED7,
+			VAR_FILED8,
+			VAR_FILEDS
+        ) VALUES (
+			#{boardId},
+			#{messageCategoryId},
+			#{parentMessageId},
+			#{tags},
+			#{topFlag},
+			#{title},
+			#{subTitle},
+			#{summaryContents},
+			0,
+			0,
+			0,
+			#{attachmentCount},
+			0,
+			0,
+			0,
+			#{thumbnailUrl},
+			#{homeUrl},
+			#{startDate},
+			#{endDate},
+			#{progressStatus},
+			#{licenseType},
+			#{licensePoint},
+			#{registerId},
+			#{registerPwd},
+			#{registerName},
+			#{registerNickname},
+			#{registerEmail},
+			#{registerIp},
+			NOW(),
+			#{statusType},
+			#{varFiled1},
+			#{varFiled2},
+			#{varFiled3},
+			#{varFiled4},
+			#{varFiled5},
+			#{varFiled6},
+			#{varFiled7},
+			#{varFiled8},
+			#{varFileds}
+        )
+        <selectKey keyProperty="messageId" resultType="java.lang.String" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <insert id="insertMessageContents" parameterType="com.pama.bbs.vo.MessageFormVO">
+        INSERT INTO BBS_MESSAGE_CONTENTS (
+           	MESSAGE_ID,
+           	CONTENTS
+        ) VALUES (
+        	#{messageId},
+        	#{contents}
+       )
+    </insert>
+
+    <update id="updateMessage" parameterType="com.pama.bbs.vo.MessageVO">
+        UPDATE BBS_MESSAGE SET
+			TITLE = #{title},
+			MESSAGE_CATEGORY_ID = #{messageCategoryId},
+			TOP_FLAG = #{topFlag},
+			TAGS = #{tags},
+			SUB_TITLE = #{subTitle},
+			SUMMARY_CONTENTS = #{summaryContents},
+			THUMBNAIL_URL = #{thumbnailUrl},
+			HOME_URL = #{homeUrl},
+			START_DATE = #{startDate},
+			END_DATE = #{endDate},
+			LICENSE_TYPE = #{licenseType},
+			LICENSE_POINT = #{licensePoint},
+			PROGRESS_STATUS = #{progressStatus},
+
+			<if test="statusType != null and statusType!=''">
+				STATUS_TYPE = #{statusType},
+			</if>
+
+			<if test="varFiled1 != null and varFiled1 != ''">
+				VAR_FILED1 = #{varFiled1},
+			</if>
+			<if test="varFiled2 != null and varFiled2 != ''">
+				VAR_FILED2 = #{varFiled2},
+			</if>
+			<if test="varFiled3 != null and varFiled3 != ''">
+				VAR_FILED3 = #{varFiled3},
+			</if>
+			<if test="varFiled4 != null and varFiled4 != ''">
+				VAR_FILED4 = #{varFiled4},
+			</if>
+			<if test="varFiled5 != null and varFiled5 != ''">
+				VAR_FILED5 = #{varFiled5},
+			</if>
+			<if test="varFiled6 != null and varFiled6 != ''">
+				VAR_FILED6 = #{varFiled6},
+			</if>
+			<if test="varFiled7 != null and varFiled7 != ''">
+				VAR_FILED7 = #{varFiled7},
+			</if>
+			<if test="varFiled8 != null and varFiled8 != ''">
+				VAR_FILED8 = #{varFiled8},
+			</if>
+
+			<if test="varFileds != null and varFileds != ''">
+				VAR_FILEDS = #{varFileds},
+			</if>
+
+			UPDATE_ID 		= #{updateId},
+			UPDATE_IP 		= #{updateIp},
+			UPDATE_DATE 	= NOW()
+
+        WHERE MESSAGE_ID = #{messageId}
+    </update>
+
+    <update id="updateMessageSortTree" parameterType="com.pama.bbs.vo.MessageFormVO">
+    	UPDATE BBS_MESSAGE SET
+    		MESSAGE_LEVEL	= #{messageLevel},
+    		SORT_TREE 		= #{sortTree},
+			UPDATE_ID 		= #{updateId},
+			UPDATE_IP 		= #{updateIp},
+			UPDATE_DATE 	= NOW()
+    	WHERE MESSAGE_ID = #{messageId}
+    </update>
+
+    <update id="updateMessageContents" parameterType="com.pama.bbs.vo.MessageVO">
+        UPDATE BBS_MESSAGE_CONTENTS   SET
+			CONTENTS  = #{contents}
+        WHERE MESSAGE_ID = #{messageId}
+    </update>
+
+    <update id="updateMessageProgressStatus" parameterType="com.pama.bbs.vo.MessageVO">
+        UPDATE BBS_MESSAGE SET
+                   PROGRESS_STATUS = #{progressStatus}
+            WHERE  MESSAGE_ID = #{messageId}
+    </update>
+
+    <update id="updateMessageAddViewCount" parameterType="com.pama.bbs.vo.MessageFormVO">
+        UPDATE BBS_MESSAGE SET
+                   VIEW_COUNT = IFNULL(VIEW_COUNT,0)+1
+            WHERE  MESSAGE_ID = #{messageId}
+            <if test="registerId != ''">
+            	AND REGISTER_ID &lt;&gt; #{registerId}
+            </if>
+    </update>
+
+    <update id="updateMessageAddReplyCount" parameterType="com.pama.bbs.vo.MessageFormVO">
+        UPDATE BBS_MESSAGE SET
+                   REPLY_COUNT = IFNULL(REPLY_COUNT,0)+1
+            WHERE  MESSAGE_ID = #{parentMessageId}
+            <if test="registerId != ''">
+            	AND REGISTER_ID &lt;&gt; #{registerId}
+            </if>
+    </update>
+
+
+    <update id="updateMessageAddCommentCount" parameterType="com.pama.bbs.vo.MessageFormVO">
+        UPDATE BBS_MESSAGE BM SET
+                   COMMENT_COUNT = (SELECT COUNT(*) FROM BBS_MESSAGE_COMMENT WHERE MESSAGE_ID = #{messageId})
+       WHERE  BM.MESSAGE_ID = #{messageId}
+    </update>
+
+    <update id="updateMessageRemove" parameterType="com.pama.bbs.vo.MessageVO">
+        UPDATE BBS_MESSAGE SET
+            STATUS_TYPE = 0,
+            UPDATE_DATE 	= NOW(),
+			UPDATE_ID 		= #{updateId},
+			UPDATE_IP 		= #{updateIp}
+        WHERE  MESSAGE_ID = #{messageId}
+    </update>
+    <update id="updateVarFiled1" parameterType="com.pama.bbs.vo.MessageVO">
+        UPDATE BBS_MESSAGE SET
+            VAR_FILED1 = #{varFiled1}
+        WHERE  MESSAGE_ID = #{messageId}
+    </update>
+
+    <update id="updateMessageTagsRemove" parameterType="com.pama.bbs.vo.MessageVO">
+        UPDATE BBS_MESSAGE SET
+            TAGS = #{tags},
+			UPDATE_ID 		= #{updateId},
+			UPDATE_IP 		= #{updateIp},
+			UPDATE_DATE 	= NOW()
+        WHERE  MESSAGE_ID = #{messageId}
+    </update>
+
+    <update id="updateSelectMessageRemove" parameterType="com.pama.bbs.vo.MessageFormVO">
+        UPDATE BBS_MESSAGE SET
+			UPDATE_DATE = NOW(),
+			UPDATE_ID = #{updateId},
+			UPDATE_IP = #{updateIp},
+        	STATUS_TYPE = '0'
+        <trim prefix="WHERE">
+        1=1
+        	<choose>
+        	<when test="checkedIds != null">
+        		AND MESSAGE_ID IN
+        		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+        			#{checkedIds}
+        		</foreach>
+        	</when>
+        	<otherwise>
+        		AND MESSAGE_ID = 0
+        	</otherwise>
+        	</choose>
+        </trim>
+    </update>
+
+    <delete id="deleteMessage" parameterType="java.lang.String">
+        DELETE FROM BBS_MESSAGE WHERE MESSAGE_ID = #{messageId}
+    </delete>
+
+    <delete id="deleteMessageContents" parameterType="java.lang.String">
+        DELETE FROM BBS_MESSAGE_CONTENTS WHERE MESSAGE_ID = #{messageId}
+    </delete>
+
+    <delete id="deleteSelectMessage" parameterType="com.pama.bbs.vo.MessageFormVO">
+        DELETE FROM BBS_MESSAGE
+        <trim prefix="WHERE">
+        1=1
+        	<choose>
+        	<when test="checkedIds != null">
+        		AND MESSAGE_ID IN
+        		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+        			#{checkedIds}
+        		</foreach>
+        	</when>
+        	<otherwise>
+        		AND MESSAGE_ID = 0
+        	</otherwise>
+        	</choose>
+        </trim>
+    </delete>
+
+    <delete id="deleteSelectMessageContents" parameterType="com.pama.bbs.vo.MessageFormVO">
+        DELETE FROM BBS_MESSAGE_CONTENTS
+        <trim prefix="WHERE">
+        1=1
+        	<choose>
+        	<when test="checkedIds != null">
+        		AND MESSAGE_ID IN
+        		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+        			#{checkedIds}
+        		</foreach>
+        	</when>
+        	<otherwise>
+        		AND MESSAGE_ID = 0
+        	</otherwise>
+        	</choose>
+        </trim>
+    </delete>
+
+</mapper>

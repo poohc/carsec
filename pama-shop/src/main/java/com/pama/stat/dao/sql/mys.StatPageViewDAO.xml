@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.stat.dao.StatPageViewDAO">
+
+
+    <!-- 추가 -->
+    <insert id="insertStatPageView" parameterType="com.pama.stat.vo.StatPageViewVO">
+        INSERT INTO STAT_PAGE_VIEW (
+        	PAGE_URL,
+        	USER_AGENT,
+        	REGISTER_IP
+        ) VALUES(
+        	#{pageURL},
+            #{userAgent},
+            #{registerIp}
+        );
+		<selectKey  resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+
+</mapper>

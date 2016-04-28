@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.car.dao.CarcodeDAO">
+
+    <!-- resultMap은 항상 조회위 위치 -->
+    <resultMap id="getCarcodeListResult" type="com.pama.car.vo.CarcodeVO">
+        <result property="carId"     	column="CAR_ID"/>
+        <result property="maker"     column="MAKER"/>
+        <result property="modelName"     column="MODEL_NAME"/>
+        <result property="method"  column="METHOD"/>
+        <result property="startYear" column="START_YEAR"/>
+        <result property="endYear" 	column="END_YEAR"/>
+    </resultMap>
+    <!-- 조회:목록 -->
+    <select id="getCarcodeList" resultMap="getCarcodeListResult" parameterType="com.pama.car.vo.CarcodeVO">
+         SELECT
+             CAR_ID,
+             MAKER,
+             MODEL_NAME,
+             METHOD,
+             START_YEAR,
+             END_YEAR
+         FROM CAR_CODE
+         WHERE CAR_ID = #{carId}
+    </select>
+    
+    <select id="getCarcodeSearchList" resultMap="getCarcodeListResult" parameterType="com.pama.car.vo.CarcodeVO">
+         SELECT
+             distinct
+             <if test="searchType == 'maker'">
+             MAKER
+             </if>
+             <if test="searchType == 'model'">
+             MAKER,
+             MODEL_NAME,
+             METHOD
+             </if>
+             <if test="searchType == 'years'">
+             CAR_ID,
+             MAKER,
+             MODEL_NAME,
+             METHOD,
+             START_YEAR,
+             END_YEAR
+             </if>
+         FROM CAR_CODE
+         WHERE 
+         1=1
+         <if test="searchType == 'model'">
+         AND MAKER = #{maker}
+         </if>
+         <if test="searchType == 'years'">
+         AND MAKER = #{maker}
+         AND MODEL_NAME = #{modelName}
+         AND METHOD = #{method}        
+         </if>
+    </select>    
+
+</mapper>

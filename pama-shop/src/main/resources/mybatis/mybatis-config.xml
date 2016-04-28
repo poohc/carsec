@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+
+
+	<typeAliases>
+		<typeAlias alias="accountSearchVO" type="com.pama.mbr.vo.AccountSearchVO"/>
+
+		<typeAlias alias="accountCarInfoVO" type="com.pama.mbr.vo.AccountCarInfoVO"/>
+		<typeAlias alias="accountMechanicInfoVO" type="com.pama.mbr.vo.AccountMechanicInfoVO"/>
+
+    	<typeAlias alias="categoryVO" type="com.pama.prd.vo.CategoryVO"/>
+    	<typeAlias alias="productVO" type="com.pama.prd.vo.ProductVO"/>
+	    <typeAlias alias="productContentsVO" type="com.pama.prd.vo.ProductContentsVO"/>
+	    <typeAlias alias="productAttachementVO" type="com.pama.prd.vo.ProductAttachementVO"/>
+	    <typeAlias alias="productSearchVO" type="com.pama.prd.vo.ProductSearchVO"/>
+
+    	<typeAlias alias="productLicenseVO" type="com.pama.prd.vo.ProductLicenseVO"/>
+    	<typeAlias alias="productLicenseSearchVO" type="com.pama.prd.vo.ProductLicenseSearchVO"/>
+
+		<typeAlias alias="orderSearchVO" type="com.pama.ord.vo.OrderSearchVO"/>
+		<typeAlias alias="texSearchVO" type="com.pama.ord.vo.TaxSearchVO"/>
+
+		<typeAlias alias="boardSearchVO" type="com.pama.bbs.vo.BoardSearchVO"/>
+		<typeAlias alias="messageAttachmentVO" type="com.pama.bbs.vo.MessageAttachmentVO"/>
+		<typeAlias alias="messageAttachmentSearchVO" type="com.pama.bbs.vo.MessageAttachmentSearchVO"/>
+		<typeAlias alias="messageSearchVO" type="com.pama.bbs.vo.MessageSearchVO"/>
+		<typeAlias alias="messageCategorySearchVO" type="com.pama.bbs.vo.MessageCategorySearchVO"/>
+
+		<typeAlias alias="bannerFormVO" type="com.pama.banner.vo.BannerFormVO"/>
+		<typeAlias alias="bannerGroupVO" type="com.pama.banner.vo.BannerGroupVO"/>
+    	<typeAlias alias="bannerInfoVO" type="com.pama.banner.vo.BannerInfoVO"/>
+    	<typeAlias alias="bannerListVO" type="com.pama.banner.vo.BannerListVO"/>
+	    <typeAlias alias="bannerPlaceVO" type="com.pama.banner.vo.BannerPlaceVO"/>
+	    <typeAlias alias="bannerSearchVO" type="com.pama.banner.vo.BannerSearchVO"/>
+
+	    <typeAlias alias="siteContentVO" type="com.pama.sitecontents.vo.SiteContentVO"/>
+	    <typeAlias alias="productOptionVO" type="com.pama.prdoption.vo.ProductOptionVO"/>
+	    <typeAlias alias="productOptionSearchVO" type="com.pama.prdoption.vo.ProductOptionSearchVO"/>
+	    <typeAlias alias="productOptVO" type="com.pama.prd.vo.ProductOptVO"/>
+
+
+	</typeAliases>
+
+
+</configuration>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.ord.dao.PurchaserDAO">
+
+    <resultMap id="getPurchaserResult" type="com.pama.ord.vo.PurchaserVO">
+        <result property="ordId" column="ORD_ID"/>
+        <result property="ordererId" column="ORDERER_ID"/>
+        <result property="ordererName" column="ORDERER_NAME"/>
+        <result property="ordererEmail" column="ORDERER_EMAIL"/>
+        <result property="ordererTel" column="ORDERER_TEL"/>
+        <result property="ordererMobile" column="ORDERER_MOBILE"/>
+        <result property="ordererZipcode" column="ORDERER_ZIPCODE"/>
+        <result property="ordererAddr1" column="ORDERER_ADDR1"/>
+        <result property="ordererAddr2" column="ORDERER_ADDR2"/>
+        <result property="receiveNane" column="RECEIVE_NANE"/>
+        <result property="receiveEmail" column="RECEIVE_EMAIL"/>
+        <result property="receiveTel" column="RECEIVE_TEL"/>
+        <result property="receiveMobile" column="RECEIVE_MOBILE"/>
+        <result property="receiveZipcode" column="RECEIVE_ZIPCODE"/>
+        <result property="receiveAddr1" column="RECEIVE_ADDR1"/>
+        <result property="receiveAddr2" column="RECEIVE_ADDR2"/>
+        <result property="memo" column="MEMO"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+    </resultMap>
+    <select id="getPurchaser" resultMap="getPurchaserResult" parameterType="com.pama.ord.vo.PurchaserVO">
+        SELECT
+            ORD_ID,
+            ORDERER_ID,
+            ORDERER_NAME,
+            ORDERER_EMAIL,
+            ORDERER_TEL,
+            ORDERER_MOBILE,
+            ORDERER_ZIPCODE,
+            ORDERER_ADDR1,
+            ORDERER_ADDR2,
+            RECEIVE_NANE,
+            RECEIVE_EMAIL,
+            RECEIVE_TEL,
+            RECEIVE_MOBILE,
+            RECEIVE_ZIPCODE,
+            RECEIVE_ADDR1,
+            RECEIVE_ADDR2,
+            MEMO,
+            REGISTER_DATE,
+            UPDATE_DATE
+        FROM ORD_PURCHASER
+        WHERE ORD_ID = #{ordId}
+    </select>
+
+    <insert id="insertPurchaser" parameterType="com.pama.ord.vo.OrderVO">
+        INSERT INTO ORD_PURCHASER (
+            ORD_ID
+            ,ORDERER_ID
+            ,ORDERER_NAME
+            ,ORDERER_EMAIL
+            ,ORDERER_TEL
+            ,ORDERER_MOBILE
+            ,ORDERER_ZIPCODE
+            ,ORDERER_ADDR1
+            ,ORDERER_ADDR2
+            ,RECEIVE_NANE
+            ,RECEIVE_EMAIL
+            ,RECEIVE_TEL
+            ,RECEIVE_MOBILE
+            ,RECEIVE_ZIPCODE
+            ,RECEIVE_ADDR1
+            ,RECEIVE_ADDR2
+            ,MEMO
+            ,REGISTER_DATE
+            ,UPDATE_DATE
+        ) VALUES (
+            #{ordId}
+            ,#{ordererId}
+            ,#{ordererName}
+            ,#{ordererEmail}
+            ,#{ordererTel}
+            ,#{ordererMobile}
+            ,#{ordererZipcode}
+            ,#{ordererAddr1}
+            ,#{ordererAddr2}
+            ,#{receiveNane}
+            ,#{receiveEmail}
+            ,#{receiveTel}
+            ,#{receiveMobile}
+            ,#{receiveZipcode}
+            ,#{receiveAddr1}
+            ,#{receiveAddr2}
+            ,#{memo}
+            ,NOW()
+            ,NOW()
+        )
+       <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+       </selectKey>
+    </insert>
+
+    <update id="updatePurchaser" parameterType="com.pama.ord.vo.PurchaserVO">
+        UPDATE ORD_PURCHASER SET
+            ORDERER_ID = #{ordererId}
+            ,ORDERER_NAME = #{ordererName}
+            ,ORDERER_EMAIL = #{ordererEmail}
+            ,ORDERER_TEL = #{ordererTel}
+            ,ORDERER_MOBILE = #{ordererMobile}
+            ,ORDERER_ZIPCODE = #{ordererZipcode}
+            ,ORDERER_ADDR1 = #{ordererAddr1}
+            ,ORDERER_ADDR2 = #{ordererAddr2}
+            ,RECEIVE_NANE = #{receiveNane}
+            ,RECEIVE_EMAIL = #{receiveEmail}
+            ,RECEIVE_TEL = #{receiveTel}
+            ,RECEIVE_MOBILE = #{receiveMobile}
+            ,RECEIVE_ZIPCODE = #{receiveZipcode}
+            ,RECEIVE_ADDR1 = #{receiveAddr1}
+            ,RECEIVE_ADDR2 = #{receiveAddr2}
+            ,MEMO = #{memo}
+            ,UPDATE_DATE = NOW()
+        WHERE ORD_ID = #{ordId}
+
+    </update>
+
+</mapper>

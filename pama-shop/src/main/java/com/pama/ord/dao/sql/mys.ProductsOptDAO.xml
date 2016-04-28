@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.ord.dao.ProductsOptDAO">
+
+    <resultMap id="productsOptVOResult" type="com.pama.ord.vo.ProductsOptVO">
+        <result property="ordId" column="ORD_ID"/>
+        <result property="prdId" column="PRD_ID"/>
+        <result property="optId" column="OPT_ID"/>
+        <result property="optName" column="OPT_NAME"/>
+        <result property="optPrice" column="OPT_PRICE"/>
+    </resultMap>
+    <select id="getProductsOptList" resultMap="productsOptVOResult" parameterType="com.pama.ord.vo.ProductsOptVO">
+        SELECT
+            PRD_ID
+            ,ORD_ID
+            ,OPT_ID
+            ,OPT_NAME
+            ,OPT_PRICE
+        FROM ORD_PRD_OPTIONS 
+        WHERE ORD_ID = #{ordId}
+          AND PRD_ID = #{prdId}
+    </select>
+
+    <insert id="insertProductsOpt" parameterType="com.pama.ord.vo.ProductsOptVO">
+        INSERT INTO ORD_PRD_OPTIONS (
+            PRD_ID
+            ,ORD_ID
+            ,OPT_ID
+            ,OPT_NAME
+            ,OPT_PRICE
+        ) VALUES (
+            #{prdId}
+            ,#{ordId}
+            ,#{optId}
+            ,#{optName}
+            ,#{optPrice}
+        )
+       <selectKey keyProperty="ordPrdOptId" resultType="java.lang.String" order="AFTER">
+            SELECT LAST_INSERT_ID()
+       </selectKey>
+    </insert>
+    
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context" xmlns:cache="http://www.springframework.org/schema/cache" xmlns:util="http://www.springframework.org/schema/util" xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+            http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+            http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
+
+	<!-- ==================================================== -->
+	<!-- propertyConfigurer Setting -->
+	<!-- ==================================================== -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/config/application-config.xml</value>
+			</list>
+		</property>
+	</bean>
+	<util:properties id="config" location="classpath:/config/application-config.xml" />
+
+	<!-- ==================================================== -->
+	<!-- multipart Setting -->
+	<!-- ==================================================== -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<!-- ==================================================== -->
+	<!-- Java Mail Setting -->
+	<!-- ==================================================== -->
+	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.host}" />
+		<property name="port" value="${mail.port}" />
+		<property name="username" value="${mail.username}" />
+		<property name="password" value="${mail.password}" />
+		<property name="protocol" value="${mail.protocol}" />
+		<property name="defaultEncoding" value="${mail.defaultEncoding}" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+				<prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+				<prop key="mail.smtp.quitwait">${mail.smtp.quitwait}</prop>
+				<prop key="mail.debug">${mail.debug}</prop>
+				<prop key="mail.from">${mail.from}</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<!-- ==================================================== -->
+	<!-- Transaction Setting(AOP USE) -->
+	<!-- ==================================================== -->
+	<aop:config>
+		<aop:advisor id="managerTx" advice-ref="txAdvice" pointcut="execution(* *..service.*Service.*(..))" />
+	</aop:config>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" />
+			<tx:method name="insert*" />
+			<tx:method name="modify*" />
+			<tx:method name="update*" />
+			<tx:method name="remove*" />
+			<tx:method name="delete*" />
+			<tx:method name="trx*" />
+			<tx:method name="*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- ==================================================== -->
+	<!-- mybatis Setting -->
+	<!-- ==================================================== -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:/mybatis/mybatis-config.xml" />
+		<property name="mapperLocations">
+			<array>
+				<value>classpath:/com/pama/**/sql/*.xml</value>
+			</array>
+		</property>
+	</bean>
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean>
+
+</beans>

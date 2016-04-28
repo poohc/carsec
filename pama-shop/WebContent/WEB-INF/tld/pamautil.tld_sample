@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>1.2</jsp-version>
+    <short-name>bean</short-name>
+    <uri>pamautil</uri>
+
+    <tag>
+        <name>cmmPaging</name>
+        <tag-class>net.pamafw.tag.CmmPagingTag</tag-class>
+        <body-content>empty</body-content>
+        <!--  list url -->
+        <attribute>
+            <name>listUrl</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!--  totalCount -->
+        <attribute>
+            <name>totalCount</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!--  curPage -->
+        <attribute>
+            <name>curPage</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!--  listPages -->
+        <attribute>
+            <name>listPages</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!--  listLines -->
+        <attribute>
+            <name>listLines</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- block -->
+        <attribute>
+            <name>prevImage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nextImage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!--  page -->
+        <attribute>
+            <name>prevPageImage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>nextPageImage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>splitImage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>alinkCss</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>curPageCss</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>textCss</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ifBrower</name>
+        <tag-class>net.pamafw.tag.IfBrowerTag</tag-class>
+        <body-content>jsp</body-content>
+        <!--  list url -->
+        <attribute>
+            <name>searchName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+            <![CDATA[
+                  <ul><pre><code>​searchName</code></pre>
+                    <li><pre><code>F​i​r​e​f​o​x/version</code></pre></li>
+                    <li><pre><code>MSIE version</code></pre></li>
+                    <li><pre><code>O​p​e​r​a/version</code></pre></li>
+                    <li><pre><code>C​h​r​o​m​e/version</code></pre></li>
+                    <li><pre><code>S​a​f​a​r​i​/version</code></pre></li>
+                  </ul>
+                  <p><strong>Example :</strong></p>
+                  <pre><code>​F​i​r​e​f​o​x/3 or MSIE 7.0 or C​h​r​o​m​e/2</code></pre>
+                ]]>
+            </description>
+        </attribute>
+
+        <attribute>
+            <name>debug</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+             <![CDATA[<pre><code>[debug mode] 1</code></pre>]]>
+            </description>
+        </attribute>
+    </tag>
+
+
+</taglib>

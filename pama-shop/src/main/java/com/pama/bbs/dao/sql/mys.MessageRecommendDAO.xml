@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.bbs.dao.MessageRecommendDAO">
+
+
+	<select id="getMessageRecommendRegisterId" parameterType="com.pama.bbs.vo.MessageRecommendVO" resultType="com.pama.bbs.vo.MessageRecommendVO">
+        SELECT  RECOMMEND_ID as recommendId,
+			    MESSAGE_ID as messageId,
+			    REGISTER_DATE as registerDate,
+			    REGISTER_ID as registerId,
+			    REGISTER_IP as registerIp 
+		FROM BBS_MESSAGE_RECOMMEND
+		WHERE MESSAGE_ID = #{messageId}
+			AND REGISTER_ID = #{registerId}
+    </select>
+
+    <insert id="insertMessageRecommend" parameterType="com.pama.bbs.vo.MessageRecommendVO" useGeneratedKeys="true" keyProperty="recommendId">
+        INSERT INTO BBS_MESSAGE_RECOMMEND
+				(
+				MESSAGE_ID,
+				REGISTER_DATE,
+				REGISTER_ID,
+				REGISTER_IP)
+				VALUES
+				(
+				#{messageId},
+				now(),
+				#{registerId},
+				#{registerIp}
+				
+				)
+        <selectKey keyProperty="commentId" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+
+    <!-- View Resolver for File Download -->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="0" />
+	</bean>
+
+	<!-- View Resolver for XML -->
+	<bean class="org.springframework.web.servlet.view.XmlViewResolver"
+		p:location="classpath:/spring/views.xml" p:order="1" />
+
+
+	<!-- View Resolver for JSP -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<property name="redirectHttp10Compatible" value="false" />
+	</bean>
+
+	    <!-- ==================================================== -->
+    <!-- AOP Logger 설정 -->
+    <!-- ==================================================== -->
+	<aop:aspectj-autoproxy />
+
+    <context:component-scan base-package="com.pama" />
+
+    <bean id="loggerAspect" class="com.pama.common.aspect.LoggerAspect" />
+    <bean id="accountAspect" class="com.pama.mbr.aspect.AccountAspect" />
+
+	<!-- mvc annotaion -->
+    <mvc:annotation-driven />
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**/*.do" />
+            <bean class="com.pama.admin.interceptor.AdminInteceptor">
+                <property name="byPassURIs">
+                    <list>
+                        <value>/admin/login/</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/mbr/mypage/**/*.do" />
+            <mvc:mapping path="/mbr/info/**/*.do" />
+			<mvc:mapping path="/ord/**/*.do" />
+			<mvc:mapping path="/point/**/*.do" />
+
+            <bean class="com.pama.front.interceptor.FrontInteceptor">
+                <property name="byPassURIs">
+                    <list>
+                        <value>/login/</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+
+    </mvc:interceptors>
+
+
+</beans>

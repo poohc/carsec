@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.prdoption.dao.ProductOptionDAO">
+
+    <resultMap id="productOptionVOResult" type="productOptionVO">
+        <id property="optId" column="OPT_ID"/>
+        <result property="optName" column="OPT_NAME"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="updateIp" column="UPDATE_IP"/>
+        <result property="optStatus" column="OPT_STATUS"/>
+    </resultMap>
+
+    <sql id="getProductOptionListWhere">
+        FROM
+            PRD_OPTION_INFO
+        WHERE
+            OPT_STATUS = '1'
+            <if test="optId != null">
+            	AND OPT_ID = #{optId}
+            </if>
+            <if test="optName != null">
+            	AND OPT_NAME LIKE CONCAT(#{optName},'%')
+            </if>
+    </sql>
+
+    <select id="getProductOptionListCount" resultType="java.lang.Integer" parameterType="productOptionSearchVO">
+        SELECT
+            COUNT(OPT_ID) AS TOTAL_COUNT
+        <include refid="getProductOptionListWhere"/>
+    </select>
+
+    <select id="getProductOptionList" resultMap="productOptionVOResult" parameterType="productOptionSearchVO">
+        SELECT
+            OPT_ID,
+            OPT_NAME,
+            REGISTER_DATE,
+            REGISTER_ID,
+            REGISTER_IP,
+            UPDATE_DATE,
+            UPDATE_ID,
+            UPDATE_IP
+		<include refid="getProductOptionListWhere"/>
+        <!-- Sorting -->
+        <choose>
+        	<when test="sortColumn == ''">
+        		ORDER BY OPT_ID DESC
+        	</when>
+        	<when test="sortColumn == 'optName'">
+        		ORDER BY OPT_NAME ${sortValue}
+        	</when>
+        	<otherwise>
+        		ORDER BY OPT_NAME DESC
+        	</otherwise>
+        </choose>
+
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+    <select id="getProductOption" resultMap="productOptionVOResult" parameterType="productOptionSearchVO">
+        SELECT
+            OPT_ID,
+            OPT_NAME,
+            REGISTER_DATE,
+            REGISTER_ID,
+            REGISTER_IP,
+            UPDATE_DATE,
+            UPDATE_ID,
+            UPDATE_IP
+        FROM
+            PRD_OPTION_INFO
+        WHERE 1=1
+        	<if test="optId != null">
+        		AND OPT_ID = #{optId}
+        	</if>
+        	<if test="optName != null">
+        		AND OPT_NAME = #{optName}
+        	</if>
+    </select>
+
+    <insert id="insertProductOption" parameterType="productOptionVO">
+        INSERT INTO PRD_OPTION_INFO (
+            OPT_NAME,
+            REGISTER_DATE,
+            REGISTER_ID,
+            REGISTER_IP,
+            UPDATE_DATE,
+            UPDATE_ID,
+            UPDATE_IP,
+            OPT_STATUS
+        )VALUES(
+            #{optName},
+            NOW(),
+            #{registerId},
+            #{registerIp},
+            NOW(),
+            #{updateId},
+            #{updateIp},
+            '1'
+        )
+       <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateProductOption" parameterType="productOptionVO">
+        UPDATE
+            PRD_OPTION_INFO
+        SET
+        	OPT_NAME = #{optName},
+            UPDATE_DATE = NOW(),
+            UPDATE_ID = #{updateId},
+            UPDATE_IP = #{updateIp}
+        WHERE
+            OPT_ID = #{optId}
+    </update>
+
+    <update id="updateProductOptionStatus" parameterType="productOptionVO">
+        UPDATE
+            PRD_OPTION_INFO
+        SET
+            OPT_STATUS = '0',
+            UPDATE_DATE = NOW(),
+            UPDATE_ID = #{updateId},
+            UPDATE_IP = #{updateIp}
+        WHERE
+            OPT_ID = #{optId}
+    </update>
+
+</mapper>
+

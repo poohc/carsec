@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.banner.dao.BannerPlaceDAO">
+
+    <!-- 목록에 대한 검색조건은 같은걸로 사용 -->
+    <sql id="getListWhere">
+    	<trim prefix="WHERE" >
+    		1=1
+    		<choose>
+	        	<when test="statusType == null">
+	        		AND STATUS_TYPE &lt;&gt; 0
+	        	</when>
+	        	<otherwise>
+	        		AND STATUS_TYPE = #{statusType}
+	        	</otherwise>
+	        </choose>
+
+	        <!-- select box로 검색할경우 -->
+	        <if test="searchValue != null">
+	        	<if test="searchColumn == 'bannerTitle'">
+	        		AND INSTR(LOWER(BANNER_TITLE),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        </if>
+		</trim>
+    </sql>
+
+    <!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="bannerSearchVO">
+        SELECT COUNT(BANNER_PLACE_ID) AS TOTAL_COUNT
+        FROM BANNER_PLACE
+        <include refid="getListWhere"/>
+    </select>
+
+	<resultMap id="bannerPlaceResult" type="com.pama.banner.vo.BannerPlaceVO">
+		<id property="bannerPlaceId" column="BANNER_PLACE_ID"/>
+		<result property="bannerTitle"	column="BANNER_TITLE" />
+		<result property="bannerSize"	column="BANNER_SIZE" />
+		<result property="registerDate"	column="REGISTER_DATE" />
+		<result property="registerId"	column="REGISTER_ID" />
+		<result property="statusType"	column="STATUS_TYPE" />
+	</resultMap>
+    <!-- 조회:목록 -->
+    <select id="getBannerPlaceList" resultMap="bannerPlaceResult" parameterType="bannerSearchVO">
+    	SELECT
+	        BANNER_PLACE_ID,
+	        BANNER_TITLE,
+	        BANNER_SIZE,
+	        REGISTER_DATE,
+	        REGISTER_ID,
+	        STATUS_TYPE
+    	FROM BANNER_PLACE
+		<include refid="getListWhere"/>
+		<!-- Sorting -->
+		ORDER BY BANNER_PLACE_ID
+	    <if test="row > 0">
+	    LIMIT #{startIndex}, #{row}
+	    </if>
+
+    </select>
+
+	<resultMap id="bannerPlaceResult1" type="com.pama.banner.vo.BannerPlaceVO">
+		<id property="bannerPlaceId" column="BANNER_PLACE_ID"/>
+		<result property="bannerTitle"	column="BANNER_TITLE" />
+		<result property="bannerSize"	column="BANNER_SIZE" />
+		<result property="bannerMemo"	column="BANNER_MEMO" />
+		<result property="registerDate"	column="REGISTER_DATE" />
+		<result property="registerId"	column="REGISTER_ID" />
+		<result property="statusType"	column="STATUS_TYPE" />
+	</resultMap>
+
+	<select id="getBannerPlace" resultMap="bannerPlaceResult1" parameterType="bannerSearchVO">
+	    SELECT
+	        BANNER_PLACE_ID,
+	        BANNER_TITLE,
+	        BANNER_SIZE,
+	        BANNER_MEMO,
+	        REGISTER_DATE,
+	        REGISTER_ID,
+	        STATUS_TYPE
+	    FROM BANNER_PLACE
+		<trim prefix="WHERE" >
+	    	1=1
+    		<choose>
+	        	<when test="statusType == null">
+	        		AND STATUS_TYPE &lt;&gt; 0
+	        	</when>
+	        	<otherwise>
+	        		AND STATUS_TYPE = #{statusType}
+	        	</otherwise>
+	    	</choose>
+	    	AND BANNER_PLACE_ID = #{bannerPlaceId}
+	    </trim>
+    </select>
+
+	<insert id="insertBannerPlace" parameterType="com.pama.banner.vo.BannerPlaceVO" useGeneratedKeys="true" keyProperty="bannerPlaceId">
+        INSERT INTO BANNER_PLACE (
+        	BANNER_TITLE,
+        	BANNER_SIZE,
+        	BANNER_MEMO,
+        	REGISTER_DATE,
+        	REGISTER_ID,
+        	REGISTER_IP,
+        	UPDATE_DATE,
+        	STATUS_TYPE
+        ) VALUES (
+        	#{bannerTitle},
+        	#{bannerSize},
+        	#{bannerMemo},
+        	NOW(),
+        	#{registerId},
+        	#{registerIp},
+        	NOW(),
+        	#{statusType}
+        )
+        <selectKey keyProperty="bannerPlaceId" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+
+	<update id="updateBannerPlace" parameterType="com.pama.banner.vo.BannerPlaceVO">
+		UPDATE BANNER_PLACE SET
+			BANNER_TITLE = #{bannerTitle},
+			BANNER_SIZE = #{bannerSize},
+			BANNER_MEMO = #{bannerMemo},
+			UPDATE_DATE = NOW(),
+			STATUS_TYPE = #{statusType}
+		WHERE BANNER_PLACE_ID = #{bannerPlaceId}
+	</update>
+
+	<update id="updateBannerPlaceRemove" parameterType="com.pama.banner.vo.BannerPlaceVO">
+        UPDATE BANNER_PLACE SET
+        	UPDATE_DATE 	= NOW(),
+        	STATUS_TYPE = '0'
+        WHERE  BANNER_PLACE_ID = #{bannerPlaceId}
+	</update>
+
+	<update id="updateSelectBannerPlaceRemove" parameterType="com.pama.banner.vo.BannerFormVO">
+        UPDATE BANNER_PLACE SET
+        	UPDATE_DATE 	= NOW(),
+        	STATUS_TYPE = '0'
+        <trim prefix="WHERE">
+        1=1
+        	<choose>
+        	<when test="checkedIds != null">
+        		AND BANNER_PLACE_ID IN
+        		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+        			#{checkedIds}
+        		</foreach>
+        	</when>
+        	<otherwise>
+        		AND BANNER_PLACE_ID = 0
+        	</otherwise>
+        	</choose>
+        </trim>
+    </update>
+
+</mapper>

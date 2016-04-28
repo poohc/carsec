@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.bbs.dao.BoardDAO">
+
+    <!-- 목록에 대한 검색조건은 같은걸로 사용 -->
+    <sql id="getListWhere">
+
+        <trim prefix="WHERE" >
+
+        	BOARD_ID &gt; 0
+
+	        <choose>
+	        	<when test="statusType == null">
+	        		AND STATUS_TYPE in ('1','2')
+	        	</when>
+	        	<otherwise>
+	        		AND STATUS_TYPE = #{statusType}
+	        	</otherwise>
+	        </choose>
+
+	        <!-- select box로 검색할경우 -->
+	        <if test="searchValue != null">
+	        	<if test="searchColumn == 'title'">
+	        		AND INSTR(LOWER(TITLE),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        </if>
+
+		</trim>
+
+    </sql>
+
+    <!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="boardSearchVO">
+        SELECT COUNT(*) AS TOTAL_COUNT
+        FROM BBS_BOARD
+        <include refid="getListWhere"/>
+    </select>
+
+    <!-- resultMap은 항상 조회위 위치 -->
+    <resultMap id="boardResult" type="com.pama.bbs.vo.BoardVO">
+     	<id property="boardId" column="BOARD_ID"/>
+        <result property="boardKey" column="BOARD_KEY"/>
+        <result property="boardType" column="BOARD_TYPE"/>
+        <result property="title" column="TITLE"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="listLines" column="LIST_LINES"/>
+        <result property="listLinesAdmin" column="LIST_LINES_ADMIN"/>
+    	<result property="messageCategoryFlag" column="MESSAGE_CATEGORY_FLAG"/>
+        <result property="consultFlag" column="CONSULT_FLAG"/>
+        <result property="replyFlag" column="REPLY_FLAG"/>
+        <result property="commentFlag" column="COMMENT_FLAG"/>
+        <result property="attachmentFlag" column="ATTACHMENT_FLAG"/>
+        <result property="recommendFlag" column="RECOMMEND_FLAG"/>
+        <result property="listImageFlag" column="LIST_IMAGE_FLAG"/>
+        <result property="topMessageFlag" column="TOP_MESSAGE_FLAG"/>
+        <result property="tagsFlag" column="TAGS_FLAG"/>
+        <result property="expirationFlag" column="EXPIRATION_FLAG"/>
+        <result property="summaryFlag" column="SUMMARY_FLAG"/>
+        <result property="contentsFlag" column="CONTENTS_FLAG"/>
+        <result property="secretFlag" column="SECRET_FLAG"/>
+        <result property="authAccess" column="AUTH_ACCESS"/>
+        <result property="authList" column="AUTH_LIST"/>
+        <result property="authView" column="AUTH_VIEW"/>
+        <result property="authWrite" column="AUTH_WRITE"/>
+        <result property="authManager" column="AUTH_MANAGER"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+    </resultMap>
+    <!-- 조회:목록 -->
+    <select id="getBoardList" resultMap="boardResult" parameterType="boardSearchVO">
+				SELECT
+					BOARD_ID,
+					BOARD_KEY,
+					BOARD_TYPE,
+					TITLE,
+					DESCRIPTION,
+					LIST_LINES,
+					LIST_LINES_ADMIN,
+					MESSAGE_CATEGORY_FLAG,
+
+					CONSULT_FLAG,
+					REPLY_FLAG,
+					COMMENT_FLAG,
+					ATTACHMENT_FLAG,
+					RECOMMEND_FLAG,
+					LIST_IMAGE_FLAG,
+					TOP_MESSAGE_FLAG,
+
+					TAGS_FLAG,
+					EXPIRATION_FLAG,
+					SUMMARY_FLAG,
+					CONTENTS_FLAG,
+					SECRET_FLAG,
+					AUTH_ACCESS,
+					AUTH_LIST,
+
+					AUTH_VIEW,
+					AUTH_WRITE,
+					AUTH_MANAGER,
+					REGISTER_ID,
+					REGISTER_DATE,
+					STATUS_TYPE
+				FROM BBS_BOARD
+        		<include refid="getListWhere"/>
+		        <!-- Sorting -->
+	        	<if test="sortColumn == 'title'">
+	        		ORDER BY TITLE ${sortValue}
+	        	</if>
+	        	LIMIT #{startIndex}, #{row}
+    </select>
+
+    <select id="getBoardOpenList" resultMap="boardResult" parameterType="BoardSearchVO">
+		SELECT
+			BOARD_ID,
+			BOARD_KEY,
+			BOARD_TYPE,
+			TITLE,
+			DESCRIPTION,
+			LIST_LINES,
+			LIST_LINES_ADMIN,
+			MESSAGE_CATEGORY_FLAG,
+
+			CONSULT_FLAG,
+			REPLY_FLAG,
+			COMMENT_FLAG,
+			ATTACHMENT_FLAG,
+			RECOMMEND_FLAG,
+			LIST_IMAGE_FLAG,
+			TOP_MESSAGE_FLAG,
+
+			TAGS_FLAG,
+			EXPIRATION_FLAG,
+			SUMMARY_FLAG,
+			CONTENTS_FLAG,
+			SECRET_FLAG,
+			AUTH_ACCESS,
+			AUTH_LIST,
+
+			AUTH_VIEW,
+			AUTH_WRITE,
+			AUTH_MANAGER,
+			REGISTER_ID,
+			REGISTER_DATE,
+			STATUS_TYPE
+		FROM BBS_BOARD
+		WHERE STATUS_TYPE = '2'
+    </select>
+
+    <select id="getBoard" resultMap="boardResult">
+        SELECT
+			BOARD_ID,
+			BOARD_KEY,
+			BOARD_TYPE,
+			TITLE,
+			DESCRIPTION,
+			LIST_LINES,
+			LIST_LINES_ADMIN,
+			MESSAGE_CATEGORY_FLAG,
+
+			CONSULT_FLAG,
+			REPLY_FLAG,
+			COMMENT_FLAG,
+			ATTACHMENT_FLAG,
+			RECOMMEND_FLAG,
+			LIST_IMAGE_FLAG,
+			TOP_MESSAGE_FLAG,
+
+			TAGS_FLAG,
+			EXPIRATION_FLAG,
+			SUMMARY_FLAG,
+			CONTENTS_FLAG,
+			SECRET_FLAG,
+			AUTH_ACCESS,
+			AUTH_LIST,
+
+			AUTH_VIEW,
+			AUTH_WRITE,
+			AUTH_MANAGER,
+			REGISTER_ID,
+			REGISTER_DATE,
+			STATUS_TYPE
+		FROM BBS_BOARD
+		<where>
+       		STATUS_TYPE in ('1','2')
+
+	        <choose>
+	        	<when test="boardId == null">
+	        		and (BOARD_ID = ''
+	        	</when>
+	        	<otherwise>
+	        		and (BOARD_ID = #{boardId}
+	        	</otherwise>
+	        </choose>
+	        <choose>
+	        	<when test="boardKey == null">
+	        		or BOARD_KEY = '')
+	        	</when>
+	        	<otherwise>
+	        		or BOARD_KEY = #{boardKey})
+	        	</otherwise>
+			</choose>
+
+       	</where>
+
+    </select>
+
+    <insert id="insertBoard" parameterType="com.pama.bbs.vo.BoardVO" useGeneratedKeys="true" keyProperty="messageId">
+        INSERT INTO BBS_BOARD (
+			BOARD_KEY,
+			BOARD_TYPE,
+			TITLE,
+			DESCRIPTION,
+			LIST_LINES,
+			LIST_LINES_ADMIN,
+			MESSAGE_CATEGORY_FLAG,
+			CONSULT_FLAG,
+			REPLY_FLAG,
+			COMMENT_FLAG,
+			ATTACHMENT_FLAG,
+			RECOMMEND_FLAG,
+			LIST_IMAGE_FLAG,
+			TOP_MESSAGE_FLAG,
+			TAGS_FLAG,
+			EXPIRATION_FLAG,
+			SUMMARY_FLAG,
+			CONTENTS_FLAG,
+			SECRET_FLAG,
+			AUTH_ACCESS,
+			AUTH_LIST,
+			AUTH_VIEW,
+			AUTH_WRITE,
+			AUTH_MANAGER,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP,
+			UPDATE_DATE,
+			UPDATE_ID,
+			UPDATE_IP,
+			STATUS_TYPE
+        ) VALUES (
+            CAST( #{boardKey} AS CHAR ),
+            #{boardType},
+            #{title},
+            #{description},
+            #{listLines},
+            #{listLinesAdmin},
+            #{messageCategoryFlag},
+            #{consultFlag},
+            #{replyFlag},
+            #{commentFlag},
+            #{attachmentFlag},
+            #{recommendFlag},
+            #{listImageFlag},
+            #{topMessageFlag},
+            #{tagsFlag},
+            #{expirationFlag},
+            #{summaryFlag},
+            #{contentsFlag},
+            #{secretFlag},
+            #{authAccess},
+            #{authList},
+            #{authView},
+            #{authWrite},
+            #{authManager},
+            NOW(),
+            #{registerId},
+            #{registerIp},
+            NOW(),
+            #{updateId},
+            #{updateIp},
+            #{statusType}
+         )
+        <selectKey keyProperty="messageId" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateBoard" parameterType="com.pama.bbs.vo.BoardVO">
+		UPDATE BBS_BOARD SET
+			BOARD_KEY		  		= #{boardKey},
+			BOARD_TYPE            	= #{boardType},
+			TITLE                 	= #{title},
+			DESCRIPTION           	= #{description},
+			LIST_LINES            	= #{listLines},
+			LIST_LINES_ADMIN       	= #{listLinesAdmin},
+			MESSAGE_CATEGORY_FLAG 	= #{messageCategoryFlag},
+			CONSULT_FLAG			= #{consultFlag},
+			REPLY_FLAG            	= #{replyFlag},
+			COMMENT_FLAG          	= #{commentFlag},
+			ATTACHMENT_FLAG      	= #{attachmentFlag},
+			RECOMMEND_FLAG        	= #{recommendFlag},
+			LIST_IMAGE_FLAG       	= #{listImageFlag},
+			TOP_MESSAGE_FLAG      	= #{topMessageFlag},
+			TAGS_FLAG             	= #{tagsFlag},
+			EXPIRATION_FLAG			= #{expirationFlag},
+			SUMMARY_FLAG		  	= #{summaryFlag},
+			CONTENTS_FLAG 			= #{contentsFlag},
+			SECRET_FLAG				= #{secretFlag},
+			AUTH_ACCESS			  	= #{authAccess},
+			AUTH_LIST			  	= #{authList},
+			AUTH_VIEW			  	= #{authView},
+			AUTH_WRITE			  	= #{authWrite},
+			AUTH_MANAGER		  	= #{authManager},
+			UPDATE_ID			  	= #{updateId},
+			UPDATE_DATE			  	= NOW(),
+			UPDATE_IP			  	= #{updateIp},
+			STATUS_TYPE           	= #{statusType}
+		WHERE BOARD_ID = #{boardId}
+    </update>
+
+    <update id="updateBoardStatus" parameterType="com.pama.bbs.vo.BoardVO">
+         UPDATE BBS_BOARD SET
+             STATUS_TYPE        = #{statusType},
+             UPDATE_ID			= #{updateId},
+             UPDATE_DATE		= NOW(),
+             UPDATE_IP			= #{updateIp}
+         WHERE BOARD_ID = #{boardId}
+    </update>
+</mapper>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.mbr.dao.AccountInfoDAO">
+
+    <resultMap id="accountCarInfoVOResult" type="com.pama.mbr.vo.AccountCarInfoVO">
+		<id property="carId" column="CAR_ID"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="brand" column="BRAND"/>
+		<result property="model" column="MODEL"/>
+		<result property="mission" column="MISSION"/>
+		<result property="caryear" column="CAR_YEAR"/>
+		<result property="distance" column="DISTANCE"/>
+		<result property="carNumber" column="CAR_NUMBER"/>
+		<result property="carIdentNumber" column="CAR_IDENT_NUMBER"/>
+		<result property="carCode" column="CAR_CODE"/>
+    </resultMap>
+
+    <resultMap id="accountMechanicInfoVOResult" type="com.pama.mbr.vo.AccountMechanicInfoVO">
+		<id property="mechanicId" column="MECHANIC_ID"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="bizNumber" column="BIZ_NUMBER"/>
+		<result property="bizRegFile" column="BIZ_REG_FILE"/>
+		<result property="bizPhoto" column="BIZ_PHOTO"/>
+		<result property="faxTrans" column="FAX_TRANS"/>
+		<result property="serviceItem1" column="SERVICE_ITEM1"/>
+		<result property="serviceItem2" column="SERVICE_ITEM2"/>
+		<result property="serviceItem3" column="SERVICE_ITEM3"/>
+		<result property="serviceItem4" column="SERVICE_ITEM4"/>
+		<result property="serviceItem5" column="SERVICE_ITEM5"/>
+    </resultMap>
+
+    <select id="getAccountCarInfo" resultMap="accountCarInfoVOResult">
+        SELECT
+			CAR_ID,
+			MBR_ID,
+			BRAND,
+			MODEL,
+			MISSION,
+			CAR_YEAR,
+			DISTANCE,
+			CAR_NUMBER,
+			CAR_IDENT_NUMBER,
+			CAR_CODE
+        FROM MBR_CARINFO
+        WHERE
+           (MBR_ID = #{mbrId} OR CAR_ID = #{carId})
+    </select>
+
+    <select id="getAccountMechanicInfo" resultMap="accountMechanicInfoVOResult">
+        SELECT
+			 MECHANIC_ID,
+			 MBR_ID,
+			 BIZ_NUMBER,
+			 BIZ_PHOTO,
+			 BIZ_REG_FILE,
+			 FAX_TRANS,
+			 SERVICE_ITEM1,
+			 SERVICE_ITEM2,
+			 SERVICE_ITEM3,
+			 SERVICE_ITEM4,
+			 SERVICE_ITEM5
+        FROM MBR_MECHANICINFO
+        WHERE
+           (MBR_ID = #{mbrId} OR MECHANIC_ID = #{mechanicId})
+    </select>
+
+	<!-- 일반회원 차량정보등록 -->
+    <insert id="insertAccountCarInfo" parameterType="com.pama.mbr.vo.AccountCarInfoVO">
+        INSERT INTO MBR_CARINFO (
+			MBR_ID
+			,BRAND
+			,MODEL
+			,MISSION
+			,CAR_YEAR
+			,DISTANCE
+			,CAR_IDENT_NUMBER
+			,CAR_NUMBER
+			,CAR_CODE
+        ) VALUES (
+            #{mbrId}
+            ,#{brand}
+            ,#{model}
+            ,#{mission}
+            ,#{caryear}
+            ,#{distance}
+            ,#{carIdentNumber}
+            ,#{carNumber}
+            ,#{carCode}
+        )
+    </insert>
+
+    <!-- 메카닉회원 서비스품목 등록 -->
+    <insert id="insertAccountMechanicInfo" parameterType="com.pama.mbr.vo.AccountMechanicInfoVO">
+        INSERT INTO MBR_MECHANICINFO (
+			MBR_ID
+			,BIZ_NUMBER
+			,BIZ_REG_FILE
+			,BIZ_PHOTO
+			,SERVICE_ITEM1
+			,SERVICE_ITEM2
+			,SERVICE_ITEM3
+			,SERVICE_ITEM4
+			,SERVICE_ITEM5
+        ) VALUES (
+            #{mbrId}
+            ,#{bizNumber}
+            ,#{bizRegFile}
+            ,#{bizPhoto}
+            ,#{serviceItem1}
+            ,#{serviceItem2}
+            ,#{serviceItem3}
+            ,#{serviceItem4}
+            ,#{serviceItem5}
+        )
+    </insert>
+
+    <update id="updateAccountCarInfo" parameterType="com.pama.mbr.vo.AccountCarInfoVO">
+        UPDATE MBR_CARINFO SET
+			BRAND = #{brand}
+			,MODEL = #{model}
+			,MISSION = #{mission}
+			,CAR_YEAR = #{caryear}
+			,CAR_NUMBER = #{carNumber}
+			,CAR_IDENT_NUMBER = #{carIdentNumber}
+			,DISTANCE = #{distance}
+			,CAR_CODE = #{carCode}
+        WHERE CAR_ID = #{carId}
+    </update>
+
+    <update id="updateAccountMechanicInfo" parameterType="com.pama.mbr.vo.AccountMechanicInfoVO">
+        UPDATE MBR_MECHANICINFO SET
+			  FAX_TRANS     =   #{faxTrans}
+			 ,SERVICE_ITEM1 =   #{serviceItem1}
+			 ,SERVICE_ITEM2 =   #{serviceItem2}
+			 ,SERVICE_ITEM3 =   #{serviceItem3}
+			 ,SERVICE_ITEM4 =   #{serviceItem4}
+			 ,SERVICE_ITEM5 =   #{serviceItem5}
+			<if test="bizNumber != null and bizNumber != ''">
+			 ,BIZ_NUMBER    =   #{bizNumber}
+			</if>
+            <if test="bizRegFile != null and bizRegFile != ''">
+            	,BIZ_REG_FILE = #{bizRegFile}
+            </if>
+            <if test="bizPhoto != null and bizPhoto != ''">
+            	,BIZ_PHOTO = #{bizPhoto}
+            </if>
+        WHERE MECHANIC_ID = #{mechanicId}
+    </update>
+
+    <update id="updateAccountCarInfoRemove" parameterType="com.pama.mbr.vo.AccountCarInfoVO">
+        UPDATE MBR_CARINFO SET
+			BRAND = ''
+			,MODEL = ''
+			,MISSION = ''
+			,CAR_YEAR = ''
+			,CAR_NUMBER = ''
+			,CAR_IDENT_NUMBER = ''
+			,DISTANCE = ''
+			,CAR_CODE = ''
+        WHERE MECHANIC_ID = #{carId}
+    </update>
+
+    <update id="updateAccountMechanicInfoRemove" parameterType="com.pama.mbr.vo.AccountMechanicInfoVO">
+        UPDATE MBR_MECHANICINFO SET
+			BIZ_NUMBER    =   #{bizNumber}
+			 ,FAX_TRANS     =   #{faxTrans}
+			 ,SERVICE_ITEM1 =   #{serviceItem1}
+			 ,SERVICE_ITEM2 =   #{serviceItem2}
+			 ,SERVICE_ITEM3 =   #{serviceItem3}
+			 ,SERVICE_ITEM4 =   #{serviceItem4}
+			 ,SERVICE_ITEM5 =   #{serviceItem5}
+			 ,BIZ_REG_FILE = #{bizRegFile}
+             ,BIZ_PHOTO = #{bizPhoto}
+        WHERE MECHANIC_ID = #{mechanicId}
+    </update>
+
+    <update id="deleteAccountCarInfo" parameterType="com.pama.mbr.vo.AccountCarInfoVO">
+        DELETE FROM MBR_CARINFO
+        WHERE
+        	MBR_ID = #{mbrId}
+    </update>
+
+    <update id="deleteAccountMechanicInfo" parameterType="com.pama.mbr.vo.AccountMechanicInfoVO">
+        DELETE FROM MBR_MECHANICINFO
+        WHERE
+        	MBR_ID = #{mbrId}
+    </update>
+
+</mapper>

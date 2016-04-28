@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.banner.dao.BannerInfoDAO">
+
+    <!-- 목록에 대한 검색조건은 같은걸로 사용 -->
+    <sql id="getListWhere">
+    	<trim prefix="WHERE" >
+    		1=1
+    		<choose>
+	        	<when test="statusType == null">
+	        		AND t1.STATUS_TYPE &lt;&gt; 0
+	        	</when>
+	        	<otherwise>
+	        		AND t1.STATUS_TYPE = #{statusType}
+	        	</otherwise>
+	        </choose>
+
+        	<if test="bannerPlaceId != null and bannerPlaceId != 0">
+        		AND t1.BANNER_PLACE_ID = #{bannerPlaceId}
+        	</if>
+
+	        <!-- select box로 검색할경우 -->
+	        <if test="bannerTargetOpen != null">
+	     		AND BANNER_TARGET_OPEN = #{bannerTargetOpe}
+	            AND t1.BANNER_START_DATE &lt;= DATE_FORMAT(now(), '%Y-%m-%d')
+	            AND t1.BANNER_END_DATE &gt;= DATE_FORMAT(now(), '%Y-%m-%d')
+	        </if>
+		</trim>
+    </sql>
+
+    <!-- 목록에 대한 검색조건은 같은걸로 사용 -->
+    <sql id="getGroupListWhere">
+    	<trim prefix="WHERE" >
+    		1=1
+    		AND BANNER_GROUP_ID = #{bannerGroupId}
+    		<choose>
+	        	<when test="statusType == null">
+	        		AND t1.STATUS_TYPE &lt;&gt; 0
+	        	</when>
+	        	<otherwise>
+	        		AND t1.STATUS_TYPE = #{statusType}
+	        	</otherwise>
+	        </choose>
+	        <if test="bannerTargetOpen != null">
+	     		AND BANNER_TARGET_OPEN = #{bannerTargetOpe}
+	            AND t1.BANNER_START_DATE &lt;= DATE_FORMAT(now(), '%Y-%m-%d')
+	            AND t1.BANNER_END_DATE &gt;= DATE_FORMAT(now(), '%Y-%m-%d')
+	        </if>
+     	</trim>
+    </sql>
+
+    <!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="bannerSearchVO">
+        SELECT COUNT(BANNER_ID) AS TOTAL_COUNT
+        FROM BANNER_INFO t1 inner join BANNER_PLACE t2
+          ON t2.BANNER_PLACE_ID = t1.BANNER_PLACE_ID AND t2.STATUS_TYPE = '2'
+          inner join BANNER_GROUP t3
+          ON t3.BANNER_GROUP_ID = t1.BANNER_GROUP_ID AND t3.STATUS_TYPE = '2'
+        <include refid="getListWhere"/>
+    </select>
+
+	<resultMap id="bannerInfoResult" type="com.pama.banner.vo.BannerInfoVO">
+		<id property="bannerId" column="BANNER_ID"/>
+		<result property="bannerGroupId" column="BANNER_GROUP_ID"/>
+		<result property="compyName" column="COMPY_NAME"/>
+		<result property="bannerPlaceId" column="BANNER_PLACE_ID"/>
+		<result property="bannerTitle" column="BANNER_TITLE"/>
+		<result property="bannerSize" column="BANNER_SIZE"/>
+		<result property="bannerStartDate" column="BANNER_START_DATE"/>
+		<result property="bannerEndDate" column="BANNER_END_DATE"/>
+		<result property="bannerOpenTags" column="BANNER_OPEN_TAGS"/>
+		<result property="openCount" column="OPEN_COUNT"/>
+		<result property="clickCount" column="CLICK_COUNT"/>
+		<result property="bannerTargetUrl" column="BANNER_TARGET_URL"/>
+		<result property="fileType" column="FILE_TYPE"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileSize" column="FILE_SIZE"/>
+		<result property="imageWidth" column="IMAGE_WIDTH"/>
+		<result property="imageHeight" column="IMAGE_HEIGHT"/>
+		<result property="contentType" column="CONTENT_TYPE"/>
+		<result property="registerDate" column="REGISTER_DATE"/>
+		<result property="registerId" column="REGISTER_ID"/>
+		<result property="registerIp" column="REGISTER_IP"/>
+		<result property="statusType" column="STATUS_TYPE"/>
+	</resultMap>
+
+    <!-- 조회:목록 -->
+    <select id="getBannerInfoList" resultMap="bannerInfoResult" parameterType="bannerSearchVO">
+		SELECT
+			t1.BANNER_ID,
+			t1.BANNER_GROUP_ID,
+			t3.COMPY_NAME,
+			t1.BANNER_PLACE_ID,
+			t2.BANNER_TITLE,
+			t2.BANNER_SIZE,
+			t1.BANNER_START_DATE,
+			t1.BANNER_END_DATE,
+			t1.BANNER_OPEN_TAGS,
+			t1.OPEN_COUNT,
+			t1.CLICK_COUNT,
+			t1.BANNER_TARGET_URL,
+			t1.FILE_TYPE,
+			t1.FILE_NAME,
+			t1.FILE_SIZE,
+			t1.IMAGE_WIDTH,
+			t1.IMAGE_HEIGHT,
+			t1.CONTENT_TYPE,
+			t1.REGISTER_DATE,
+			t1.REGISTER_ID,
+			t1.REGISTER_IP,
+			t1.STATUS_TYPE
+		FROM BANNER_INFO t1 inner join BANNER_PLACE t2
+			ON t2.BANNER_PLACE_ID = t1.BANNER_PLACE_ID AND t2.STATUS_TYPE = '2'
+			inner join BANNER_GROUP t3
+			ON t3.BANNER_GROUP_ID = t1.BANNER_GROUP_ID AND t3.STATUS_TYPE = '2'
+		<include refid="getListWhere"/>
+		<choose>
+	      <when test="sortColumn != null">
+	      	<choose>
+	      		<when test="sortColumn == 'registerDate'">
+	      			ORDER BY REGISTER_DATE ${sortValue}
+	      		</when>
+	      	</choose>
+	      </when>
+	      <otherwise>
+	      		ORDER BY REGISTER_DATE DESC
+	      </otherwise>
+	    </choose>
+		LIMIT #{startIndex}, #{row}
+    </select>
+
+	<resultMap id="bannerInfoResult2" type="com.pama.banner.vo.BannerInfoVO">
+		<id property="bannerId" column="BANNER_ID"/>
+		<result property="bannerGroupId" column="BANNER_GROUP_ID"/>
+		<result property="bannerPlaceId" column="BANNER_PLACE_ID"/>
+		<result property="bannerTitle" column="BANNER_TITLE"/>
+		<result property="bannerSize" column="BANNER_SIZE"/>
+		<result property="bannerStartDate" column="BANNER_START_DATE"/>
+		<result property="bannerEndDate" column="BANNER_END_DATE"/>
+		<result property="bannerOpenTags" column="BANNER_OPEN_TAGS"/>
+		<result property="openCount" column="OPEN_COUNT"/>
+		<result property="clickCount" column="CLICK_COUNT"/>
+		<result property="bannerTargetUrl" column="BANNER_TARGET_URL"/>
+		<result property="fileType" column="FILE_TYPE"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileSize" column="FILE_SIZE"/>
+		<result property="imageWidth" column="IMAGE_WIDTH"/>
+		<result property="imageHeight" column="IMAGE_HEIGHT"/>
+		<result property="contentType" column="CONTENT_TYPE"/>
+		<result property="registerDate" column="REGISTER_DATE"/>
+		<result property="registerId" column="REGISTER_ID"/>
+		<result property="registerIp" column="REGISTER_IP"/>
+		<result property="statusType" column="STATUS_TYPE"/>
+	</resultMap>
+    <!-- 조회:목록 -->
+    <select id="getBannerGroupInfoList" resultMap="bannerInfoResult2" parameterType="bannerSearchVO">
+		SELECT
+			t1.BANNER_ID,
+			t1.BANNER_GROUP_ID,
+			t1.BANNER_PLACE_ID,
+			t2.BANNER_TITLE,
+			t2.BANNER_SIZE,
+			t1.BANNER_START_DATE,
+			t1.BANNER_END_DATE,
+			t1.BANNER_OPEN_TAGS,
+			t1.OPEN_COUNT,
+			t1.CLICK_COUNT,
+			t1.BANNER_TARGET_URL,
+			t1.FILE_TYPE,
+			t1.FILE_NAME,
+			t1.FILE_SIZE,
+			t1.IMAGE_WIDTH,
+			t1.IMAGE_HEIGHT,
+			t1.CONTENT_TYPE,
+			t1.REGISTER_DATE,
+			t1.REGISTER_ID,
+			t1.REGISTER_IP,
+			t1.STATUS_TYPE
+		FROM BANNER_INFO t1 inner join BANNER_PLACE t2
+			ON t2.BANNER_PLACE_ID = t1.BANNER_PLACE_ID AND t2.STATUS_TYPE = '2'
+		<include refid="getGroupListWhere"/>
+		<!-- Sorting -->
+		<choose>
+	      <when test="sortColumn != null">
+	      	<choose>
+	      		<when test="sortColumn == 'registerDate'">
+	      			ORDER BY REGISTER_DATE ${sortValue}
+	      		</when>
+	      	</choose>
+	      </when>
+	      <otherwise>
+	      		ORDER BY REGISTER_DATE DESC
+	      </otherwise>
+	    </choose>
+		LIMIT #{startIndex}, #{row}
+    </select>
+
+	<resultMap id="bannerInfoResult3" type="com.pama.banner.vo.BannerInfoVO">
+		<id property="bannerId" column="BANNER_ID"/>
+		<result property="bannerGroupId" column="BANNER_GROUP_ID"/>
+		<result property="bannerPlaceId" column="BANNER_PLACE_ID"/>
+		<result property="bannerStartDate" column="BANNER_START_DATE"/>
+		<result property="bannerEndDate" column="BANNER_END_DATE"/>
+		<result property="bannerOpenTags" column="BANNER_OPEN_TAGS"/>
+		<result property="openCount" column="OPEN_COUNT"/>
+		<result property="clickCount" column="CLICK_COUNT"/>
+		<result property="bannerTargetType" column="BANNER_TARGET_TYPE"/>
+		<result property="bannerTargetOpen" column="BANNER_TARGET_OPEN"/>
+		<result property="bannerTargetUrl" column="BANNER_TARGET_URL"/>
+		<result property="fileType" column="FILE_TYPE"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileSize" column="FILE_SIZE"/>
+		<result property="imageWidth" column="IMAGE_WIDTH"/>
+		<result property="imageHeight" column="IMAGE_HEIGHT"/>
+		<result property="contentType" column="CONTENT_TYPE"/>
+		<result property="registerDate" column="REGISTER_DATE"/>
+		<result property="registerId" column="REGISTER_ID"/>
+		<result property="registerIp" column="REGISTER_IP"/>
+		<result property="statusType" column="STATUS_TYPE"/>
+	</resultMap>
+	<select id="getBannerInfo" resultMap="bannerInfoResult3" parameterType="bannerSearchVO">
+		SELECT
+			BANNER_ID,
+			BANNER_GROUP_ID,
+			BANNER_PLACE_ID,
+			BANNER_START_DATE,
+			BANNER_END_DATE,
+			BANNER_OPEN_TAGS,
+			OPEN_COUNT,
+			CLICK_COUNT,
+			BANNER_TARGET_TYPE,
+			BANNER_TARGET_OPEN,
+			BANNER_TARGET_URL,
+			FILE_TYPE,
+			FILE_NAME,
+			FILE_SIZE,
+			IMAGE_WIDTH,
+			IMAGE_HEIGHT,
+			CONTENT_TYPE,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP,
+			STATUS_TYPE
+		FROM BANNER_INFO
+		<trim prefix="WHERE" >
+	    	1=1
+	    	<choose>
+	        	<when test="statusType == null">
+	        		AND STATUS_TYPE &lt;&gt; 0
+	        	</when>
+	        	<otherwise>
+	        		AND STATUS_TYPE = #{statusType}
+	        	</otherwise>
+	    	</choose>
+	     	AND BANNER_ID = #{bannerId}
+	    </trim>
+    </select>
+
+	<resultMap id="bannerInfoResult4" type="com.pama.banner.vo.BannerInfoVO">
+		<id property="bannerId" column="BANNER_ID"/>
+		<result property="bannerGroupId" column="BANNER_GROUP_ID"/>
+		<result property="bannerPlaceId" column="BANNER_PLACE_ID"/>
+		<result property="bannerOpenTags" column="BANNER_OPEN_TAGS"/>
+		<result property="bannerTargetType" column="BANNER_TARGET_TYPE"/>
+		<result property="bannerTargetOpen" column="BANNER_TARGET_OPEN"/>
+		<result property="bannerTargetUrl" column="BANNER_TARGET_URL"/>
+		<result property="fileType" column="FILE_TYPE"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="imageWidth" column="IMAGE_WIDTH"/>
+		<result property="imageHeight" column="IMAGE_HEIGHT"/>
+		<result property="contentType" column="CONTENT_TYPE"/>
+		<result property="registerDate" column="REGISTER_DATE"/>
+	</resultMap>
+	<select id="getBanner" resultMap="bannerInfoResult4" parameterType="bannerSearchVO">
+		SELECT
+			BANNER_ID,
+			BANNER_GROUP_ID,
+			BANNER_PLACE_ID,
+			BANNER_OPEN_TAGS,
+			BANNER_TARGET_TYPE,
+			BANNER_TARGET_OPEN,
+			BANNER_TARGET_URL,
+			FILE_TYPE,
+			FILE_NAME,
+			IMAGE_WIDTH,
+			IMAGE_HEIGHT,
+			CONTENT_TYPE,
+			REGISTER_DATE
+		FROM BANNER_INFO
+	    WHERE 1=1
+	    	AND STATUS_TYPE = '2'
+	     	AND BANNER_PLACE_ID = #{bannerPlaceId}
+              AND BANNER_START_DATE &lt;= DATE_FORMAT(now(), '%Y-%m-%d')
+              AND BANNER_END_DATE &gt;= DATE_FORMAT(now(), '%Y-%m-%d')
+	    ORDER BY RAND()
+		LIMIT 1
+    </select>
+
+	<select id="getBanners" resultMap="bannerInfoResult4" parameterType="bannerSearchVO">
+		SELECT
+			BANNER_ID,
+			BANNER_GROUP_ID,
+			BANNER_PLACE_ID,
+			BANNER_OPEN_TAGS,
+			BANNER_TARGET_TYPE,
+			BANNER_TARGET_OPEN,
+			BANNER_TARGET_URL,
+			FILE_TYPE,
+			FILE_NAME,
+			IMAGE_WIDTH,
+			IMAGE_HEIGHT,
+			CONTENT_TYPE,
+			REGISTER_DATE
+		FROM BANNER_INFO
+	    WHERE STATUS_TYPE = '2' AND BANNER_PLACE_ID = #{bannerPlaceId}
+               AND BANNER_START_DATE &lt;= DATE_FORMAT(now(), '%Y-%m-%d')
+               AND BANNER_END_DATE &gt;= DATE_FORMAT(now(), '%Y-%m-%d')
+	    ORDER BY RAND()
+		LIMIT ${row}
+    </select>
+
+	<insert id="insertBannerInfo" parameterType="com.pama.banner.vo.BannerInfoVO" useGeneratedKeys="true" keyProperty="bannerId">
+        INSERT INTO BANNER_INFO (
+			BANNER_GROUP_ID,
+			BANNER_PLACE_ID,
+			BANNER_START_DATE,
+			BANNER_END_DATE,
+			BANNER_OPEN_TAGS,
+			OPEN_COUNT,
+			CLICK_COUNT,
+			BANNER_TARGET_TYPE,
+			BANNER_TARGET_OPEN,
+			BANNER_TARGET_URL,
+			FILE_TYPE,
+			FILE_NAME,
+			FILE_SIZE,
+			IMAGE_WIDTH,
+			IMAGE_HEIGHT,
+			CONTENT_TYPE,
+			REGISTER_DATE,
+			REGISTER_ID,
+			REGISTER_IP,
+			UPDATE_DATE,
+			UPDATE_ID,
+			UPDATE_IP,
+			STATUS_TYPE
+        ) VALUES (
+        	#{bannerGroupId},
+        	#{bannerPlaceId},
+        	#{bannerStartDate},
+        	#{bannerEndDate},
+        	#{bannerOpenTags},
+        	0,
+        	0,
+        	#{bannerTargetType},
+        	#{bannerTargetOpen},
+        	#{bannerTargetUrl},
+        	#{fileType},
+        	#{fileName},
+        	#{fileSize},
+        	#{imageWidth},
+        	#{imageHeight},
+        	#{contentType},
+        	NOW(),
+        	#{registerId},
+        	#{registerIp},
+        	NOW(),
+        	#{updateId},
+        	#{updateIp},
+        	#{statusType}
+        )
+        <selectKey keyProperty="bannerId" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+
+	<update id="updateBannerInfo" parameterType="com.pama.banner.vo.BannerInfoVO">
+		UPDATE BANNER_INFO SET
+			BANNER_PLACE_ID = #{bannerPlaceId},
+			BANNER_START_DATE = #{bannerStartDate},
+			BANNER_END_DATE = #{bannerEndDate},
+			BANNER_OPEN_TAGS = #{bannerOpenTags},
+			BANNER_TARGET_TYPE = #{bannerTargetType},
+			BANNER_TARGET_OPEN = #{bannerTargetOpen},
+			BANNER_TARGET_URL = #{bannerTargetUrl},
+			<if test="fileName != null">
+			FILE_TYPE = #{fileType},
+			FILE_NAME = #{fileName},
+			FILE_SIZE = #{fileSize},
+			IMAGE_WIDTH = #{imageWidth},
+			IMAGE_HEIGHT = #{imageHeight},
+			CONTENT_TYPE = #{contentType},
+			</if>
+			UPDATE_DATE = NOW(),
+			UPDATE_ID = #{updateId},
+			UPDATE_IP = #{updateIp},
+			STATUS_TYPE = #{statusType}
+		WHERE BANNER_ID = #{bannerId}
+	</update>
+
+	<update id="updateBannerOpenCount" parameterType="com.pama.banner.vo.BannerInfoVO">
+		UPDATE BANNER_INFO SET
+			OPEN_COUNT = ifnull(OPEN_COUNT,0)+1
+		WHERE BANNER_ID = #{bannerId}
+	</update>
+
+	<update id="updateBannerClickCount" parameterType="com.pama.banner.vo.BannerInfoVO">
+		UPDATE BANNER_INFO SET
+			CLICK_COUNT = ifnull(CLICK_COUNT,0)+1
+		WHERE BANNER_ID = #{bannerId}
+	</update>
+
+	<update id="updateBannerInfoRemove" parameterType="com.pama.banner.vo.BannerInfoVO">
+        UPDATE BANNER_INFO SET
+			UPDATE_DATE = NOW(),
+			UPDATE_ID = #{updateId},
+			UPDATE_IP = #{updateIp},
+            STATUS_TYPE = '0'
+        WHERE  BANNER_ID = #{bannerId}
+	</update>
+
+	<update id="updateSelectBannerInfoRemove" parameterType="com.pama.banner.vo.BannerFormVO">
+        UPDATE BANNER_PLACE SET
+			UPDATE_DATE = NOW(),
+			UPDATE_ID = #{updateId},
+			UPDATE_IP = #{updateIp},
+        	STATUS_TYPE = '0'
+        <trim prefix="WHERE">
+        1=1
+        	<choose>
+        	<when test="checkedIds != null">
+        		AND BANNER_ID IN
+        		<foreach item="checkedIds" collection="checkedIds" open="(" separator="," close=")">
+        			#{checkedIds}
+        		</foreach>
+        	</when>
+        	<otherwise>
+        		AND BANNER_ID = 0
+        	</otherwise>
+        	</choose>
+        </trim>
+    </update>
+
+</mapper>

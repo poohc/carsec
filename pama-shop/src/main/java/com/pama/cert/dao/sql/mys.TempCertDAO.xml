@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.cert.dao.TempCertDAO">
+
+    <!-- resultMap은 항상 조회위 위치 -->
+    <resultMap id="getTempCertResult" type="com.pama.cert.vo.TempCertVO">
+        <result property="tmpId"     	column="TMP_ID"/>
+        <result property="mobile"     column="MOBILE"/>
+        <result property="certKey"     column="CERT_KEY"/>
+        <result property="registerDate"  column="REGISTER_DATE"/>
+    </resultMap>
+    
+    <!-- 조회:목록 -->
+    <select id="getTempCert" resultMap="getTempCertResult" parameterType="com.pama.cert.vo.TempCertVO">
+         SELECT
+             MOBILE,
+             CERT_KEY,
+             REGISTER_DATE
+         FROM TMP_CERT_KEY
+         WHERE 
+         MOBILE = #{mobile}       
+    </select>    
+
+
+	<insert id="insertTempCert" parameterType="com.pama.cert.vo.TempCertVO" useGeneratedKeys="true" keyProperty="tmpId">
+        INSERT INTO TMP_CERT_KEY (
+			MOBILE,
+			CERT_KEY,
+			REGISTER_DATE
+        ) VALUES (
+        	#{mobile},
+        	#{certKey},
+        	NOW()
+        )
+        <selectKey keyProperty="tmpId" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+	
+	<delete id="deleteTempCert" parameterType="com.pama.cert.vo.TempCertVO">
+        DELETE FROM TMP_CERT_KEY 
+        WHERE  MOBILE = #{mobile}
+	</delete>
+</mapper>

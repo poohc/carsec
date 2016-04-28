@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.ord.dao.TaxDAO">
+
+    <sql id="getListWhere">
+        FROM ORD_TAX
+
+        WHERE 1=1
+
+		<if test="name == 'compNm'">
+			AND COMP_NM = #{compNm}
+		</if>
+    </sql>
+
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="texSearchVO">
+        SELECT COUNT(ORD_ID) AS TOTAL_COUNT
+        <include refid="getListWhere"/>
+    </select>
+
+    <resultMap id="taxVOResult" type="com.pama.ord.vo.TaxVO">
+        <result property="ORD_ID" column="ORD_ID"/>
+        <result property="COMP_BIZ_NO" column="COMP_BIZ_NO"/>
+        <result property="COMP_NM" column="COMP_NM"/>
+        <result property="CEO_NM" column="CEO_NM"/>
+        <result property="COMP_ADDR" column="COMP_ADDR"/>
+        <result property="COMP_BIZ_NM" column="COMP_BIZ_NM"/>
+        <result property="COMP_FIELD_NM" column="COMP_FIELD_NM"/>
+    </resultMap>
+    <select id="getTaxList" resultMap="taxVOResult" parameterType="texSearchVO">
+        SELECT
+            ORD_ID,
+            COMP_BIZ_NO,
+            COMP_NM,
+            CEO_NM,
+            COMP_ADDR,
+            COMP_BIZ_NM,
+            COMP_FIELD_NM
+        FROM ORD_TAX
+        <include refid="getListWhere"/>
+
+		<choose>
+			<when test="sortColumn == 'compBizNo'">
+				ORDER BY COMP_BIZ_NO ${sortValue}
+			</when>
+			<when test="sortColumn == 'compNm'">
+				ORDER BY COMP_NM ${sortValue}
+			</when>
+		</choose>
+
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+    <resultMap id="getTaxResult" type="com.pama.ord.vo.TaxVO">
+        <result property="ORD_ID" column="ORD_ID"/>
+        <result property="COMP_BIZ_NO" column="COMP_BIZ_NO"/>
+        <result property="COMP_NM" column="COMP_NM"/>
+        <result property="CEO_NM" column="CEO_NM"/>
+        <result property="COMP_ADDR" column="COMP_ADDR"/>
+        <result property="COMP_BIZ_NM" column="COMP_BIZ_NM"/>
+        <result property="COMP_FIELD_NM" column="COMP_FIELD_NM"/>
+    </resultMap>
+    <select id="getTax" resultMap="getTaxResult">
+        SELECT
+            ORD_ID,
+            COMP_BIZ_NO,
+            COMP_NM,
+            CEO_NM,
+            COMP_ADDR,
+            COMP_BIZ_NM,
+            COMP_FIELD_NM
+        FROM ORD_TAX
+        WHRER ORD_ID = #{ordId}
+    </select>
+
+    <insert id="insertTax" parameterType="com.pama.ord.vo.TaxVO">
+        INSERT INTO ORD_TAX (
+            ORD_ID
+            ,COMP_BIZ_NO
+            ,COMP_NM
+            ,CEO_NM
+            ,COMP_ADDR
+            ,COMP_BIZ_NM
+            ,COMP_FIELD_NM
+        ) VALUES (
+            #{ordId}
+            ,#{compBizNo}
+            ,#{compNm}
+            ,#{ceoNm}
+            ,#{compAddr}
+            ,#{compBizNm}
+            ,#{compFieldNm}
+        )
+        <selectKey  resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+    </insert>
+
+    <update id="updateTax" parameterType="com.pama.ord.vo.TaxVO">
+        UPDATE ORD_TAX SET
+            COMP_BIZ_NO = #{compBizNo}
+            ,COMP_NM = #{compNm}
+            ,CEO_NM = #{ceoNm}
+            ,COMP_ADDR = #{compAddr}
+            ,COMP_BIZ_NM = #{compBizNm}
+            ,COMP_FIELD_NM = #{compFieldNm}
+        WHERE ORD_ID = #{ordId}
+    </update>
+
+    <delete id="removeTax" parameterType="com.pama.ord.vo.TaxVO">
+         DELETE FROM ORD_TAX
+         WHERE ORD_ID = #{ordId}
+    </delete>
+
+</mapper>

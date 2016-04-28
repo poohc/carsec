@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.ord.dao.InfoDAO">
+
+    <!-- 목록에 대한 검색조건은 같은걸로 사용 -->
+    <sql id="getListWhere">
+        FROM ORD_INFO OI
+        	LEFT OUTER JOIN ORD_PURCHASER OPU on OPU.ORD_ID = OI.ORD_ID
+			LEFT OUTER JOIN ORD_PRODUCTS OP	on OP.ORD_ID = OI.ORD_ID
+			LEFT OUTER JOIN PRD_INFO P on P.PRD_ID = OP.PRD_ID
+			LEFT OUTER JOIN PRD_CATEGORY PC on PC.CATE_ID = P.CATE_ID
+			LEFT OUTER JOIN MBR_ACCOUNT MA ON MA.MBR_ID = OI.REGISTER_ID
+
+        <trim prefix="WHERE">
+			1=1
+			<if test="settleType != null">
+				AND SETTLE_TYPE = #{settleType}
+			</if>
+       		<!-- 본인의 주문 목록을 조회한다. -->
+			<if test="registerId != null">
+				AND OI.REGISTER_ID = #{registerId}
+			</if>
+			<if test="statusType != null and statusType != ''">
+				AND OI.STATUS_TYPE = #{statusType}
+			</if>
+			<if test="comp != null and comp != ''">
+				AND P.COMP = #{comp}
+			</if>
+			<if test="statusTypes != null and statusTypes != ''">
+				AND OI.STATUS_TYPE in
+				<foreach collection="statusTypes" item="type"   open="(" close=")" separator=",">
+      				#{type}
+ 			</foreach>
+			</if>
+			<if test="startRegisterDate != null">
+				AND DATE_FORMAT(OI.REGISTER_DATE, '%Y%m%d') &gt;= DATE_FORMAT(#{startRegisterDate}, '%Y%m%d')
+			</if>
+			<if test="endRegisterDate != null">
+				AND DATE_FORMAT(OI.REGISTER_DATE, '%Y%m%d') &lt;= DATE_FORMAT(#{endRegisterDate}, '%Y%m%d')
+			</if>
+			<if test="endDateType == '1'">
+				AND DATE_FORMAT(OP.END_DATE, '%Y%m%d') &gt;= DATE_FORMAT(NOW(), '%Y%m%d')
+			</if>
+			<if test="endDateType == '2'">
+				AND DATE_FORMAT(OP.END_DATE, '%Y%m%d') &lt; DATE_FORMAT(NOW(), '%Y%m%d')
+			</if>
+
+	        <!-- select box로 검색할경우 -->
+	        <if test="searchValue != null">
+	        	<if test="searchColumn == 'ordId'">
+	        		AND INSTR(LOWER(OI.ORD_ID),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        	<if test="searchColumn == 'ordererName'">
+	        		AND INSTR(LOWER(OPU.ORDERER_NAME),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        	<if test="searchColumn == 'title'">
+	        		AND INSTR(LOWER(OI.TITLE),LOWER(#{searchValue})) &gt; 0
+	        	</if>
+	        </if>
+
+        </trim>
+
+    </sql>
+
+
+    <!-- 조회:목록전체갯수 -->
+    <select id="getListTotalCount" resultType="java.lang.Integer" parameterType="orderSearchVO">
+        SELECT COUNT(1) AS TOTAL_COUNT
+        <include refid="getListWhere"/>
+    </select>
+
+    <!-- resultMap은 항상 조회위 위치 -->
+    <resultMap id="orderListResult" type="com.pama.ord.vo.OrderVO">
+        <id property="ordId" column="ORD_ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="totalPrice" column="TOTAL_PRICE"/>
+        <result property="settlePrice" column="SETTLE_PRICE"/>
+        <result property="settleType" column="SETTLE_TYPE"/>
+        <result property="settleAccountNo" column="SETTLE_ACCOUNT_NO"/>
+        <result property="settleAccountBank" column="SETTLE_ACCOUNT_BANK"/>
+        <result property="settleAccountNm" column="SETTLE_ACCOUNT_NM"/>
+        <result property="depositNm" column="DEPOSIT_NM"/>
+        <result property="deliveryType" column="DELIVERY_TYPE"/>
+        <result property="deliveryPrice" column="DELIVERY_PRICE"/>
+        <result property="orderTexyn" column="ORDER_TEXYN"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="updateIp" column="UPDATE_IP"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+        <result property="cateId" column="CATE_ID"/>
+        <result property="cateName" column="CATE_NAME"/>
+        <result property="prdName" column="PRD_NAME"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="licenseCode" column="LICENSE_CODE"/>
+        <result property="ordererId" column="ORDERER_ID"/>
+        <result property="ordererName" column="ORDERER_NAME"/>
+        <result property="ordererEmail" column="ORDERER_EMAIL"/>
+        <result property="ordererTel" column="ORDERER_TEL"/>
+        <result property="ordererMobile" column="ORDERER_MOBILE"/>
+        <result property="ordererZipcode" column="ORDERER_ZIPCODE"/>
+        <result property="ordererAddr1" column="ORDERER_ADDR1"/>
+        <result property="ordererAddr2" column="ORDERER_ADDR2"/>
+        <result property="receiveNane" column="RECEIVE_NANE"/>
+        <result property="receiveEmail" column="RECEIVE_EMAIL"/>
+        <result property="receiveTel" column="RECEIVE_TEL"/>
+        <result property="receiveMobile" column="RECEIVE_MOBILE"/>
+        <result property="receiveZipcode" column="RECEIVE_ZIPCODE"/>
+        <result property="receiveAddr1" column="RECEIVE_ADDR1"/>
+        <result property="receiveAddr2" column="RECEIVE_ADDR2"/>
+        <result property="memo" column="MEMO"/>
+    </resultMap>
+    <!-- 조회:목록 -->
+    <select id="getOrderList" resultMap="orderListResult" parameterType="orderSearchVO">
+        SELECT
+            OI.ORD_ID,
+            OI.TITLE,
+            OI.TOTAL_PRICE,
+            OI.SETTLE_PRICE,
+            OI.SETTLE_TYPE,
+            OI.SETTLE_ACCOUNT_NO,
+            OI.SETTLE_ACCOUNT_BANK,
+            OI.SETTLE_ACCOUNT_NM,
+            OI.DEPOSIT_NM,
+            OI.DELIVERY_TYPE,
+            OI.DELIVERY_PRICE,
+            OI.ORDER_TEXYN,
+            OI.REGISTER_DATE,
+            OI.REGISTER_ID,
+            OI.REGISTER_IP,
+            OI.UPDATE_DATE,
+            OI.UPDATE_ID,
+            OI.UPDATE_IP,
+            OI.STATUS_TYPE,
+            PC.CATE_ID,
+            PC.CATE_NAME,
+            P.PRD_NAME,
+            MA.FIRST_NAME,
+            OP.START_DATE,
+            OP.END_DATE,
+            OP.LICENSE_CODE,
+            OPU.ORDERER_ID,
+            OPU.ORDERER_NAME,
+            OPU.ORDERER_EMAIL,
+            OPU.ORDERER_TEL,
+            OPU.ORDERER_MOBILE,
+            OPU.ORDERER_ZIPCODE,
+            OPU.ORDERER_ADDR1,
+            OPU.ORDERER_ADDR2,
+            OPU.RECEIVE_NANE,
+            OPU.RECEIVE_EMAIL,
+            OPU.RECEIVE_TEL,
+            OPU.RECEIVE_MOBILE,
+            OPU.RECEIVE_ZIPCODE,
+            OPU.RECEIVE_ADDR1,
+            OPU.RECEIVE_ADDR2,
+            OPU.MEMO
+        <include refid="getListWhere"/>
+
+        <!-- Sorting -->
+        <choose>
+        	<when test="sortColumn == null">
+        		ORDER BY OI.REGISTER_DATE DESC
+        	</when>
+        	<otherwise>
+        		<if test="sortColumn == 'REGISTER_ID'">
+        			ORDER BY OI.REGISTER_ID ${sortValue}
+        		</if>
+        	</otherwise>
+        </choose>
+
+        LIMIT #{startIndex}, #{row}
+    </select>
+
+    <resultMap id="getOredrResult" type="com.pama.ord.vo.OrderVO">
+        <result property="ordId" column="ORD_ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="totalPrice" column="TOTAL_PRICE"/>
+        <result property="settlePrice" column="SETTLE_PRICE"/>
+        <result property="settleType" column="SETTLE_TYPE"/>
+        <result property="settleAccountNo" column="SETTLE_ACCOUNT_NO"/>
+        <result property="settleAccountBank" column="SETTLE_ACCOUNT_BANK"/>
+        <result property="settleAccountNm" column="SETTLE_ACCOUNT_NM"/>
+        <result property="depositNm" column="DEPOSIT_NM"/>
+        <result property="deliveryType" column="DELIVERY_TYPE"/>
+        <result property="deliveryPrice" column="DELIVERY_PRICE"/>
+        <result property="orderTexyn" column="ORDER_TEXYN"/>
+        <result property="registerDate" column="REGISTER_DATE"/>
+        <result property="registerId" column="REGISTER_ID"/>
+        <result property="registerIp" column="REGISTER_IP"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="updateId" column="UPDATE_ID"/>
+        <result property="updateIp" column="UPDATE_IP"/>
+        <result property="statusType" column="STATUS_TYPE"/>
+        <result property="ordererId" column="ORDERER_ID"/>
+        <result property="ordererName" column="ORDERER_NAME"/>
+        <result property="ordererEmail" column="ORDERER_EMAIL"/>
+        <result property="ordererTel" column="ORDERER_TEL"/>
+        <result property="ordererMobile" column="ORDERER_MOBILE"/>
+        <result property="ordererZipcode" column="ORDERER_ZIPCODE"/>
+        <result property="ordererAddr1" column="ORDERER_ADDR1"/>
+        <result property="ordererAddr2" column="ORDERER_ADDR2"/>
+        <result property="receiveNane" column="RECEIVE_NANE"/>
+        <result property="receiveEmail" column="RECEIVE_EMAIL"/>
+        <result property="receiveTel" column="RECEIVE_TEL"/>
+        <result property="receiveMobile" column="RECEIVE_MOBILE"/>
+        <result property="receiveZipcode" column="RECEIVE_ZIPCODE"/>
+        <result property="receiveAddr1" column="RECEIVE_ADDR1"/>
+        <result property="receiveAddr2" column="RECEIVE_ADDR2"/>
+        <result property="memo" column="MEMO"/>
+    </resultMap>
+    <select id="getOrderInfo" resultMap="getOredrResult">
+         SELECT
+            OI.ORD_ID,
+            OI.TITLE,
+            OI.TOTAL_PRICE,
+            OI.SETTLE_PRICE,
+            OI.SETTLE_TYPE,
+            OI.SETTLE_ACCOUNT_NO,
+            OI.SETTLE_ACCOUNT_BANK,
+            OI.SETTLE_ACCOUNT_NM,
+            OI.DEPOSIT_NM,
+            OI.DELIVERY_TYPE,
+            OI.DELIVERY_PRICE,
+            OI.ORDER_TEXYN,
+            OI.REGISTER_DATE,
+            OI.REGISTER_ID,
+            OI.REGISTER_IP,
+            OI.UPDATE_DATE,
+            OI.UPDATE_ID,
+            OI.UPDATE_IP,
+            OI.STATUS_TYPE,
+            OPU.ORDERER_ID,
+            OPU.ORDERER_NAME,
+            OPU.ORDERER_EMAIL,
+            OPU.ORDERER_TEL,
+            OPU.ORDERER_MOBILE,
+            OPU.ORDERER_ZIPCODE,
+            OPU.ORDERER_ADDR1,
+            OPU.ORDERER_ADDR2,
+            OPU.RECEIVE_NANE,
+            OPU.RECEIVE_EMAIL,
+            OPU.RECEIVE_TEL,
+            OPU.RECEIVE_MOBILE,
+            OPU.RECEIVE_ZIPCODE,
+            OPU.RECEIVE_ADDR1,
+            OPU.RECEIVE_ADDR2,
+            OPU.MEMO
+        FROM ORD_INFO OI LEFT OUTER JOIN ORD_PURCHASER OPU on OI.ORD_ID = OPU.ORD_ID
+        WHERE OI.ORD_ID=#{ordId}
+    </select>
+
+    <insert id="insertInfo" parameterType="com.pama.ord.vo.OrderVO">
+        INSERT INTO ORD_INFO (
+            ORD_ID
+            ,TITLE
+            ,TOTAL_PRICE
+            ,SETTLE_PRICE
+            ,SETTLE_TYPE
+            ,SETTLE_ACCOUNT_NO
+            ,SETTLE_ACCOUNT_BANK
+            ,SETTLE_ACCOUNT_NM
+            ,DEPOSIT_NM
+            ,DELIVERY_TYPE
+            ,DELIVERY_PRICE
+            ,ORDER_TEXYN
+            ,REGISTER_DATE
+            ,REGISTER_ID
+             ,REGISTER_IP
+            ,UPDATE_DATE
+            ,UPDATE_ID
+            ,UPDATE_IP
+            ,STATUS_TYPE
+        ) VALUES (
+            #{ordId}
+            ,#{title}
+            ,#{totalPrice}
+            ,#{settlePrice}
+            ,#{settleType}
+            ,#{settleAccountNo}
+            ,#{settleAccountBank}
+            ,#{settleAccountNm}
+            ,#{depositNm}
+            ,#{deliveryType}
+            ,#{deliveryPrice}
+            ,#{orderTexyn}
+            ,NOW()
+            ,#{registerId}
+            ,#{registerIp}
+            ,NOW()
+            ,#{updateId}
+            ,#{updateIp}
+            ,#{statusType}
+        )
+       <selectKey resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+       </selectKey>
+    </insert>
+
+    <update id="updateInfo" parameterType="com.pama.ord.vo.InfoVO">
+        UPDATE ORD_INFO SET
+            TITLE = #{title}
+            ,TOTAL_PRICE = #{totalPrice}
+            ,SETTLE_PRICE = #{settlePrice}
+            ,SETTLE_TYPE = #{settleType}
+            ,SETTLE_ACCOUNT_NO = #{settleAccountNo}
+            ,SETTLE_ACCOUNT_BANK = #{settleAccountBank}
+            ,SETTLE_ACCOUNT_NM = #{settleAccountNm}
+            ,DEPOSIT_NM = #{depositNm}
+            ,DELIVERY_TYPE = #{deliveryType}
+            ,DELIVERY_PRICE = #{deliveryPrice}
+            ,ORDER_TEXYN = #{orderTexyn}
+            ,UPDATE_DATE = NOW()
+            ,UPDATE_ID = #{updateId}
+            ,UPDATE_IP = #{updateIp}
+            ,STATUS_TYPE = #{statusType}
+        WHERE ORD_ID = #{ordId}
+    </update>
+
+    <update id="updateOrderStatusType" parameterType="com.pama.ord.vo.InfoVO">
+        UPDATE ORD_INFO SET
+            STATUS_TYPE = #{statusType}
+            ,UPDATE_ID = #{updateId}
+            ,UPDATE_IP = #{updateIp}
+            ,UPDATE_DATE = NOW()
+        WHERE ORD_ID = #{ordId}
+    </update>
+
+    <update id="updateOrderRemove" parameterType="com.pama.ord.vo.InfoVO">
+        UPDATE ORD_INFO SET
+            STATUS_TYPE = #{statusType}
+            ,UPDATE_ID = #{updateId}
+            ,UPDATE_IP = #{updateIp}
+            ,UPDATE_DATE = NOW()
+        WHERE ORD_ID = #{ordId}
+    </update>
+
+</mapper>

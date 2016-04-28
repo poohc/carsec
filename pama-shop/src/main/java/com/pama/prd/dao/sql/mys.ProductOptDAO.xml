@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pama.prd.dao.ProductOptDAO">
+
+    <resultMap id="productOptVOResult" type="productOptVO">
+        <id property="optId" column="OPT_ID"/>
+        <result property="optName" column="OPT_NAME"/>
+        <result property="optPrice" column="OPT_PRICE"/>
+        <result property="prdId" column="PRD_ID"/>
+        <result property="optStatus" column="OPT_STATUS"/>
+    </resultMap>
+
+    <sql id="getProductOptListWhere">
+        FROM
+            PRD_OPTIONS
+        WHERE
+            OPT_STATUS = '1'
+            <if test="optId != null">
+            	AND OPT_ID = #{optId}
+            </if>
+            <if test="prdId != null">
+            	AND PRD_ID = #{prdId}
+            </if>
+            <if test="optName != null">
+            	AND OPT_NAME LIKE CONCAT(#{optName},'%')
+            </if>
+    </sql>
+
+    <select id="getProductOptList" resultMap="productOptVOResult" parameterType="productOptVO">
+        SELECT
+            OPT_ID,
+            OPT_NAME,
+            OPT_PRICE,
+            PRD_ID
+		<include refid="getProductOptListWhere"/>
+        <!-- Sorting -->
+       	ORDER BY OPT_ID DESC
+    </select>
+
+    <select id="getProductOpt" resultMap="productOptVOResult" parameterType="productOptVO">
+        SELECT
+            OPT_ID,
+            OPT_NAME,
+            OPT_PRICE,
+            PRD_ID
+        FROM
+            PRD_OPTIONS
+        WHERE
+        	1=1
+       		AND OPT_ID = #{optId}
+            <if test="prdId != null">
+            	AND PRD_ID = #{prdId}
+            </if>       		
+    </select>
+
+    <insert id="insertProductOpt" parameterType="productOptVO">
+        INSERT INTO PRD_OPTIONS (
+            OPT_ID,
+            OPT_NAME,
+            OPT_PRICE,
+            PRD_ID,
+            OPT_STATUS
+        )VALUES(
+            #{optId},
+            #{optName},
+            #{optPrice},
+            #{prdId},
+            '1'
+        )
+    </insert>
+
+    <update id="updateProductOpt" parameterType="productOptVO">
+        UPDATE
+            PRD_OPTIONS
+        SET
+            OPT_PRICE = #{optPrice}
+        WHERE
+            OPT_ID = #{optId}
+            AND PRD_ID = #{prdId}
+    </update>
+
+    <update id="updateProductOptStatus" parameterType="productOptVO">
+        UPDATE
+            PRD_OPTIONS
+        SET
+            OPT_STATUS = '0'
+        WHERE
+            OPT_ID = #{optId}
+            AND PRD_ID = #{prdId}
+    </update>
+
+    <delete id="deleteProductOpt" parameterType="productOptVO">
+    	DELETE FROM PRD_OPTIONS
+    	WHERE
+            OPT_ID = #{optId}
+            AND PRD_ID = #{prdId}
+    </delete>
+
+</mapper>

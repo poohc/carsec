@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>Configuration</comment>
+    <entry key="jndi.mysql.name" >java:/comp/env/jdbc/pama-shop</entry>
+	<entry key="template.path">/WEB-INF/template</entry>
+    <entry key="upload.path">/home/hosting_users/carsec/upload</entry>
+    <entry key="cafe24.sms.userId">youngmedia</entry>
+    <entry key="cafe24.sms.secure">c2c72dfc8855cae355771c61b9f29d5c</entry>
+    <entry key="cafe24.sms.sphone1">032</entry>
+    <entry key="cafe24.sms.sphone2">700</entry>
+    <entry key="cafe24.sms.sphone3">7000</entry>
+    <entry key="cafe24.sms.url.protocol">1</entry>
+    <entry key="cafe24.sms.url.http">http://sslsms.cafe24.com/sms_sender.php</entry>
+    <entry key="cafe24.sms.url.https">https://sslsms.cafe24.com/sms_sender.php</entry>
+    <entry key="mail.host">smtp.carsec.or.kr</entry>
+    <entry key="mail.port">25</entry>
+    <entry key="mail.username">master@carsec.or.kr</entry>
+    <entry key="mail.password">test</entry>
+    <entry key="mail.protocol">smtp</entry>
+    <entry key="mail.defaultEncoding">UTF-8</entry>
+    <entry key="mail.defaultFromEmail"></entry>
+    <entry key="mail.defaultFromName">carsec.or.kr</entry>
+    <entry key="mail.smtp.auth">true</entry>
+	<entry key="mail.smtp.starttls.enable">true</entry>
+	<entry key="mail.smtp.quitwait">false</entry>
+	<entry key="mail.debug">true</entry>
+	<entry key="mail.from">master@carsec.or.kr</entry>
+    <entry key="database.driver">com.mysql.jdbc.Driver</entry>
+    <entry key="database.url">jdbc:mysql://pama-nas.iptime.org:5306/pama_shop</entry>
+    <entry key="database.user">pama_shop</entry>
+    <entry key="database.password">1q2w3e4r</entry>
+    <entry key="database.pool.min.size">5</entry>
+    <entry key="database.pool.max.size">5</entry>
+</properties>
