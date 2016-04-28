@@ -11,3 +11,7 @@ id:carsec  ps:carsec1426
 http://carsec.cafe24.com/admin/login/loginForm.do
 
 id:admin  ps:qwer1234
+
+http://carsec.cafe24.com/bbs/newcar/messageList.do
+
+카섹 메카닉 게시판에 가입회원 모두에게 글쓰기권한 부여
