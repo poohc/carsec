@@ -106,7 +106,7 @@ function goMessageDetail(id) {
 			<input type="hidden" name="messageId" value="" />
 			<input type="hidden" name="listReturnURL" value="${currentURI}" />
 		</form>
-<c:if test="${boardVO.boardKey=='trafficlaw' }">
+<%-- <c:if test="${boardVO.boardKey=='trafficlaw' }"> --%>
     <div class="write_search">
 
 		<form name="messageSearchForm" method="get">
@@ -117,7 +117,7 @@ function goMessageDetail(id) {
 			</div>
 		</form>
 	</div>
-</c:if>
+<%-- </c:if> --%>
 
 		<ul class="gallery_layout2">
 			<c:forEach items="${messageList.messageList }" var="i" varStatus="iStatus">

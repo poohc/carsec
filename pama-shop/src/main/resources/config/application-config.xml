@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>Configuration</comment>
-    <entry key="jndi.mysql.name" >java:/comp/env/jdbc/pama-shop</entry>
+    <entry key="jndi.mysql.name" >java:/comp/env/jdbc/carsec</entry>
 	<entry key="template.path">/WEB-INF/template</entry>
     <entry key="upload.path">/home/hosting_users/carsec/upload</entry>
     <entry key="cafe24.sms.userId">youngmedia</entry>
@@ -27,9 +27,12 @@
 	<entry key="mail.debug">true</entry>
 	<entry key="mail.from">master@carsec.or.kr</entry>
     <entry key="database.driver">com.mysql.jdbc.Driver</entry>
-    <entry key="database.url">jdbc:mysql://pama-nas.iptime.org:5306/pama_shop</entry>
-    <entry key="database.user">pama_shop</entry>
-    <entry key="database.password">1q2w3e4r</entry>
+<!--     <entry key="database.url">jdbc:mysql://pama-nas.iptime.org:5306/pama_shop</entry> -->
+<!--     <entry key="database.user">pama_shop</entry> -->
+<!--     <entry key="database.password">1q2w3e4r</entry> -->
+    <entry key="database.url">jdbc:mysql://carsec.cafe24.com:3306/carsec</entry>
+    <entry key="database.user">carsec</entry>
+    <entry key="database.password">carsec1426</entry>
     <entry key="database.pool.min.size">5</entry>
     <entry key="database.pool.max.size">5</entry>
 </properties>

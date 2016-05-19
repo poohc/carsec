@@ -14,4 +14,7 @@ id:admin  ps:qwer1234
 
 http://carsec.cafe24.com/bbs/newcar/messageList.do
 
+cafe24
+ljr1426 , 190707
+
 카섹 메카닉 게시판에 가입회원 모두에게 글쓰기권한 부여
