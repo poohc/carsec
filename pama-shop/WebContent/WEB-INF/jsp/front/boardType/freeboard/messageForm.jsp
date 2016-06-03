@@ -3,35 +3,51 @@
 <html>
 <head>
 <title>${boardVO.title }</title>
-<script type="text/javascript" src="/common/ckeditor/ckeditor.js" charset="utf-8"></script>
+<script type="text/javascript" src="/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
 <script type="text/javascript">
-function formSubmit(){
-	form = document.messageForm;
-
-	if(form.title.value == ''){
-		alert("제목을 입력하세요!");
-		form.title.focus();
-		return;
-	}
-
-	ckeditEmptyInstace="";
-	for ( instance in CKEDITOR.instances ){
-		CKEDITOR.instances[instance].updateElement();
-		editValue=$("#"+instance).val();
-		if(editValue==""){
-			ckeditEmptyInstace=instance;
-			break;
-		}
-	}
-
-	if(ckeditEmptyInstace != ""){
-		alert("내용을 입력하세요.");
-		CKEDITOR.instances[ckeditEmptyInstace].focus();
-	}else{
-		form.submit();
-	}
-
-}
+$(document).ready(function(){
+	 
+	var editor_object = [];
+    nhn.husky.EZCreator.createInIFrame({
+        oAppRef: editor_object,
+        elPlaceHolder: "contentsarea",
+        sSkinURI: "/smarteditor/SmartEditor2Skin.html", 
+        htParams : {
+        	// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+            bUseToolbar : true,             
+            // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+            bUseVerticalResizer : false,     
+            // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+            bUseModeChanger : true,
+            fOnBeforeUnload : function(){},
+        },	    
+	    //boolean
+	    fOnAppLoad : function(){
+	    	
+	    	if('<c:out value="${param.messageId}" />' != ''){
+	    		var contents = '<c:out value="${messageVO.contents}" escapeXml="false" />';
+	    		editor_object.getById["contentsarea"].exec("PASTE_HTML", [contents]); //로딩이 끝나면 contents를 txtContent에 넣습니다.
+	    	}
+	    }    
+    });
+    
+    
+    $("#regBtn").click(function(){
+    	form = document.messageForm;
+    	
+    	if($('#title').val() == ''){
+    		alert('제목을 입력해 주세요');
+    		return false;
+    	}
+    	
+        //id가 smarteditor인 textarea에 에디터에서 대입
+        editor_object.getById["contentsarea"].exec("UPDATE_CONTENTS_FIELD", []);
+        // 이부분에 에디터 validation 검증
+        
+        form.submit();	
+    });
+    
+});
 
 function goList(listReturnURL) {
 	if(listReturnURL != ""){
@@ -41,6 +57,7 @@ function goList(listReturnURL) {
 	}
 
 }
+
 </script>
 </head>
 <body>
@@ -72,52 +89,7 @@ function goList(listReturnURL) {
 					<tbody>
 						<tr>
 							<td colspan="4">
-							<textarea cols="80" id="contentsarea" name="contents">${messageVO.contents}</textarea>
-							<script type="text/javascript">
-// 							CKEDITOR.replace( 'contentsarea', {
-
-// 								height: 280,
-
-// 								stylesSet: [
-// 									{ name: 'Narrow image', type: 'widget', widget: 'image', attributes: { 'class': 'image-narrow' } },
-// 									{ name: 'Wide image', type: 'widget', widget: 'image', attributes: { 'class': 'image-wide' } }
-// 								],
-
-// 								contentsCss: [ CKEDITOR.basePath + 'contents.css', 'assets/css/widgetstyles.css' ],
-// 								image2_alignClasses: [ 'image-align-left', 'image-align-center', 'image-align-right' ],
-// 								image2_disableResizer: true
-
-
-// 							} );
-
-	CKEDITOR.replace( 'contentsarea', {
-			height: 300,
-
-			// Upload images to a CKFinder connector (note that the response type is set to JSON).
-
-			// Configure your file manager integration. This example uses CKFinder 3 for PHP.
-
-			// The following options are not necessary and are used here for presentation purposes only.
-			// They configure the Styles drop-down list and widgets to use classes.
-
-			stylesSet: [
-				{ name: 'Narrow image', type: 'widget', widget: 'image', attributes: { 'class': 'image-narrow' } },
-				{ name: 'Wide image', type: 'widget', widget: 'image', attributes: { 'class': 'image-wide' } }
-			],
-
-			// Load the default contents.css file plus customizations for this sample.
-			contentsCss: [ CKEDITOR.basePath + 'contents.css', 'http://sdk.ckeditor.com/samples/assets/css/widgetstyles.css' ],
-
-			// Configure the Enhanced Image plugin to use classes instead of styles and to disable the
-			// resizer (because image size is controlled by widget styles or the image takes maximum
-			// 100% of the editor width).
-			image2_alignClasses: [ 'image-align-left', 'image-align-center', 'image-align-right' ],
-			image2_disableResizer: true
-		} );
-
-
-
-							</script>
+							<textarea cols="80" id="contentsarea" name="contents"></textarea>
 							</td>
 						</tr>
 					</tbody>
@@ -126,7 +98,7 @@ function goList(listReturnURL) {
 		</div>
 		<div class="btn_right">
 			<button type="button" class="button_type1" onclick="javascript:goList('${ param.listReturnURL }');"'">목록</button>
-			<button type="button" class="button_type1" onclick="javascript:formSubmit();">${empty param.messageId?'등록':'수정' }하기</button>
+			<button type="button" class="button_type1" id="regBtn" onclick="javascript:formSubmit();">${empty param.messageId?'등록':'수정' }하기</button>
 		</div>
 	</form>
 
